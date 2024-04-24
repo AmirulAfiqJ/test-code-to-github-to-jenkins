@@ -1,34 +1,78 @@
 {
   "project_info": {
-    "project_number": "323445016502",
-    "project_id": "test-bizapp",
-    "storage_bucket": "test-bizapp.appspot.com"
+    "project_number": "479036384065",
+    "firebase_url": "https://bizapptrackallonlineuser.firebaseio.com",
+    "project_id": "bizapptrackallonlineuser",
+    "storage_bucket": "bizapptrackallonlineuser.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:323445016502:android:2e4109c2bbd63a269ba317",
+        "mobilesdk_app_id": "1:479036384065:android:546fa95d027b5a25eb77c0",
         "android_client_info": {
-          "package_name": "com.example.bizapptrack"
+          "package_name": "com.bizapp.bizappx"
         }
       },
       "oauth_client": [
         {
-          "client_id": "323445016502-qe98cfu5b9b9mcgb8dej2l5s9qvvm2hu.apps.googleusercontent.com",
+          "client_id": "479036384065-m4en76p95too7peibifhq4j4bhcl94mu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBkCaYGBl9AaxxhypKUVKsR0U5jLF9MeUk"
+          "current_key": "AIzaSyC1U8Bj4LNFh6Pz4M43pY_IEBwhAkg76u8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "323445016502-qe98cfu5b9b9mcgb8dej2l5s9qvvm2hu.apps.googleusercontent.com",
+              "client_id": "479036384065-m4en76p95too7peibifhq4j4bhcl94mu.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "479036384065-6itb6beofg67lf0op5jvbc4or2dcuei0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "bizapp.bizappx"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479036384065:android:580b0c53d4723cb6eb77c0",
+        "android_client_info": {
+          "package_name": "com.example.bizapptrack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "479036384065-m4en76p95too7peibifhq4j4bhcl94mu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1U8Bj4LNFh6Pz4M43pY_IEBwhAkg76u8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "479036384065-m4en76p95too7peibifhq4j4bhcl94mu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "479036384065-6itb6beofg67lf0op5jvbc4or2dcuei0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "bizapp.bizappx"
+              }
             }
           ]
         }

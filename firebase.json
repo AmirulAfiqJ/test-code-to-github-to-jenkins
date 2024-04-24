@@ -1,10 +1,1 @@
-{
-  "hosting": {
-    "public": "build/web",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ]
-  }
-}
+{"flutter":{"platforms":{"android":{"default":{"projectId":"bizapptrackallonlineuser","appId":"1:479036384065:android:580b0c53d4723cb6eb77c0","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"bizapptrackallonlineuser","appId":"1:479036384065:ios:2472540269c3061eeb77c0","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"bizapptrackallonlineuser","configurations":{"android":"1:479036384065:android:580b0c53d4723cb6eb77c0","ios":"1:479036384065:ios:2472540269c3061eeb77c0","web":"1:479036384065:web:86ed3cdd95ec80bfeb77c0"}}}}}}
