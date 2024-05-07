@@ -1,3 +1,4 @@
+import 'package:bizapptrack/ui/login.dart';
 import 'package:bizapptrack/ui/status.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +28,8 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,9 +38,19 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // home: const TestFirebase(),
-      home: const TestRenew(),
-      // home: const ListToExcel(),
+      home: Scaffold(
+        body: Center(
+          child: Container(
+            padding: const EdgeInsets.all(20.0),
+            constraints: BoxConstraints(maxHeight: 650, maxWidth: 1400), // Limit width
+            decoration: BoxDecoration(
+              //color: Color.fromARGB(255, 198, 197, 197), // Change color here
+              //borderRadius: BorderRadius.circular(25), // Set border radius
+            ),
+            child: LoginForm(),
+          ),
+        ),
+      ),
     );
   }
 }
