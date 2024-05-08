@@ -1,10 +1,10 @@
 import 'package:bizapptrack/ui/button.dart';
-import 'package:bizapptrack/ui/data_user.dart';
+import 'package:bizapptrack/ui/dataUser.dart';
 import 'package:bizapptrack/env.dart';
 import 'package:bizapptrack/ui/home.dart';
-import 'package:bizapptrack/ui/list_to_excel.dart';
-import 'package:bizapptrack/ui/loading_widget.dart';
-// import 'package:bizapptrack/ui/sideNav.dart';
+import 'package:bizapptrack/ui/listToExcel.dart';
+import 'package:bizapptrack/ui/loadingWidget.dart';
+import 'package:bizapptrack/ui/sideNav.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,12 +19,12 @@ class TestRenew extends StatefulWidget {
 
 class _TestRenewState extends State<TestRenew> {
   TextEditingController usernameController = TextEditingController();
-  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // key: _scaffoldKey, // Add this line to assign the scaffold key
+      key: _scaffoldKey, // Add this line to assign the scaffold key
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       floatingActionButton: BizappButton(
         color: Colors.black87,
@@ -34,22 +34,12 @@ class _TestRenewState extends State<TestRenew> {
       ),
       appBar: AppBar(
         backgroundColor: Colors.black,
-        // leading: IconButton(
-        //   icon: const Icon(Icons.menu, color: Colors.white),
-        //   onPressed: () {
-        //     _scaffoldKey.currentState!.openDrawer();
-        //   },
-        // ),
         leading: IconButton(
-    icon: Icon(
-      Icons.arrow_back,
-      color: Colors.white, // Customize the color here
-    ),
-    onPressed: () {
-      Navigator.push(context,
-            MaterialPageRoute(builder: (context) =>  HomePage()));
-    },
-  ),
+          icon: const Icon(Icons.menu, color: Colors.white),
+          onPressed: () {
+            _scaffoldKey.currentState!.openDrawer();
+          },
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20),
@@ -100,7 +90,7 @@ class _TestRenewState extends State<TestRenew> {
           },
         ),
       ),
-      // drawer: SideDrawer(),
+      drawer: SideDrawer(),
     );
   }
 
@@ -227,7 +217,6 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(80)),
           color: Colors.white, borderRadius: BorderRadius.circular(80)),
       child: const Padding(
         padding: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 10.0),
