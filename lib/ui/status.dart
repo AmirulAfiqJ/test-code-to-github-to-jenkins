@@ -4,6 +4,7 @@ import 'package:bizapptrack/env.dart';
 import 'package:bizapptrack/ui/home.dart';
 import 'package:bizapptrack/ui/listToExcel.dart';
 import 'package:bizapptrack/ui/loadingWidget.dart';
+import 'package:bizapptrack/ui/login.dart';
 import 'package:bizapptrack/ui/sideNav.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -18,81 +19,114 @@ class TestRenew extends StatefulWidget {
 }
 
 class _TestRenewState extends State<TestRenew> {
+  String _userName = 'John'; // Replace with actual user name
   TextEditingController usernameController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey, // Add this line to assign the scaffold key
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      floatingActionButton: BizappButton(
-        color: Colors.black87,
-        title: "Export Excel",
-        tapCallback: () => Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const ListToExcel())),
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    key: _scaffoldKey, // Add this line to assign the scaffold key
+    backgroundColor: Color.fromARGB(255, 255, 255, 255),
+    floatingActionButton: BizappButton(
+      color: Colors.black87,
+      title: "Export Excel",
+      tapCallback: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ListToExcel())),
+    ),
+    appBar: AppBar(
+      backgroundColor: Colors.black,
+      leading: IconButton(
+        icon: const Icon(Icons.menu, color: Colors.white),
+        onPressed: () {
+          _scaffoldKey.currentState!.openDrawer();
+        },
       ),
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () {
-            _scaffoldKey.currentState!.openDrawer();
-          },
+      title: Text(
+        'Bizapp Back Office',
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: Text(Env.versi, style: const TextStyle(color: Colors.black)),
-          )
-        ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) => Consumer<StatusController>(
-          builder: (context, model, child) {
-            return SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  children: [
-                    const Header(),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        FormStatus(
-                            constraints: constraints,
-                            controller: usernameController),
-                        IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: () async {
-                            setState(() {
-                              model.call = true;
-                            });
-                            try {
-                              await model.loginServices(context,
-                                  userid: usernameController.text);
-                            } finally {
-                              setState(() {
-                                model.call = false;
-                              });
-                            }
-                          },
-                        ),
-                        const SizedBox(width: 10),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    _body2(constraints),
-                  ],
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 40.0),
+          child: PopupMenuButton(
+            icon: Icon(Icons.account_circle, color: Color.fromARGB(255, 237, 245, 255)),
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                child: Text('Welcome, $_userName'),
+                enabled: false,
+              ),
+              PopupMenuItem(
+                child: ListTile(
+                  leading: Icon(Icons.exit_to_app),
+                  title: Text('Logout'),
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                      (route) => false,
+                    );
+                  },
                 ),
               ),
-            );
-          },
+            ],
+          ),
         ),
+        // Padding(
+        //   padding: const EdgeInsets.only(right: 20),
+        //   child: Text(Env.versi, style: const TextStyle(color: Colors.black)),
+        // ),
+      ],
+    ),
+    body: LayoutBuilder(
+      builder: (context, constraints) => Consumer<StatusController>(
+        builder: (context, model, child) {
+          return SingleChildScrollView(
+            child: Center(
+              child: Column(
+                children: [
+                  const Header(),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FormStatus(
+                        constraints: constraints,
+                        controller: usernameController,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () async {
+                          setState(() {
+                            model.call = true;
+                          });
+                          try {
+                            await model.loginServices(context, userid: usernameController.text);
+                          } finally {
+                            setState(() {
+                              model.call = false;
+                            });
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  _body2(constraints),
+                ],
+              ),
+            ),
+          );
+        },
       ),
-      drawer: SideDrawer(),
-    );
-  }
+    ),
+    drawer: SideDrawer(),
+  );
+}
+
 
   Widget _body2(BoxConstraints constraints) {
 

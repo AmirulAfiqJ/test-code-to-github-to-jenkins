@@ -1,4 +1,5 @@
 import 'package:bizapptrack/ui/button.dart';
+import 'package:bizapptrack/ui/login.dart';
 import 'package:bizapptrack/ui/sideNav.dart';
 import 'package:bizapptrack/ui/status.dart';
 import 'package:excel/excel.dart';
@@ -14,6 +15,7 @@ class ListToExcel extends StatefulWidget {
 }
 
 class _ListToExcelState extends State<ListToExcel> {
+  String _userName = 'John'; // Replace with actual user name
   final List<PenggunaModel> _list = [];
 
   final TextEditingController _penggunaIdController = TextEditingController();
@@ -50,15 +52,50 @@ class _ListToExcelState extends State<ListToExcel> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: const Color(0xfff0f8ff),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(55.0),
         child: AppBar(
+          title: Text(
+            'Bizapp Back Office',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           backgroundColor: Colors.black,
+          automaticallyImplyLeading: false,
           leading: IconButton(
             onPressed: () => _scaffoldKey.currentState!.openDrawer(),
             icon: const Icon(Icons.menu, color: Colors.white),
           ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: 40.0),
+              child: PopupMenuButton(
+                icon: Icon(Icons.account_circle, color: Color.fromARGB(255, 237, 245, 255)),
+                itemBuilder: (BuildContext context) => [
+                  PopupMenuItem(
+                    child: Text('Welcome, $_userName'),
+                    enabled: false,
+                  ),
+                  PopupMenuItem(
+                    child: ListTile(
+                      leading: Icon(Icons.exit_to_app),
+                      title: Text('Logout'),
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          (route) => false,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
       drawer: SideDrawer(),
@@ -71,6 +108,7 @@ class _ListToExcelState extends State<ListToExcel> {
       physics: const BouncingScrollPhysics(),
       child: Column(
         children: [
+          const SizedBox(height: 20),
           const Header(),
           const SizedBox(height: 20),
           Row(
@@ -348,7 +386,7 @@ class Header extends StatelessWidget {
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(80)),
       child: const Padding(
-        padding: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 10.0),
+        padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         child: Text("List To Excel",
             style: TextStyle(
               fontSize: 32,
