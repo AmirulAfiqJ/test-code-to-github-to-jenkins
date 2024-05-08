@@ -228,6 +228,7 @@ class Header extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(80)),
+          color: Colors.white, borderRadius: BorderRadius.circular(80)),
       child: const Padding(
         padding: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 10.0),
         child: Text("Status Renew Bizapp User",
