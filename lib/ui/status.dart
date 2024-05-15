@@ -1,7 +1,6 @@
 import 'package:bizapptrack/ui/button.dart';
 import 'package:bizapptrack/ui/dataUser.dart';
 import 'package:bizapptrack/env.dart';
-import 'package:bizapptrack/ui/home.dart';
 import 'package:bizapptrack/ui/listToExcel.dart';
 import 'package:bizapptrack/ui/loadingWidget.dart';
 import 'package:bizapptrack/ui/login.dart';
@@ -10,6 +9,7 @@ import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'customAppBar.dart'; 
 
 class TestRenew extends StatefulWidget {
   const TestRenew({super.key});
@@ -19,9 +19,10 @@ class TestRenew extends StatefulWidget {
 }
 
 class _TestRenewState extends State<TestRenew> {
-  String _userName = 'John'; // Replace with actual user name
+   // Replace with actual user name
   TextEditingController usernameController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _userName = 'John';
 
   void _performSearch() async {
     StatusController model =
@@ -42,7 +43,7 @@ class _TestRenewState extends State<TestRenew> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Add this line to assign the scaffold key
+      key: _scaffoldKey, // Assign the scaffold key
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       floatingActionButton: BizappButton(
         color: Colors.black87,
@@ -50,54 +51,7 @@ class _TestRenewState extends State<TestRenew> {
         tapCallback: () => Navigator.push(context,
             MaterialPageRoute(builder: (context) => const ListToExcel())),
       ),
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () {
-            _scaffoldKey.currentState!.openDrawer();
-          },
-        ),
-        title: Text(
-          'Bizapp Back Office',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 40.0),
-            child: PopupMenuButton(
-              icon: Icon(Icons.account_circle,
-                  color: Color.fromARGB(255, 237, 245, 255)),
-              itemBuilder: (BuildContext context) => [
-                PopupMenuItem(
-                  child: Text('Welcome, $_userName'),
-                  enabled: false,
-                ),
-                PopupMenuItem(
-                  child: ListTile(
-                    leading: Icon(Icons.exit_to_app),
-                    title: Text('Logout'),
-                    onTap: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                        (route) => false,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.only(right: 20),
-          //   child: Text(Env.versi, style: const TextStyle(color: Colors.black)),
-          // ),
-        ],
-      ),
+      appBar: CustomAppBar(userName: _userName, scaffoldKey: _scaffoldKey), // Use custom app bar
       body: LayoutBuilder(
         builder: (context, constraints) => Consumer<StatusController>(
           builder: (context, model, child) {
@@ -161,10 +115,8 @@ class _TestRenewState extends State<TestRenew> {
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.grey[
-                          200], // Set the background color of the box // Solid border
-                      borderRadius: BorderRadius.circular(
-                          10), // Optional: Add rounded corners
+                      color: Colors.grey[200], // Set the background color of the box
+                      borderRadius: BorderRadius.circular(10), // Optional: Add rounded corners
                     ),
                     child: Wrap(
                       runSpacing: 5,
@@ -174,25 +126,9 @@ class _TestRenewState extends State<TestRenew> {
                           BizappText(text: "Username:  ${provider.username}"),
                           BizappText(text: "Nama:  ${provider.nama}"),
                           BizappText(text: "Pakej:  ${provider.roleid}"),
-                          BizappText(
-                              text:
-                                  "Tarikh naik taraf:  ${provider.tarikhnaiktaraf}"),
-                          Text("Tarikh tamat:  ${provider.tarikhtamat}",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red)),
-                          Text("Tarikh sekarang: $formattedDate",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green)),
-                          // const Text("Status: Aktif",
-                          //     style: TextStyle(
-                          //         fontSize: 16,
-                          //         fontWeight: FontWeight.bold,
-                          //         color: Colors.green)),
-                          //_tips(),
+                          BizappText(text: "Tarikh naik taraf:  ${provider.tarikhnaiktaraf}"),
+                          Text("Tarikh tamat:  ${provider.tarikhtamat}", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red)),
+                          Text("Tarikh sekarang: $formattedDate", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green)),
                           provider.basicplusonly != "-" &&
                                   provider.basicplusonly != ""
                               ? BizappText(
@@ -236,8 +172,7 @@ class _TestRenewState extends State<TestRenew> {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment
-                          .center, // Center align content horizontally
+                      mainAxisAlignment: MainAxisAlignment.center, // Center align content horizontally
                       children: [
                         SizedBox(height: 5), // Add space above the text
                         BizappText(text: 'Senarai rekod 5 terakhir: '),
