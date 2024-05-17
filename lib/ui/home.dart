@@ -1,4 +1,5 @@
-import 'package:bizapptrack/ui/others.dart';
+//import 'package:bizapptrack/ui/inactive.dart';
+import 'package:bizapptrack/ui/newRenew.dart';
 import 'package:flutter/material.dart';
 import 'package:bizapptrack/ui/listToExcel.dart';
 import 'package:bizapptrack/ui/login.dart';
@@ -14,6 +15,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    final buttonWidth = 200.0;
+    final buttonHeight = 50.0;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -108,36 +112,57 @@ class _HomePageState extends State<HomePage> {
                         'Bizapp User Status',
                         style: TextStyle(
                           color: const Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 24,
+                          fontSize: 32,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 40.0),
+                      // SizedBox(height: 30.0),
+                      // ElevatedButton.icon(
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(builder: (context) => ListToExcel()),
+                      //     );
+                      //   },
+                      //   icon: Icon(Icons.file_download, size: 40.0), // Set icon size
+                      //   label: Padding(
+                      //     padding: EdgeInsets.symmetric(vertical: 16.0),
+                      //     child: Text(
+                      //       'Export Excel',
+                      //       style: TextStyle(fontSize: 14.0), // Set button text size
+                      //     ),
+                      //   ),
+                      //   style: ElevatedButton.styleFrom(
+                      //     foregroundColor: Colors.black,
+                      //     backgroundColor: Colors.grey,
+                      //     shape: RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.circular(10.0),
+                      //     ), // Text color
+                      //   ),
+                      // ),
+                      SizedBox(height: 70.0),
                       SizedBox(
-                        width: 250.0, // Set the desired width
-                        height: 80.0, // Set the desired height
+                        width: buttonWidth,
+                        height: buttonHeight,
                         child: ElevatedButton.icon(
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => TestRenew()),
+                              MaterialPageRoute(builder: (context) => NewCustomer()),
                             );
                           },
-                          icon: Icon(Icons.person_add,
-                              size: 40.0), // Set icon size
+                          icon: Icon(Icons.fiber_new, size: 30.0), // Set icon size
                           label: Padding(
                             padding: EdgeInsets.symmetric(vertical: 16.0),
                             child: Text(
-                              'New/Renew',
-                              style: TextStyle(
-                                  fontSize: 16.0), // Set button text size
+                              'New & Renew',
+                              style: TextStyle(fontSize: 14.0), // Set button text size
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.black,
-                            backgroundColor: Color(0xFFC8E4FF),
+                            backgroundColor: Color.fromARGB(255, 173, 185, 242),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ), // Text color
@@ -146,95 +171,88 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(height: 30.0),
                       SizedBox(
-                        width: 250.0, // Set the desired width
-                        height: 80.0, // Set the desired height
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ListToExcel()),
-                            );
-                          },
-                          icon: Icon(Icons.pending_actions,
-                              size: 40.0), // Set icon size
-                          label: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16.0),
-                            child: Text(
-                              'Expiring',
-                              style: TextStyle(
-                                  fontSize: 16.0), // Set button text size
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.black,
-                            backgroundColor: Color(0xFFFBD58A),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ), // Text color
+                        width: buttonWidth,
+                        height: buttonHeight,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => NewCustomer()),
+                          );
+                        },
+                        icon: Icon(Icons.remove_circle_outline, size: 30.0), // Set icon size
+                        label: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: Text(
+                            'Inactive',
+                            style: TextStyle(fontSize: 14.0), // Set button text size
                           ),
                         ),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black,
+                          backgroundColor: Color.fromARGB(255, 255, 228, 138),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ), // Text color
+                        ),
+                      ), 
                       ),
                       SizedBox(height: 30.0),
                       SizedBox(
-                        width: 250.0, // Set the desired width
-                        height: 80.0, // Set the desired height
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OthersPage()),
-                            );
-                          },
-                          icon: Icon(Icons.highlight_off,
-                              size: 40.0), // Set icon size
-                          label: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16.0),
-                            child: Text(
-                              'Inactive',
-                              style: TextStyle(
-                                  fontSize: 16.0), // Set button text size
-                            ),
+                        width: buttonWidth,
+                        height: buttonHeight,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => TestRenew()),
+                          );
+                        },
+                        icon: Icon(Icons.access_time, size: 30.0), // Set icon size
+                        label: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: Text(
+                            'Expiring',
+                            style: TextStyle(fontSize: 14.0), // Set button text size
                           ),
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.black,
-                            backgroundColor: Color(0xFFFDB1B1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ), // Text color
-                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black,
+                          backgroundColor: Color.fromARGB(255, 255, 172, 172),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ), // Text color
                         ),
                       ),
+                      ),
+
                       SizedBox(height: 30.0),
                       SizedBox(
-                        width: 250.0, // Set the desired width
-                        height: 80.0, // Set the desired height
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OthersPage()),
-                            );
-                          },
-                          icon: Icon(Icons.queue, size: 40.0), // Set icon size
-                          label: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16.0),
-                            child: Text(
-                              'Others',
-                              style: TextStyle(
-                                  fontSize: 16.0), // Set button text size
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.black,
-                            backgroundColor: Colors.grey,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ), // Text color
+                        width: buttonWidth,
+                        height: buttonHeight,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => TestRenew()),
+                          );
+                        },
+                        icon: Icon(Icons.category, size: 30.0), // Set icon size
+                        label: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: Text(
+                            'Others',
+                            style: TextStyle(fontSize: 14.0), // Set button text size
                           ),
                         ),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black,
+                          backgroundColor: const Color.fromARGB(255, 197, 196, 196),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ), // Text color
+                        ),
+                      ),
                       ),
                     ],
                   ),
