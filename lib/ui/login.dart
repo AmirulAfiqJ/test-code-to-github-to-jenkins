@@ -21,54 +21,73 @@ class _LoginFormState extends State<LoginForm> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  final Map<String, String> validCredentials = {
-  'khai@bizapp.my': 'khaibiz',
-  'miza@bizapp.my': 'mizabiz',
-  'zurah@bizapp.my': 'zurahbiz',
-};
+  final Map<String, Map<String, String>> validCredentials = {
+    'khai@bizapp.my': {'username': 'Khai', 'password': 'khaibiz'},
+    'miza@bizapp.my': {'username': 'Miza', 'password': 'mizabiz'},
+    'zurah@bizapp.my': {'username': 'Zurah', 'password': 'zurahbiz'},
+  };
 
-String message = '';
+  String message = '';
 
-// Password validation rules
-String? validatePassword(String value) {
-  if (value.isEmpty) {
-    return 'Password cannot be empty';
-  } else if (value.length < 6) {
-    return 'Password must be at least 6 characters long';
+  // Password validation rules
+  String? validatePassword(String value) {
+    if (value.isEmpty) {
+      return 'Password cannot be empty';
+    } else if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+    return null; // Return null if password is valid
   }
-  return null; // Return null if password is valid
-}
 
-// Toggles the password visibility
-bool _isPasswordVisible = false;
-void _togglePasswordVisibility() {
-  setState(() {
-    _isPasswordVisible = !_isPasswordVisible;
-  });
-}
+  // Toggles the password visibility
+  bool _isPasswordVisible = false;
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordVisible = !_isPasswordVisible;
+    });
+  }
 
-// Method to handle login button pressed
-void _loginPressed(BuildContext context) {
-  String email = emailController.text;
-  String password = passwordController.text;
+  // Method to handle login button pressed
+  void _loginPressed(BuildContext context) {
+    String email = emailController.text;
+    String password = passwordController.text;
 
-  String lowerCaseEmail = email.toLowerCase();
+    String lowerCaseEmail = email.toLowerCase();
 
-  // Check email and password combination
-  if (validCredentials.containsKey(lowerCaseEmail)) {
-    if (validCredentials[lowerCaseEmail] == password) {
-      // Navigate to Home Page after successful login
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()), // Navigate to HomePage
-      );
+    // Check email and password combination
+    if (validCredentials.containsKey(lowerCaseEmail)) {
+      if (validCredentials[lowerCaseEmail]!['password'] == password) {
+        String username = validCredentials[lowerCaseEmail]!['username']!;
+        // Navigate to Home Page after successful login
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(username: username), // Pass username to HomePage
+          ),
+        );
+      } else {
+        // Show error message if email and password do not match
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Login Failed'),
+            content: Text('Email and password do not match.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     } else {
-      // Show error message if email and password do not match
+      // Show error message if email does not exist in the validCredentials map
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Login Failed'),
-          content: Text('Email and password do not match.'),
+          content: Text('You do not have access to this website.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -78,23 +97,7 @@ void _loginPressed(BuildContext context) {
         ),
       );
     }
-  } else {
-    // Show error message if email does not exist in the validCredentials map
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Login Failed'),
-        content: Text('You do not have access to this website.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {
