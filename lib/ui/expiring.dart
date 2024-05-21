@@ -1,110 +1,76 @@
-import 'package:bizapptrack/ui/button.dart';
-import 'package:bizapptrack/ui/dataUser.dart';
-import 'package:bizapptrack/ui/listToExcel.dart';
-import 'package:bizapptrack/ui/loadingWidget.dart';
-import 'package:bizapptrack/ui/sideNav.dart';
-import 'package:bizapptrack/ui/update.dart';
-import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
+// new_customer_view.dart
+import 'package:bizapptrack/viewmodel/expiringViewmodel.dart';
+import 'package:bizapptrack/viewmodel/inactiveViewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
+import 'package:bizapptrack/ui/sideNav.dart';
+import 'package:bizapptrack/viewmodel/expiringViewmodel.dart';
 import 'customAppBar.dart';
 
-class Expiring extends StatefulWidget {
-  const Expiring({super.key});
-
-  @override
-  State<Expiring> createState() => _ExpiringState();
-}
-
-class _ExpiringState extends State<Expiring> {
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController noteController = TextEditingController(); // Controller for the note text field
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _userName = 'John';
-  
-  // Add state variables for dropdowns
-  String _selectedNumber = 'Select';
-  String _selectedCallStatus = 'Select Status';
-  String _selectedFeedback = 'Select Feedback';
-  String _selectedAction = 'Select Action';
-  String _selectedFollowUp = 'Select Follow Up';
-
-  void _performSearch() async {
-    StatusController model =
-        Provider.of<StatusController>(context, listen: false);
-    setState(() {
-      model.call = true;
-    });
-    try {
-      await model.loginServices(context, userid: usernameController.text);
-    } finally {
-      setState(() {
-        model.call = false;
-      });
-    }
-  }
-
-  void _clearSelections() {
-    setState(() {
-      _selectedNumber = 'Select';
-      _selectedCallStatus = 'Select Status';
-      _selectedFeedback = 'Select Feedback';
-      _selectedAction = 'Select Action';
-      _selectedFollowUp = 'Select Follow Up';
-      noteController.clear();
-    });
-  }
+class Expiring extends StatelessWidget {
+  Expiring({super.key});
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.white,
-      appBar: CustomAppBar(userName: _userName, scaffoldKey: _scaffoldKey),
-      body: LayoutBuilder(
-        builder: (context, constraints) => Consumer<StatusController>(
-          builder: (context, model, child) {
-            return SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    const Header(),
-                    const SizedBox(height: 20),
-                    _buildSearchSection(),
-                    const SizedBox(height: 20),
-                    model.call ? CircularProgressIndicator(color: Colors.red) : _buildUserDetailsSection(model),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
+    return ChangeNotifierProvider(
+      create: (_) => ExpiringViewmodel(),
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Colors.white,
+        appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Consumer<ExpiringViewmodel>(
+              builder: (context, model, child) {
+                return SingleChildScrollView(
+                  child: Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        const Header(),
+                        const SizedBox(height: 20),
+                        _buildSearchSection(model, context),
+                        const SizedBox(height: 20),
+                        model.isLoading 
+                          ? CircularProgressIndicator(color: Colors.red) 
+                          : _buildUserDetailsSection(context, model),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
           },
         ),
+        drawer: SideDrawer(),
       ),
-      drawer: SideDrawer(),
     );
   }
 
-  Widget _buildSearchSection() {
+  Widget _buildSearchSection(ExpiringViewmodel model, BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         FormStatus(
-          controller: usernameController,
-          onSearch: _performSearch,
+          controller: model.usernameController,
+          onSearch: () => model.performSearch(context),
         ),
         IconButton(
           icon: Icon(Icons.search),
-          onPressed: _performSearch,
+          onPressed: () => model.performSearch(context),
         ),
         const SizedBox(width: 10),
       ],
     );
   }
 
-  Widget _buildUserDetailsSection(StatusController model) {
+  Widget _buildUserDetailsSection(BuildContext context, ExpiringViewmodel model) {
+    final statusModel = Provider.of<StatusController>(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 50.0),
       child: Row(
@@ -122,22 +88,22 @@ class _ExpiringState extends State<Expiring> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Bizapp ID: " + "${model.username}",
+                    "Bizapp ID: ${statusModel.username}",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "Package: ${model.roleid}",
+                    "Package: ${statusModel.roleid}",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 50),
                   Text(
-                    "Name: ${model.nama}",
+                    "Name: ${statusModel.nama}",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "Email: ${model.email}",
+                    "Email: ${statusModel.email}",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 15),
@@ -154,191 +120,44 @@ class _ExpiringState extends State<Expiring> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Number: ',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    DropdownButton<String>(
-                      value: _selectedNumber,
-                      items: <String>['Select', 'BualAsia', 'Office HP', 'Personal HP']
-                          .map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedNumber = newValue!;
-                        });
-                      },
-                    ),
-                  ],
+                _buildDropdown(
+                  label: 'Number',
+                  value: model.selectedNumber,
+                  items: model.numberItems,
+                  onChanged: model.setSelectedNumber,
                 ),
-                SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Call status: ',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    DropdownButton<String>(
-                      value: _selectedCallStatus,
-                      items: <String>['Select Status', 'Did Not Call', 'Picked Up','Ringing','Not in service','Wrong Number','Changed PIC']
-                          .map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedCallStatus = newValue!;
-                        });
-                      },
-                    ),
-                  ],
+                _buildDropdown(
+                  label: 'Call status',
+                  value: model.selectedCallStatus,
+                  items: model.callStatusItems,
+                  onChanged: model.setSelectedCallStatus,
                 ),
-                SizedBox(height:5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Feedback: ',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    DropdownButton<String>(
-                      value: _selectedFeedback,
-                      items: <String>[
-                        'Select Feedback',
-                        'Irrelevant, Renewed',
-                        'Bad experience',
-                        'Bad support',
-                        'Change business model',
-                        'Stop business',
-                        'Fifty-fifty',
-                        'Unknown reason',
-                        'Use another BIZAPP ID',
-                        'Other'
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedFeedback = newValue!;
-                        });
-                      },
-                    ),
-                  ],
+                _buildDropdown(
+                  label: 'Feedback',
+                  value: model.selectedFeedback,
+                  items: model.feedbackItems,
+                  onChanged: model.setSelectedFeedback,
                 ),
-
-                SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Action: ',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    DropdownButton<String>(
-                      value: _selectedAction,
-                      items: <String>[
-                        'Select Action',
-                        'Not priority to call',
-                        'Call, to follow up',
-                        'Offer Demo',
-                        'Offer Bizapp 101',
-                        'Offer Bizapp A-Z',
-                        'Offer Dedicated Support',
-                        'Offer EjenPro',
-                        'Offer Upgrade',
-                        'To Management'
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedAction = newValue!;
-                        });
-                      },
-                    ),
-                  ],
+                _buildDropdown(
+                  label: 'Action',
+                  value: model.selectedAction,
+                  items: model.actionItems,
+                  onChanged: model.setSelectedAction,
                 ),
-                SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Follow up: ',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    DropdownButton<String>(
-                      value: _selectedFollowUp,
-                      items: <String>[
-                        'Select Follow Up',
-                        'Irrelevent',
-                        'Informed Management',
-                        'WhatsApp',
-                        'Emailed',
-                        'WhatsApp & Emailed',
-                        'Joined 101',
-                        'Registered A-Z',
-                        'Subscribed Dedicated Support',
-                        'Subscribed EjenPro',
-                        'Upgrade Package'
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedFollowUp = newValue!;
-                        });
-                      },
-                    ),
-                  ],
+                _buildDropdown(
+                  label: 'Follow up',
+                  value: model.selectedFollowUp,
+                  items: model.followUpItems,
+                  onChanged: model.setSelectedFollowUp,
                 ),
-                SizedBox(width: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Note: ',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
+                    Text('Note: ', style: TextStyle(fontSize: 18)),
                     SizedBox(width: 15),
                     Expanded(
                       child: TextFormField(
-                        controller: noteController,
+                        controller: model.noteController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Enter note',
@@ -356,20 +175,14 @@ class _ExpiringState extends State<Expiring> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 125, 212, 98),
                       ),
-                      child: Text(
-                        'Update',
-                        style: TextStyle(color: Colors.black),
-                      ),
+                      child: Text('Update', style: TextStyle(color: Colors.black)),
                     ),
                     ElevatedButton(
-                      onPressed: _clearSelections,
+                      onPressed: model.clearSelections,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 255, 109, 99),
                       ),
-                      child: Text(
-                        'Clear',
-                        style: TextStyle(color: Colors.black),
-                      ),
+                      child: Text('Clear', style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ),
@@ -381,7 +194,32 @@ class _ExpiringState extends State<Expiring> {
     );
   }
 
- 
+  Widget _buildDropdown({
+    required String label,
+    required String value,
+    required List<String> items,
+    required void Function(String) onChanged,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text('$label: ', style: TextStyle(fontSize: 18)),
+        SizedBox(width: 10),
+        DropdownButton<String>(
+          value: value,
+          items: items.map((String item) {
+            return DropdownMenuItem<String>(
+              value: item,
+              child: Text(item),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            onChanged(newValue!);
+          },
+        ),
+      ],
+    );
+  }
 }
 
 class Header extends StatelessWidget {
