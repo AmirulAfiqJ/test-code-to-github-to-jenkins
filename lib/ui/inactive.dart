@@ -1,15 +1,15 @@
-// new_customer_view.dart
 import 'package:bizapptrack/viewmodel/inactiveViewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:bizapptrack/ui/sideNav.dart';
-import 'package:bizapptrack/viewmodel/inactiveViewmodel.dart';
 import 'customAppBar.dart';
 
 class Inactive extends StatelessWidget {
-  Inactive({super.key});
+    final String username;
+
+  Inactive({super.key, required this.username});
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -19,7 +19,7 @@ class Inactive extends StatelessWidget {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
+        appBar: CustomAppBar(username: username, scaffoldKey: _scaffoldKey),
         body: LayoutBuilder(
           builder: (context, constraints) {
             return Consumer<InactiveViewmodel>(
@@ -45,7 +45,7 @@ class Inactive extends StatelessWidget {
             );
           },
         ),
-        drawer: SideDrawer(),
+        drawer: SideDrawer(username: username),
       ),
     );
   }
@@ -102,7 +102,7 @@ class Inactive extends StatelessWidget {
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "Email: ${statusModel.email}",
+                    "Email: ",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 15),

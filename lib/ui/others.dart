@@ -1,9 +1,5 @@
-import 'package:bizapptrack/ui/button.dart';
-import 'package:bizapptrack/ui/dataUser.dart';
-import 'package:bizapptrack/ui/listToExcel.dart';
-import 'package:bizapptrack/ui/loadingWidget.dart';
+
 import 'package:bizapptrack/ui/sideNav.dart';
-import 'package:bizapptrack/ui/update.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +7,8 @@ import 'package:provider/provider.dart';
 import 'customAppBar.dart';
 
 class Others extends StatefulWidget {
-  const Others({super.key});
+  final String username;
+  Others({required this.username});
 
   @override
   State<Others> createState() => _OthersState();
@@ -64,7 +61,7 @@ class _OthersState extends State<Others> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(userName: _userName, scaffoldKey: _scaffoldKey),
+      appBar: CustomAppBar(username: widget.username, scaffoldKey: _scaffoldKey),
       body: LayoutBuilder(
         builder: (context, constraints) => Consumer<StatusController>(
           builder: (context, model, child) {
@@ -86,7 +83,7 @@ class _OthersState extends State<Others> {
           },
         ),
       ),
-      drawer: SideDrawer(),
+      drawer: SideDrawer(username: widget.username),
     );
   }
 
@@ -140,7 +137,7 @@ class _OthersState extends State<Others> {
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "Email: ${model.email}",
+                    "Email: ",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 15),

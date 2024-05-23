@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:bizapptrack/ui/login.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String userName;
+  final String username;
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  CustomAppBar({required this.userName, required this.scaffoldKey});
+  CustomAppBar({required this.username, required this.scaffoldKey});
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -35,7 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: Icon(Icons.account_circle, color: Color.fromARGB(255, 237, 245, 255)),
             itemBuilder: (BuildContext context) => [
               PopupMenuItem(
-                child: Text('Welcome, $userName'),
+                child: Text('Welcome, $username'),
                 enabled: false,
               ),
               PopupMenuItem(

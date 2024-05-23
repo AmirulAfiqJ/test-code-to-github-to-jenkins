@@ -1,6 +1,6 @@
 import 'package:bizapptrack/ui/home.dart';
+import 'package:bizapptrack/viewmodel/login_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:bizapptrack/ui/status.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -18,29 +18,10 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
-  final Map<String, Map<String, String>> validCredentials = {
-    'khai@bizapp.my': {'username': 'Khai', 'password': 'khaibiz'},
-    'miza@bizapp.my': {'username': 'Miza', 'password': 'mizabiz'},
-    'zurah@bizapp.my': {'username': 'Zurah', 'password': 'zurahbiz'},
-  };
-
-  String message = '';
-
-  // Password validation rules
-  String? validatePassword(String value) {
-    if (value.isEmpty) {
-      return 'Password cannot be empty';
-    } else if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
-    }
-    return null; // Return null if password is valid
-  }
+  LoginViewModel viewModel = LoginViewModel();
+  bool _isPasswordVisible = false;
 
   // Toggles the password visibility
-  bool _isPasswordVisible = false;
   void _togglePasswordVisibility() {
     setState(() {
       _isPasswordVisible = !_isPasswordVisible;
@@ -49,54 +30,55 @@ class _LoginFormState extends State<LoginForm> {
 
   // Method to handle login button pressed
   void _loginPressed(BuildContext context) {
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    String lowerCaseEmail = email.toLowerCase();
+    String email = viewModel.emailController.text.toLowerCase();
+    String password = viewModel.passwordController.text;
 
     // Check email and password combination
-    if (validCredentials.containsKey(lowerCaseEmail)) {
-      if (validCredentials[lowerCaseEmail]!['password'] == password) {
-        String username = validCredentials[lowerCaseEmail]!['username']!;
-        // Navigate to Home Page after successful login
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(username: username), // Pass username to HomePage
-          ),
-        );
-      } else {
-        // Show error message if email and password do not match
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Login Failed'),
-            content: Text('Email and password do not match.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    } else {
-      // Show error message if email does not exist in the validCredentials map
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Login Failed'),
-          content: Text('You do not have access to this website.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
+    for (var user in viewModel.loginList) {
+      if (user.email.toLowerCase() == email) {
+        if (user.password == password) {
+          // Successful login
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(username: user.username),
             ),
-          ],
-        ),
-      );
+          );
+          return;
+        } else {
+          // Show error message if email and password do not match
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Login Failed'),
+              content: Text('Email and password do not match.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+          return;
+        }
+      }
     }
+
+    // Show error message if email does not exist in the validCredentials map
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Login Failed'),
+        content: Text('You do not have access to this website.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -110,7 +92,7 @@ class _LoginFormState extends State<LoginForm> {
           Container(
             width: MediaQuery.of(context).size.width * 0.4,
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 198, 197, 197), // Set container color
+              color: Color.fromARGB(255, 198, 197, 197),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20.0),
                 bottomLeft: Radius.circular(20.0),
@@ -125,20 +107,20 @@ class _LoginFormState extends State<LoginForm> {
                     Text(
                       'Bizapp Back Office',
                       style: TextStyle(
-                        fontSize: 24, // Adjust font size as needed
-                        fontWeight: FontWeight.bold, // Make the title bold
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 50), // Add spacing below the title
+                    SizedBox(height: 50),
                     TextField(
-                      controller: emailController,
+                      controller: viewModel.emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
                       ),
                     ),
                     SizedBox(height: 20),
                     TextField(
-                      controller: passwordController,
+                      controller: viewModel.passwordController,
                       obscureText: !_isPasswordVisible,
                       decoration: InputDecoration(
                         labelText: 'Password',
@@ -157,7 +139,7 @@ class _LoginFormState extends State<LoginForm> {
                     ElevatedButton(
                       onPressed: () => _loginPressed(context),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white, // Button color
+                        backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -179,7 +161,7 @@ class _LoginFormState extends State<LoginForm> {
           Container(
             width: MediaQuery.of(context).size.width * 0.4,
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 50, 49, 49), // Set container color
+              color: Color.fromARGB(255, 50, 49, 49),
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20.0),
                 bottomRight: Radius.circular(20.0),
@@ -192,18 +174,18 @@ class _LoginFormState extends State<LoginForm> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.network(
-                      'https://static.vecteezy.com/system/resources/previews/010/872/897/non_2x/3d-graphic-designer-working-in-office-png.png', // Provide the path to your logo image
-                      width: 300, // Adjust width as needed
-                      height: 300, // Adjust height as needed
-                      // You can also use other properties like fit, alignment, etc.
+                      'https://static.vecteezy.com/system/resources/previews/010/872/897/non_2x/3d-graphic-designer-working-in-office-png.png',
+                      width: 300,
+                      height: 300,
                     ),
                     SizedBox(height: 60),
                     Text(
                       'Hello, welcome to Bizapp Back Office!',
                       style: TextStyle(
-                          fontSize: 22,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white),
+                        fontSize: 22,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
@@ -214,4 +196,10 @@ class _LoginFormState extends State<LoginForm> {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: LoginPage(),
+  ));
 }

@@ -1,9 +1,7 @@
 import 'package:bizapptrack/ui/button.dart';
-import 'package:bizapptrack/ui/dataUser.dart';
-import 'package:bizapptrack/env.dart';
+import 'package:bizapptrack/ui/dataUser.dart'; 
 import 'package:bizapptrack/ui/listToExcel.dart';
-import 'package:bizapptrack/ui/loadingWidget.dart';
-import 'package:bizapptrack/ui/login.dart';
+import 'package:bizapptrack/ui/loadingWidget.dart'; 
 import 'package:bizapptrack/ui/sideNav.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +49,7 @@ class _TestRenewState extends State<TestRenew> {
         tapCallback: () => Navigator.push(context,
             MaterialPageRoute(builder: (context) => const ListToExcel())),
       ),
-      appBar: CustomAppBar(userName: _userName, scaffoldKey: _scaffoldKey), // Use custom app bar
+      appBar: CustomAppBar(username: _userName, scaffoldKey: _scaffoldKey), // Use custom app bar
       body: LayoutBuilder(
         builder: (context, constraints) => Consumer<StatusController>(
           builder: (context, model, child) {
@@ -85,7 +83,7 @@ class _TestRenewState extends State<TestRenew> {
           },
         ),
       ),
-      drawer: SideDrawer(),
+      drawer: SideDrawer(username: '',),
     );
   }
 

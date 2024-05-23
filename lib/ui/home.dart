@@ -1,10 +1,10 @@
-//import 'package:bizapptrack/ui/inactive.dart';
+import 'package:bizapptrack/ui/expiring.dart';
+import 'package:bizapptrack/ui/inactive.dart';
 import 'package:bizapptrack/ui/newRenew.dart';
+import 'package:bizapptrack/ui/others.dart';
+import 'package:bizapptrack/ui/support.dart';
 import 'package:flutter/material.dart';
-import 'package:bizapptrack/ui/listToExcel.dart';
 import 'package:bizapptrack/ui/login.dart';
-import 'package:bizapptrack/ui/status.dart'; // Import your TestRenew page/widget
-
 class HomePage extends StatefulWidget {
   final String username;
   HomePage({required this.username});
@@ -117,30 +117,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      // SizedBox(height: 30.0),
-                      // ElevatedButton.icon(
-                      //   onPressed: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(builder: (context) => ListToExcel()),
-                      //     );
-                      //   },
-                      //   icon: Icon(Icons.file_download, size: 40.0), // Set icon size
-                      //   label: Padding(
-                      //     padding: EdgeInsets.symmetric(vertical: 16.0),
-                      //     child: Text(
-                      //       'Export Excel',
-                      //       style: TextStyle(fontSize: 14.0), // Set button text size
-                      //     ),
-                      //   ),
-                      //   style: ElevatedButton.styleFrom(
-                      //     foregroundColor: Colors.black,
-                      //     backgroundColor: Colors.grey,
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(10.0),
-                      //     ), // Text color
-                      //   ),
-                      // ),
                       SizedBox(height: 70.0),
                       SizedBox(
                         width: buttonWidth,
@@ -149,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => NewCustomer()),
+                              MaterialPageRoute(builder: (context) => NewCustomer(username: widget.username)),
                             );
                           },
                           icon: Icon(Icons.fiber_new, size: 30.0), // Set icon size
@@ -177,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => NewCustomer()),
+                            MaterialPageRoute(builder: (context) => Inactive(username: widget.username)),
                           );
                         },
                         icon: Icon(Icons.remove_circle_outline, size: 30.0), // Set icon size
@@ -205,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => TestRenew()),
+                            MaterialPageRoute(builder: (context) => Expiring(username: widget.username)),
                           );
                         },
                         icon: Icon(Icons.access_time, size: 30.0), // Set icon size
@@ -234,7 +210,7 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => TestRenew()),
+                            MaterialPageRoute(builder: (context) => Others(username: widget.username)),
                           );
                         },
                         icon: Icon(Icons.category, size: 30.0), // Set icon size
@@ -248,6 +224,34 @@ class _HomePageState extends State<HomePage> {
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.black,
                           backgroundColor: const Color.fromARGB(255, 197, 196, 196),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ), // Text color
+                        ),
+                      ),
+                      ),
+                      SizedBox(height: 30.0),
+                      SizedBox(
+                        width: buttonWidth,
+                        height: buttonHeight,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SupportPage(username: widget.username)),
+                          );
+                        },
+                        icon: Icon(Icons.category, size: 30.0), // Set icon size
+                        label: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: Text(
+                            'Support',
+                            style: TextStyle(fontSize: 14.0), // Set button text size
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black,
+                          backgroundColor: Color.fromARGB(255, 112, 211, 101),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ), // Text color

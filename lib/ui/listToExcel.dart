@@ -1,8 +1,6 @@
 import 'package:bizapptrack/ui/button.dart';
-import 'package:bizapptrack/ui/customAppBar.dart';
-import 'package:bizapptrack/ui/login.dart';
-import 'package:bizapptrack/ui/sideNav.dart';
-import 'package:bizapptrack/ui/status.dart';
+import 'package:bizapptrack/ui/customAppBar.dart'; 
+import 'package:bizapptrack/ui/sideNav.dart'; 
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -55,8 +53,8 @@ class _ListToExcelState extends State<ListToExcel> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      appBar: CustomAppBar(userName: _userName, scaffoldKey: _scaffoldKey),
-      drawer: SideDrawer(),
+      appBar: CustomAppBar(username: _userName, scaffoldKey: _scaffoldKey),
+      drawer: SideDrawer(username: '',),
       body: _body(),  
         );
   }

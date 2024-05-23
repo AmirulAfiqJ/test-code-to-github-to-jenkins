@@ -1,4 +1,3 @@
-// new_customer_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +18,7 @@ class NewCustomer extends StatelessWidget {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
+        appBar: CustomAppBar(username: username, scaffoldKey: _scaffoldKey),
         body: LayoutBuilder(
           builder: (context, constraints) {
             return Consumer<NewCustomerViewModel>(
@@ -45,7 +44,7 @@ class NewCustomer extends StatelessWidget {
             );
           },
         ),
-        drawer: SideDrawer(),
+        drawer: SideDrawer(username: username),
       ),
     );
   }
@@ -102,7 +101,7 @@ class NewCustomer extends StatelessWidget {
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "Email: ${statusModel.email}",
+                    "Email: ",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 15),

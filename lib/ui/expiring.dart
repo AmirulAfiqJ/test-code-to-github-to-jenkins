@@ -1,17 +1,16 @@
 // new_customer_view.dart
-import 'package:bizapptrack/viewmodel/expiringViewmodel.dart';
-import 'package:bizapptrack/viewmodel/inactiveViewmodel.dart';
+import 'package:bizapptrack/viewmodel/expiringViewmodel.dart'; 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
-import 'package:bizapptrack/ui/sideNav.dart';
-import 'package:bizapptrack/viewmodel/expiringViewmodel.dart';
+import 'package:bizapptrack/ui/sideNav.dart'; 
 import 'customAppBar.dart';
 
 class Expiring extends StatelessWidget {
-  Expiring({super.key});
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final String username;
+  Expiring({super.key, required this.username});
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,7 @@ class Expiring extends StatelessWidget {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
+        appBar: CustomAppBar(username: username, scaffoldKey: _scaffoldKey),
         body: LayoutBuilder(
           builder: (context, constraints) {
             return Consumer<ExpiringViewmodel>(
@@ -34,9 +33,9 @@ class Expiring extends StatelessWidget {
                         const SizedBox(height: 20),
                         _buildSearchSection(model, context),
                         const SizedBox(height: 20),
-                        model.isLoading 
-                          ? CircularProgressIndicator(color: Colors.red) 
-                          : _buildUserDetailsSection(context, model),
+                        model.isLoading
+                            ? CircularProgressIndicator(color: Colors.red)
+                            : _buildUserDetailsSection(context, model),
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -46,7 +45,7 @@ class Expiring extends StatelessWidget {
             );
           },
         ),
-        drawer: SideDrawer(),
+        drawer: SideDrawer(username: username),
       ),
     );
   }
@@ -68,7 +67,8 @@ class Expiring extends StatelessWidget {
     );
   }
 
-  Widget _buildUserDetailsSection(BuildContext context, ExpiringViewmodel model) {
+  Widget _buildUserDetailsSection(
+      BuildContext context, ExpiringViewmodel model) {
     final statusModel = Provider.of<StatusController>(context);
 
     return Padding(
@@ -103,7 +103,7 @@ class Expiring extends StatelessWidget {
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "Email: ${statusModel.email}",
+                    "Email: ",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 15),
@@ -175,14 +175,16 @@ class Expiring extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 125, 212, 98),
                       ),
-                      child: Text('Update', style: TextStyle(color: Colors.black)),
+                      child:
+                          Text('Update', style: TextStyle(color: Colors.black)),
                     ),
                     ElevatedButton(
                       onPressed: model.clearSelections,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 255, 109, 99),
                       ),
-                      child: Text('Clear', style: TextStyle(color: Colors.black)),
+                      child:
+                          Text('Clear', style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ),
@@ -243,7 +245,8 @@ class Header extends StatelessWidget {
 class FormStatus extends StatelessWidget {
   final TextEditingController controller;
   final Function() onSearch;
-  const FormStatus({super.key, required this.controller, required this.onSearch});
+  const FormStatus(
+      {super.key, required this.controller, required this.onSearch});
 
   @override
   Widget build(BuildContext context) {
