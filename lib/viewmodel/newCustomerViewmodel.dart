@@ -1,4 +1,3 @@
-// new_customer_viewmodel.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';

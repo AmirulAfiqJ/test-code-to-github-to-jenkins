@@ -36,8 +36,8 @@ class _SupportPageState extends State<SupportPage> {
       model.call = true;
     });
     try {
-      await model.loginServices(context,
-          userid: viewModel.usernameController.text);
+      await model.loginServices(context,userid: viewModel.usernameController.text);
+      await model.profile(context, pid: model.pid);
     } finally {
       setState(() {
         model.call = false;
@@ -158,13 +158,13 @@ class _SupportPageState extends State<SupportPage> {
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "Email: ${model.nama}",
+                    "Email: ${model.emel}",
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "No. H/P: ${model.nama}",
+                    "No. H/P: ${model.nohp}",
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),

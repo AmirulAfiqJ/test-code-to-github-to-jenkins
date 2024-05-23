@@ -1,3 +1,5 @@
+import 'package:bizapptrack/ui/dataUser.dart';
+import 'package:bizapptrack/ui/loadingWidget.dart';
 import 'package:bizapptrack/viewmodel/inactiveViewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,7 +38,15 @@ class Inactive extends StatelessWidget {
                         model.isLoading 
                           ? CircularProgressIndicator(color: Colors.red) 
                           : _buildUserDetailsSection(context, model),
-                        const SizedBox(height: 20),
+                        if (!model.isLoading)
+                          Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              _body2(context, constraints),
+                              const SizedBox(height: 20),
+                              _body3(context, constraints),
+                            ],
+                          ),
                       ],
                     ),
                   ),
@@ -63,6 +73,153 @@ class Inactive extends StatelessWidget {
           onPressed: () => model.performSearch(context),
         ),
         const SizedBox(width: 10),
+      ],
+    );
+  }
+
+  Widget _body2(BuildContext context, BoxConstraints constraints) {
+    return context.read<StatusController>().call == false
+        ? Consumer<StatusController>(
+            builder: (context, provider, child) {
+              String upgradeDate = provider.tarikhnaiktaraf;
+              String endDate = provider.tarikhtamat;
+
+              List<String> parts = upgradeDate.split(' ');
+              List<String> parts2 = endDate.split(' ');
+
+              String datePart = parts[0];
+              String datePart2 = parts2[0];
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 1.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(label: Text('Date Start')), // tarikh naik taraf
+                          DataColumn(label: Text('Date End')), // tarikh tamat
+                          DataColumn(label: Text('Last Login')), // tarikh log masuk
+                          DataColumn(label: Text('Last Order')), // tarikh last order
+                          DataColumn(label: Text('Payment')), // payment
+                          DataColumn(label: Text('No. Records')), // rekod tempahan
+                          DataColumn(label: Text('No. Orders')), // bil tempahan
+                          DataColumn(label: Text('No. Agents')), // bil ejen
+                          DataColumn(label: Text('Bizappay')), // ada bizappay
+                          DataColumn(label: Text('Business')), // jenis syarikat
+                        ],
+                        rows: [
+                          DataRow(cells: [
+                            DataCell(Text(datePart)), // tarikhnaiktaraf
+                            DataCell(Text(datePart2)), // tarikhtamat
+                            const DataCell(Text("-")),
+                            const DataCell(Text("-")),
+                            const DataCell(Text("-")),
+                            DataCell(Text(provider.rekodtempahan)),
+                            DataCell(Text(provider.biltempahan)),
+                            DataCell(Text(provider.bilEjen)),
+                            DataCell(Text(provider.bizappayacc)),
+                            DataCell(Text(provider.jenissyarikatname)),
+                          ]),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.4,
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 5),
+                        const Text('Senarai rekod 5 terakhir: '),
+                        const SizedBox(height: 5),
+                        provider.callRekod == false
+                            ? provider.listrekod.isEmpty
+                                ? const Text(
+                                    'Tiada Rekod',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  )
+                                : Center(
+                                    child:
+                                        DataList(listrekod: provider.listrekod),
+                                  )
+                            : const GetLoad(text: "Load data record ..."),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          )
+        : const SizedBox();
+  }
+
+  Widget _body3(BuildContext context, BoxConstraints constraints) {
+    final InactiveViewmodel model =
+        Provider.of<InactiveViewmodel>(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          constraints:
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 1.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: const [
+                DataColumn(label: Text('Category')),
+                DataColumn(label: Text('Date Called')),
+                DataColumn(label: Text('PIC')),
+                DataColumn(label: Text('Number')),
+                DataColumn(label: Text('Call Status')),
+                DataColumn(label: Text('Feedback')),
+                DataColumn(label: Text('Note')),
+                DataColumn(label: Text('Action')),
+                DataColumn(label: Text('Follow Up')),
+              ],
+              rows: [
+                DataRow(cells: [
+                  const DataCell(Text(" ")),
+                  const DataCell(Text(" ")),
+                  const DataCell(Text(" ")),
+                  DataCell(Text(model.selectedNumber)),
+                  DataCell(Text(model.selectedCallStatus)),
+                  DataCell(Text(model.selectedFeedback)),
+                  DataCell(Text(model.noteController.text)),
+                  DataCell(Text(model.selectedAction)),
+                  DataCell(Text(model.selectedFollowUp)),
+                ]),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
       ],
     );
   }
@@ -102,12 +259,12 @@ class Inactive extends StatelessWidget {
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "Email: ",
+                    "Email: ${statusModel.emel}",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "No. H/P: ",
+                    "No. H/P: ${statusModel.nohp}",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -161,6 +318,7 @@ class Inactive extends StatelessWidget {
                           border: OutlineInputBorder(),
                           labelText: 'Enter note',
                         ),
+                      onFieldSubmitted: model.setNoteText,
                       ),
                     ),
                   ],
@@ -170,7 +328,9 @@ class Inactive extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                      model.setNoteText(model.noteController.text);
+                    },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 125, 212, 98),
                       ),

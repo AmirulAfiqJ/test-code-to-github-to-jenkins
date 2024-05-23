@@ -1,4 +1,3 @@
-import 'package:bizapptrack/ui/button.dart';
 import 'package:bizapptrack/ui/dataUser.dart';
 import 'package:bizapptrack/ui/loadingWidget.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +10,8 @@ import 'customAppBar.dart';
 
 class NewCustomer extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  // final String username;
-  NewCustomer({super.key});
+  final String username;
+  NewCustomer({super.key, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -89,16 +88,12 @@ class NewCustomer extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: DataTable(
                         columns: const [
-                          DataColumn(
-                              label: Text('Date Start')), // tarikh naik taraf
+                          DataColumn(label: Text('Date Start')), // tarikh naik taraf
                           DataColumn(label: Text('Date End')), // tarikh tamat
-                          DataColumn(
-                              label: Text('Last Login')), // tarikh log masuk
-                          DataColumn(
-                              label: Text('Last Order')), // tarikh last order
+                          DataColumn(label: Text('Last Login')), // tarikh log masuk
+                          DataColumn(label: Text('Last Order')), // tarikh last order
                           DataColumn(label: Text('Payment')), // payment
-                          DataColumn(
-                              label: Text('No. Records')), // rekod tempahan
+                          DataColumn(label: Text('No. Records')), // rekod tempahan
                           DataColumn(label: Text('No. Orders')), // bil tempahan
                           DataColumn(label: Text('No. Agents')), // bil ejen
                           DataColumn(label: Text('Bizappay')), // ada bizappay
@@ -229,7 +224,7 @@ class NewCustomer extends StatelessWidget {
   }
 
   Widget _buildUserDetailsSection(
-      BuildContext context, NewCustomerViewModel model) {
+    BuildContext context, NewCustomerViewModel model) {
     final statusModel = Provider.of<StatusController>(context);
 
     return Padding(

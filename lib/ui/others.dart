@@ -1,4 +1,5 @@
-
+import 'package:bizapptrack/ui/dataUser.dart';
+import 'package:bizapptrack/ui/loadingWidget.dart';
 import 'package:bizapptrack/ui/sideNav.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +20,10 @@ class _OthersState extends State<Others> {
   TextEditingController purposeController = TextEditingController();
   TextEditingController feedbackController = TextEditingController();
   TextEditingController reasonController = TextEditingController();
-  TextEditingController noteController = TextEditingController(); // Controller for the note text field
+  TextEditingController noteController =
+      TextEditingController(); // Controller for the note text field
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _userName = 'John';
-  
+
   // Add state variables for dropdowns
   String _selectedNumber = 'Select';
   String _selectedCallStatus = 'Select Status';
@@ -36,6 +37,7 @@ class _OthersState extends State<Others> {
     });
     try {
       await model.loginServices(context, userid: usernameController.text);
+      await model.profile(context, pid: model.pid);
     } finally {
       setState(() {
         model.call = false;
@@ -61,7 +63,8 @@ class _OthersState extends State<Others> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(username: widget.username, scaffoldKey: _scaffoldKey),
+      appBar:
+          CustomAppBar(username: widget.username, scaffoldKey: _scaffoldKey),
       body: LayoutBuilder(
         builder: (context, constraints) => Consumer<StatusController>(
           builder: (context, model, child) {
@@ -74,8 +77,13 @@ class _OthersState extends State<Others> {
                     const SizedBox(height: 20),
                     _buildSearchSection(),
                     const SizedBox(height: 20),
-                    model.call ? CircularProgressIndicator(color: Colors.red) : _buildUserDetailsSection(model),
+                    model.call
+                        ? CircularProgressIndicator(color: Colors.red)
+                        : _buildUserDetailsSection(model),
                     const SizedBox(height: 20),
+                    _body2(context, constraints),
+                    const SizedBox(height: 20),
+                    model.call ? const SizedBox.shrink() : _body3(context, constraints),
                   ],
                 ),
               ),
@@ -84,6 +92,157 @@ class _OthersState extends State<Others> {
         ),
       ),
       drawer: SideDrawer(username: widget.username),
+    );
+  }
+
+  Widget _body2(BuildContext context, BoxConstraints constraints) {
+    return context.read<StatusController>().call == false
+        ? Consumer<StatusController>(
+            builder: (context, provider, child) {
+              String upgradeDate = provider.tarikhnaiktaraf;
+              String endDate = provider.tarikhtamat;
+
+              List<String> parts = upgradeDate.split(' ');
+              List<String> parts2 = endDate.split(' ');
+
+              String datePart = parts[0];
+              String datePart2 = parts2[0];
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 1.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(
+                              label: Text('Date Start')), // tarikh naik taraf
+                          DataColumn(label: Text('Date End')), // tarikh tamat
+                          DataColumn(
+                              label: Text('Last Login')), // tarikh log masuk
+                          DataColumn(
+                              label: Text('Last Order')), // tarikh last order
+                          DataColumn(label: Text('Payment')), // payment
+                          DataColumn(
+                              label: Text('No. Records')), // rekod tempahan
+                          DataColumn(label: Text('No. Orders')), // bil tempahan
+                          DataColumn(label: Text('No. Agents')), // bil ejen
+                          DataColumn(label: Text('Bizappay')), // ada bizappay
+                          DataColumn(label: Text('Business')), // jenis syarikat
+                        ],
+                        rows: [
+                          DataRow(cells: [
+                            DataCell(Text(datePart)), // tarikhnaiktaraf
+                            DataCell(Text(datePart2)), // tarikhtamat
+                            const DataCell(Text("-")),
+                            const DataCell(Text("-")),
+                            const DataCell(Text("-")),
+                            DataCell(Text(provider.rekodtempahan)),
+                            DataCell(Text(provider.biltempahan)),
+                            DataCell(Text(provider.bilEjen)),
+                            DataCell(Text(provider.bizappayacc)),
+                            DataCell(Text(provider.jenissyarikatname)),
+                          ]),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.4,
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 5),
+                        const Text('Senarai rekod 5 terakhir: '),
+                        const SizedBox(height: 5),
+                        provider.callRekod == false
+                            ? provider.listrekod.isEmpty
+                                ? const Text(
+                                    'Tiada Rekod',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  )
+                                : Center(
+                                    child:
+                                        DataList(listrekod: provider.listrekod),
+                                  )
+                            : const GetLoad(text: "Load data record ..."),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          )
+        : const SizedBox();
+  }
+
+  Widget _body3(BuildContext context, BoxConstraints constraints) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          constraints:
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 1.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: const [
+                DataColumn(label: Text('Category')),
+                DataColumn(label: Text('Date Called')),
+                DataColumn(label: Text('PIC')),
+                DataColumn(label: Text('Number')),
+                DataColumn(label: Text('Call Status')),
+                DataColumn(label: Text('Purpose')),
+                DataColumn(label: Text('Feedback')),
+                DataColumn(label: Text('Reason')),
+                DataColumn(label: Text('Note')),
+                DataColumn(label: Text('Follow Up')),
+              ],
+              rows: [
+                DataRow(cells: [
+                  const DataCell(Text(" ")),
+                  const DataCell(Text(" ")),
+                  const DataCell(Text(" ")),
+                  DataCell(Text(_selectedNumber)),
+                  DataCell(Text(_selectedCallStatus)),
+                  DataCell(Text(purposeController.text)),
+                  DataCell(Text(feedbackController.text)),
+                  DataCell(Text(reasonController.text)),
+                  DataCell(Text(noteController.text)),
+                  DataCell(Text(_selectedFollowUp)),
+                ]),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+      ],
     );
   }
 
@@ -137,12 +296,12 @@ class _OthersState extends State<Others> {
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "Email: ",
+                    "Email: ${model.emel}",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "No. H/P: ",
+                    "No. H/P: ${model.nohp}",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -166,8 +325,12 @@ class _OthersState extends State<Others> {
                     SizedBox(width: 10),
                     DropdownButton<String>(
                       value: _selectedNumber,
-                      items: <String>['Select', 'BualAsia', 'Office HP', 'Personal HP']
-                          .map((String value) {
+                      items: <String>[
+                        'Select',
+                        'BualAsia',
+                        'Office HP',
+                        'Personal HP'
+                      ].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
@@ -194,8 +357,15 @@ class _OthersState extends State<Others> {
                     SizedBox(width: 10),
                     DropdownButton<String>(
                       value: _selectedCallStatus,
-                      items: <String>['Select Status', 'Did Not Call', 'Picked Up','Ringing','Not in service','Wrong Number','Changed PIC']
-                          .map((String value) {
+                      items: <String>[
+                        'Select Status',
+                        'Did Not Call',
+                        'Picked Up',
+                        'Ringing',
+                        'Not in service',
+                        'Wrong Number',
+                        'Changed PIC'
+                      ].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
@@ -341,7 +511,19 @@ class _OthersState extends State<Others> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          String purpose = purposeController.text;
+                          String feedback = feedbackController.text;
+                          String reason = reasonController.text;
+                          String note = noteController.text;
+
+                          print('Purpose: $purpose');
+                          print('Feedback: $feedback');
+                          print('Reason: $reason');
+                          print('Note: $note');
+                        });
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 125, 212, 98),
                       ),
@@ -369,8 +551,6 @@ class _OthersState extends State<Others> {
       ),
     );
   }
-
- 
 }
 
 class Header extends StatelessWidget {
@@ -394,7 +574,8 @@ class Header extends StatelessWidget {
 class FormStatus extends StatelessWidget {
   final TextEditingController controller;
   final Function() onSearch;
-  const FormStatus({super.key, required this.controller, required this.onSearch});
+  const FormStatus(
+      {super.key, required this.controller, required this.onSearch});
 
   @override
   Widget build(BuildContext context) {

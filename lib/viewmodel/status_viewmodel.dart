@@ -1,37 +1,43 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:bizapptrack/model/listrekodmodel.dart';
 import 'package:bizapptrack/utils/constant.dart';
 import 'package:bizapptrack/env.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class StatusController extends ChangeNotifier{
-
+class StatusController extends ChangeNotifier {
   String username = "";
   String sk = "";
   String nama = "";
+  String emel = "";
+  String nohp = "";
   String roleid = "";
   String tarikhnaiktaraf = "";
   String tarikhtamat = "";
   String basicplusonly = "";
+  String pid = "";
 
   String biltempahan = "-";
   String rekodtempahan = "-";
   String bilEjen = "-";
   String bizappayacc = "-";
+  String jenissyarikatname = "-";
 
   bool call = false;
   bool callDedagang = false;
   bool callRekod = false;
 
   Future loginServices(BuildContext context, {required String userid}) async {
-
     Map<String, dynamic> body = {
       "username": userid,
       "password": Env.cariapa,
       "DOMAIN": "BIZAPP",
-      "platform" : "Android",
-      "lastseenversion" : "",
-      "FCM_TOKEN" : "",
+      "platform": "Android",
+      "lastseenversion": "",
+      "FCM_TOKEN": "",
       "regid": ""
     };
 
@@ -47,44 +53,100 @@ class StatusController extends ChangeNotifier{
       _dedagang(resJSON[0]['pid']).onError((error, stackTrace) {
         callDedagang = false;
         notifyListeners();
-        ScaffoldMessenger.of(context).showSnackBar(snackBarBizapp("error dedagang"));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(snackBarBizapp("error dedagang"));
       });
 
-      _getRekod(resJSON[0]['pid']);
+       _getRekod(resJSON[0]['pid']);
 
-        var report = resJSON[0]['addon_module_rpt'];
+      var report = resJSON[0]['addon_module_rpt'];
 
-        /// to check bizapp package
-        var pakej = "";
-        resJSON[0]['roleid'] == "0" && report == "0" ? pakej = "Basic" :
-        resJSON[0]['roleid'] == "0" && report == "1" ? pakej = "Basic+" :
-        resJSON[0]['roleid'] == "1" ? pakej = "Pro" :
-        resJSON[0]['roleid'] == "2" ? pakej = "Pro" :
-        resJSON[0]['roleid'] == "3" ? pakej = "Ultimate" : pakej = resJSON[0]['roleid'];
+      /// to check bizapp package
+      var pakej = "";
+      resJSON[0]['roleid'] == "0" && report == "0"
+          ? pakej = "Basic"
+          : resJSON[0]['roleid'] == "0" && report == "1"
+              ? pakej = "Basic+"
+              : resJSON[0]['roleid'] == "1"
+                  ? pakej = "Pro"
+                  : resJSON[0]['roleid'] == "2"
+                      ? pakej = "Pro"
+                      : resJSON[0]['roleid'] == "3"
+                          ? pakej = "Ultimate"
+                          : pakej = resJSON[0]['roleid'];
 
-        /// to check bizappay account
-        var accbizappay = "";
-        resJSON[0]['accountBIZAPPAY'] == "Y" ? accbizappay = "Ya" : accbizappay = "Tiada";
+      /// to check bizappay account
+      var accbizappay = "";
+      resJSON[0]['accountBIZAPPAY'] == "Y"
+          ? accbizappay = "Ya"
+          : accbizappay = "Tiada";
 
-        sk = resJSON[0]['secretkey'];
-        username = resJSON[0]['penggunaid'];
-        nama = resJSON[0]['nama'];
-        roleid = pakej;
-        tarikhnaiktaraf = resJSON[0]['tarikhnaiktaraf'];
-        tarikhtamat = resJSON[0]['tarikhtamattempoh'];
-        bizappayacc = accbizappay;
-        basicplusonly = resJSON[0]['addon_module_rpt_display'];
-        basicplusonly = basicplusonly == "" || basicplusonly.isEmpty ? basicplusonly = "-" : basicplusonly.replaceAll("<br>", " ");
-        notifyListeners();
+      pid = resJSON[0]['pid'];
+      sk = resJSON[0]['secretkey'];
+      username = resJSON[0]['penggunaid'];
+      nama = resJSON[0]['nama'];
+      roleid = pakej;
+      tarikhnaiktaraf = resJSON[0]['tarikhnaiktaraf'];
+      tarikhtamat = resJSON[0]['tarikhtamattempoh'];
+      bizappayacc = accbizappay;
+      basicplusonly = resJSON[0]['addon_module_rpt_display'];
+      basicplusonly = basicplusonly == "" || basicplusonly.isEmpty
+          ? basicplusonly = "-"
+          : basicplusonly.replaceAll("<br>", " ");
+      notifyListeners();
 
       return resJSON[0];
-
     }).onError((error, stackTrace) {
       call = false;
       notifyListeners();
 
       ScaffoldMessenger.of(context).showSnackBar(snackBarBizapp("error login"));
     });
+  }
+
+  Future profile(BuildContext context, {required String pid}) async {
+    Map<String, dynamic> body = {
+      "pid": pid,
+      "DOMAIN": "BIZAPP",
+      "TOKEN": " ",
+    };
+
+    await http.post(Uri.parse(Env.profileurl), body: body).then((res) async {
+      final resJSON = json.decode(res.body);
+      call = false;
+
+      jenissyarikatname = resJSON[0]['jenissyarikat'];
+      emel = resJSON[0]['emel'];
+      nohp = resJSON[0]['nohp'];
+      notifyListeners();
+
+      return resJSON[0];
+    }).onError((error, stackTrace) {
+      call = false;
+      notifyListeners();
+    });
+    notifyListeners();
+  }
+
+  void resetData() {
+    username = "";
+    sk = "";
+    nama = "";
+    emel = "";
+    nohp = "";
+    roleid = "";
+    tarikhnaiktaraf = "";
+    tarikhtamat = "";
+    basicplusonly = "";
+    biltempahan = "-";
+    rekodtempahan = "-";
+    bilEjen = "-";
+    bizappayacc = "-";
+    jenissyarikatname = "-";
+    call = false;
+    callDedagang = false;
+    callRekod = false;
+    notifyListeners();
   }
 
   String dedagang = "-";
@@ -109,8 +171,10 @@ class StatusController extends ChangeNotifier{
     });
   }
 
-  final List listrekod = [];
-  Future _getRekod(String pid) async {
+  listRekodModel? listrekodmodel;
+
+  final List<listRekodModel> listrekod = [];
+  Future<listRekodModel?> _getRekod(String pid) async {
     Map<String, dynamic> body = {
       "pid": pid,
       "DOMAIN": "BIZAPP",
@@ -127,15 +191,24 @@ class StatusController extends ChangeNotifier{
     listrekod.clear();
     notifyListeners();
 
-    await http.post(Uri.parse(Env.rekodurl), body: body).then((res) {
+    final res =
+        await http.post(Uri.parse(Env.rekodurl), body: body).then((res) {
       final resJSON = json.decode(res.body);
+      listrekod.add(listRekodModel.fromJson(resJSON));
+      // listrekodmodel = listRekodModel.fromJson(jsonDecode(res.body));
       callRekod = false;
-      listrekod.addAll(resJSON);
+      print("test: ${listrekod}");
+      // listrekod.addAll(res.listmodel);
       notifyListeners();
     });
   }
 
-  check(BuildContext context, String username){
+  void resetListData() {
+    listrekod.clear();
+    notifyListeners();
+  }
+
+  check(BuildContext context, String username) {
     call = true;
     notifyListeners();
     loginServices(context, userid: username).then((value) {
@@ -146,9 +219,6 @@ class StatusController extends ChangeNotifier{
       notifyListeners();
 
       ScaffoldMessenger.of(context).showSnackBar(snackBarBizapp(""));
-
     });
   }
-
-
 }

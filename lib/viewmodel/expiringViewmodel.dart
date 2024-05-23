@@ -1,7 +1,5 @@
-// new_customer_viewmodel.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:bizapptrack/ui/sideNav.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 
 class ExpiringViewmodel extends ChangeNotifier {
@@ -29,6 +27,7 @@ class ExpiringViewmodel extends ChangeNotifier {
   String _selectedFeedback = 'Select Feedback';
   String _selectedAction = 'Select Action';
   String _selectedFollowUp = 'Select Follow Up';
+  String _noteText = '';
   bool isLoading = false;
 
   String get selectedNumber => _selectedNumber;
@@ -36,6 +35,7 @@ class ExpiringViewmodel extends ChangeNotifier {
   String get selectedFeedback => _selectedFeedback;
   String get selectedAction => _selectedAction;
   String get selectedFollowUp => _selectedFollowUp;
+  String get noteText => _noteText;
 
   void setSelectedNumber(String value) {
     _selectedNumber = value;
@@ -62,12 +62,18 @@ class ExpiringViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setNoteText(String value) {
+    _noteText = value;
+    notifyListeners();
+  }
+
   void performSearch(BuildContext context) async {
     final model = Provider.of<StatusController>(context, listen: false);
     isLoading = true;
     notifyListeners();
     try {
       await model.loginServices(context, userid: usernameController.text);
+      await model.profile(context, pid: model.pid);
     } finally {
       isLoading = false;
       notifyListeners();
