@@ -31,6 +31,7 @@ class NewCustomerViewModel extends ChangeNotifier {
   String _selectedFeedback = 'Select Feedback';
   String _selectedAction = 'Select Action';
   String _selectedFollowUp = 'Select Follow Up';
+  String _noteText = '';
   bool isLoading = false;
 
   String get selectedNumber => _selectedNumber;
@@ -38,6 +39,7 @@ class NewCustomerViewModel extends ChangeNotifier {
   String get selectedFeedback => _selectedFeedback;
   String get selectedAction => _selectedAction;
   String get selectedFollowUp => _selectedFollowUp;
+  String get noteText => _noteText;
 
   void setSelectedNumber(String value) {
     _selectedNumber = value;
@@ -64,15 +66,20 @@ class NewCustomerViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setNoteText(String value) {
+    _noteText = value;
+    notifyListeners();
+  }
+
   void performSearch(BuildContext context) async {
     final model = Provider.of<StatusController>(context, listen: false);
     isLoading = true;
     notifyListeners();
     try {
       await model.loginServices(context, userid: usernameController.text);
+      await model.profile(context, pid: model.pid);
     } finally {
       isLoading = false;
-      notifyListeners();
     }
   }
 
@@ -83,6 +90,7 @@ class NewCustomerViewModel extends ChangeNotifier {
     _selectedAction = 'Select Action';
     _selectedFollowUp = 'Select Follow Up';
     noteController.clear();
+    _noteText = '';
     notifyListeners();
   }
 }
