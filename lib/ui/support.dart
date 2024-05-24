@@ -1,3 +1,5 @@
+import 'package:bizapptrack/ui/dataUser.dart';
+import 'package:bizapptrack/ui/loadingWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -94,6 +96,11 @@ class _SupportPageState extends State<SupportPage> {
                     _buildTextNote(viewModel),
                     _buildUpdateClearButton(),
                     const SizedBox(height: 20),
+                    _body2(context, constraints),
+                    const SizedBox(height: 20),
+                    model.call ? const SizedBox.shrink() : _body3(context, constraints),
+                    const SizedBox(height: 20),
+                    model.call ? const SizedBox.shrink() : _body4(context, constraints),
                   ],
                 ),
               ),
@@ -102,6 +109,218 @@ class _SupportPageState extends State<SupportPage> {
         ),
       ),
       drawer: SideDrawer(username: widget.username),
+    );
+  }
+
+  Widget _body2(BuildContext context, BoxConstraints constraints) {
+    return context.read<StatusController>().call == false
+        ? Consumer<StatusController>(
+            builder: (context, provider, child) {
+              String upgradeDate = provider.tarikhnaiktaraf;
+              String endDate = provider.tarikhtamat;
+
+              List<String> parts = upgradeDate.split(' ');
+              List<String> parts2 = endDate.split(' ');
+
+              String datePart = parts[0];
+              String datePart2 = parts2[0];
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 1.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(label: Text('Bizapp ID')), // username
+                          DataColumn(label: Text('Name')), // nama
+                          DataColumn(label: Text('Email')), // emel
+                          DataColumn(label: Text('No. H/P')), // no hp
+                          DataColumn(label: Text('Package')), // pakej
+                          DataColumn(label: Text('Date Start')), // tarikh naik taraf
+                          DataColumn(label: Text('Date End')), // tarikh tamat
+                          DataColumn(label: Text('Last Login')), // tarikh log masuk
+                          DataColumn(label: Text('Last Order')), // tarikh last order
+                          DataColumn(label: Text('Payment')), // payment
+                        ],
+                        rows: [
+                          DataRow(cells: [
+                            DataCell(Text(provider.username)), // username
+                            DataCell(Text(provider.nama)), // nama
+                            DataCell(Text(provider.emel)), // emel
+                            DataCell(Text(provider.nohp)), // no hp
+                            DataCell(Text(provider.roleid)), // pakej
+                            DataCell(Text(datePart)), // tarikhnaiktaraf
+                            DataCell(Text(datePart2)), // tarikhtamat
+                            const DataCell(Text("-")), // tarikh log masuk
+                            const DataCell(Text("-")), // tarikh last order
+                            const DataCell(Text("-")), // payment
+                          ]),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.4,
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 5),
+                        const Text('Senarai rekod 5 terakhir: '),
+                        const SizedBox(height: 5),
+                        provider.callRekod == false
+                            ? provider.listrekod.isEmpty
+                                ? const Text(
+                                    'Tiada Rekod',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  )
+                                : Center(
+                                    child:
+                                        DataList(listrekod: provider.listrekod),
+                                  )
+                            : const GetLoad(text: "Load data record ..."),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          )
+        : const SizedBox();
+  }
+
+  Widget _body3(BuildContext context, BoxConstraints constraints) {
+  return context.read<StatusController>().call == false
+      ? Consumer<StatusController>(
+          builder: (context, provider, child) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 1.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      columns: const [
+                        DataColumn(label: Text('No. Records')), // rekod tempahan
+                        DataColumn(label: Text('No. Orders')), // bil tempahan
+                        DataColumn(label: Text('No. Agents')), // bil ejen
+                        DataColumn(label: Text('Bizappay')), // ada bizappay
+                        DataColumn(label: Text('Business')), // jenis syarikat
+                        DataColumn(label: Text('Bizappshop')),
+                        DataColumn(label: Text('Bizappage')),
+                        DataColumn(label: Text('Woo-Commerce')),
+                        DataColumn(label: Text('Wsapme')),
+                        DataColumn(label: Text('Shopee')),
+                        DataColumn(label: Text('Tiktok')),
+                      ],
+                      rows: [
+                        DataRow(cells: [
+                          DataCell(Text(provider.rekodtempahan)),
+                          DataCell(Text(provider.biltempahan)),
+                          DataCell(Text(provider.bilEjen)),
+                          DataCell(Text(provider.bizappayacc)),
+                          DataCell(Text(provider.jenissyarikatname)),
+                          const DataCell(Text("-")), // bizappshop
+                          const DataCell(Text("-")), // bizappage
+                          const DataCell(Text("-")), // woo-commerce
+                          const DataCell(Text("-")), // wsapme
+                          const DataCell(Text("-")), // shopee
+                          const DataCell(Text("-")), // tiktok
+                        ]),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            );
+          },
+        )
+      : SizedBox();
+    }
+
+  Widget _body4(BuildContext context, BoxConstraints constraints) {
+    SupportViewModel viewModel = SupportViewModel();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          constraints:
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 1.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: const [
+                DataColumn(label: Text('Date')),
+                DataColumn(label: Text('Key In')),
+                DataColumn(label: Text('Source')),
+                DataColumn(label: Text('Medium')),
+                DataColumn(label: Text('Product')),
+                DataColumn(label: Text('Issue')),
+                DataColumn(label: Text('Description')),
+                DataColumn(label: Text('Level')),
+                DataColumn(label: Text('First Response')),
+                DataColumn(label: Text('Department')),
+                DataColumn(label: Text('PIC')),
+                DataColumn(label: Text('Follow Up')),
+                DataColumn(label: Text('Note')),
+              ],
+              rows: [
+                DataRow(cells: [
+                  const DataCell(Text(" ")), // date
+                  const DataCell(Text(" ")), // key in
+                  DataCell(Text(viewModel.sourceController.text)), // source
+                  DataCell(Text(" ")), // medium (checkbox)
+                  DataCell(Text(" ")), // product (checkbox)
+                  DataCell(Text(" ")), // issue (checkbox)
+                  DataCell(Text(viewModel.descController.text)), // description
+                  DataCell(Text(viewModel.levelController.text)), // level
+                  DataCell(Text(viewModel.firstResponseController.text)), // first response - initial
+                  DataCell(Text(viewModel.departmentController.text)), // department
+                  DataCell(Text(viewModel.picController.text)), // pic
+                  DataCell(Text(" ")), // follow up (checkbox)
+                  DataCell(Text(viewModel.noteController.text)), // note
+                ]),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+      ],
     );
   }
 
@@ -701,7 +920,7 @@ class FormStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.6,
+      width: MediaQuery.of(context).size.width * 0.3,
       child: TextFormField(
         style: const TextStyle(fontSize: 16),
         keyboardType: TextInputType.emailAddress,

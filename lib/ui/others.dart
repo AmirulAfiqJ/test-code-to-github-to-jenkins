@@ -126,18 +126,24 @@ class _OthersState extends State<Others> {
                         columns: const [
                           DataColumn(
                               label: Text('Date Start')), // tarikh naik taraf
-                          DataColumn(label: Text('Date End')), // tarikh tamat
+                          DataColumn(
+                            label:Text('Date End')), // tarikh tamat
                           DataColumn(
                               label: Text('Last Login')), // tarikh log masuk
                           DataColumn(
                               label: Text('Last Order')), // tarikh last order
-                          DataColumn(label: Text('Payment')), // payment
+                          DataColumn(
+                            label: Text('Payment')), // payment
                           DataColumn(
                               label: Text('No. Records')), // rekod tempahan
-                          DataColumn(label: Text('No. Orders')), // bil tempahan
-                          DataColumn(label: Text('No. Agents')), // bil ejen
-                          DataColumn(label: Text('Bizappay')), // ada bizappay
-                          DataColumn(label: Text('Business')), // jenis syarikat
+                          DataColumn(
+                            label: Text('No. Orders')), // bil tempahan
+                          DataColumn(
+                            label: Text('No. Agents')), // bil ejen
+                          DataColumn(
+                            label: Text('Bizappay')), // ada bizappay
+                          DataColumn(
+                            label: Text('Business')), // jenis syarikat
                         ],
                         rows: [
                           DataRow(cells: [

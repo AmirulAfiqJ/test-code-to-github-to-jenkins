@@ -397,11 +397,21 @@ class Header extends StatelessWidget {
   }
 }
 
-class FormStatus extends StatelessWidget {
+class FormStatus extends StatefulWidget {
   final TextEditingController controller;
   final Function() onSearch;
-  const FormStatus(
-      {super.key, required this.controller, required this.onSearch});
+
+  const FormStatus({
+    Key? key,
+    required this.controller,
+    required this.onSearch,
+  }) : super(key: key);
+
+  @override
+  _FormStatusState createState() => _FormStatusState();
+}
+
+class _FormStatusState extends State<FormStatus> {
 
   @override
   Widget build(BuildContext context) {
@@ -410,7 +420,7 @@ class FormStatus extends StatelessWidget {
       child: TextFormField(
         style: const TextStyle(fontSize: 16),
         keyboardType: TextInputType.emailAddress,
-        controller: controller,
+        controller: widget.controller,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
@@ -426,11 +436,13 @@ class FormStatus extends StatelessWidget {
           suffixIcon: IconButton(
             icon: const Icon(Icons.clear, color: Colors.red),
             onPressed: () {
-              controller.clear();
+              widget.controller.clear();
+              Provider.of<StatusController>(context, listen: false).resetData();
+              widget.onSearch();
             },
           ),
         ),
-        onEditingComplete: onSearch,
+        onEditingComplete: widget.onSearch,
       ),
     );
   }

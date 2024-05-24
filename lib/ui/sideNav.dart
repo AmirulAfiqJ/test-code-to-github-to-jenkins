@@ -7,7 +7,7 @@ import 'package:bizapptrack/ui/support.dart';
 import 'package:flutter/material.dart';
 
 class SideDrawer extends StatelessWidget {
-  final String username; // Define username as a property of the class
+  final String username;
   const SideDrawer({required this.username});
   @override
   Widget build(BuildContext context) {
