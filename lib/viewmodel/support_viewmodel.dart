@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 
 class SupportViewModel extends ChangeNotifier {
   final key = new GlobalKey<FormState>();
+
   TextEditingController usernameController = TextEditingController();
   TextEditingController sourceController = TextEditingController();
   TextEditingController displaySourceController = TextEditingController();
@@ -22,15 +23,18 @@ class SupportViewModel extends ChangeNotifier {
   void clearAllCheckboxes() {
     for (var checkbox in mediumCheckbox) {
       checkbox.value = false;
-    } for (var checkbox in productCheckbox) {
+    }
+    for (var checkbox in productCheckbox) {
       checkbox.value = false;
-    } for (var checkbox in issueCheckbox) {
+    }
+    for (var checkbox in issueCheckbox) {
       checkbox.value = false;
-    } for (var checkbox in followUpCheckbox) {
+    }
+    for (var checkbox in followUpCheckbox) {
       checkbox.value = false;
     }
   }
-
+  
   List<FormList> sourceList = [
     FormList(name: "", value: ""),
     FormList(name: "Bual.Asia/1800", value: "Bual.Asia/1800"),
@@ -80,6 +84,7 @@ class SupportViewModel extends ChangeNotifier {
 
   List<FormList> picList = [
     FormList(name: "", value: ""),
+    FormList(name: "-", value: "-"),
     FormList(name: "Jefrey", value: "Jefrey"),
     FormList(name: "Suhaimi", value: "Suhaimi"),
     FormList(name: "Hasnol", value: "Hasnol"),

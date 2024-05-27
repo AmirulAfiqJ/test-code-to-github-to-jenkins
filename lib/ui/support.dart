@@ -1,5 +1,6 @@
 import 'package:bizapptrack/ui/dataUser.dart';
 import 'package:bizapptrack/ui/loadingWidget.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,8 @@ class _SupportPageState extends State<SupportPage> {
       model.call = true;
     });
     try {
-      await model.loginServices(context,userid: viewModel.usernameController.text);
+      await model.loginServices(context,
+          userid: viewModel.usernameController.text);
       await model.profile(context, pid: model.pid);
     } finally {
       setState(() {
@@ -59,6 +61,23 @@ class _SupportPageState extends State<SupportPage> {
       viewModel.picController.clear();
       viewModel.noteController.clear();
     });
+  }
+
+  late FormList selectedSource;
+  late FormList selectedLevel;
+  late FormList selectedInitial;
+  late FormList selectedDepartment;
+  late FormList selectedPIC;
+
+  
+  @override
+  void initState() {
+    super.initState();
+    selectedSource = viewModel.sourceList.first; 
+    selectedLevel = viewModel.levelList.first;
+    selectedInitial = viewModel.firstResponseList.first;
+    selectedDepartment = viewModel.departmentList.first;
+    selectedPIC = viewModel.picList.first;
   }
 
   @override
@@ -83,24 +102,18 @@ class _SupportPageState extends State<SupportPage> {
                     model.call
                         ? CircularProgressIndicator()
                         : _buildUserDetailsSection(model),
-                    _buildDDSource(viewModel),
-                    _buildCheckboxMedium(viewModel),
-                    _buildCheckboxProduct(viewModel),
-                    _buildCheckboxIssue(viewModel),
-                    _buildTextDesc(viewModel),
-                    _buildDDLevel(viewModel),
-                    _buildDDFirstResponse(viewModel),
-                    _buildDDDepartment(viewModel),
-                    _buildDDPIC(viewModel),
-                    _buildCheckboxFollowUp(viewModel),
-                    _buildTextNote(viewModel),
+                    _buildForm(viewModel),
                     _buildUpdateClearButton(),
                     const SizedBox(height: 20),
                     _body2(context, constraints),
                     const SizedBox(height: 20),
-                    model.call ? const SizedBox.shrink() : _body3(context, constraints),
+                    model.call
+                        ? const SizedBox.shrink()
+                        : _body3(context, constraints),
                     const SizedBox(height: 20),
-                    model.call ? const SizedBox.shrink() : _body4(context, constraints),
+                    model.call
+                        ? const SizedBox.shrink()
+                        : _body4(context, constraints),
                   ],
                 ),
               ),
@@ -146,10 +159,13 @@ class _SupportPageState extends State<SupportPage> {
                           DataColumn(label: Text('Email')), // emel
                           DataColumn(label: Text('No. H/P')), // no hp
                           DataColumn(label: Text('Package')), // pakej
-                          DataColumn(label: Text('Date Start')), // tarikh naik taraf
+                          DataColumn(
+                              label: Text('Date Start')), // tarikh naik taraf
                           DataColumn(label: Text('Date End')), // tarikh tamat
-                          DataColumn(label: Text('Last Login')), // tarikh log masuk
-                          DataColumn(label: Text('Last Order')), // tarikh last order
+                          DataColumn(
+                              label: Text('Last Login')), // tarikh log masuk
+                          DataColumn(
+                              label: Text('Last Order')), // tarikh last order
                           DataColumn(label: Text('Payment')), // payment
                         ],
                         rows: [
@@ -210,62 +226,63 @@ class _SupportPageState extends State<SupportPage> {
   }
 
   Widget _body3(BuildContext context, BoxConstraints constraints) {
-  return context.read<StatusController>().call == false
-      ? Consumer<StatusController>(
-          builder: (context, provider, child) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 1.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      columns: const [
-                        DataColumn(label: Text('No. Records')), // rekod tempahan
-                        DataColumn(label: Text('No. Orders')), // bil tempahan
-                        DataColumn(label: Text('No. Agents')), // bil ejen
-                        DataColumn(label: Text('Bizappay')), // ada bizappay
-                        DataColumn(label: Text('Business')), // jenis syarikat
-                        DataColumn(label: Text('Bizappshop')),
-                        DataColumn(label: Text('Bizappage')),
-                        DataColumn(label: Text('Woo-Commerce')),
-                        DataColumn(label: Text('Wsapme')),
-                        DataColumn(label: Text('Shopee')),
-                        DataColumn(label: Text('Tiktok')),
-                      ],
-                      rows: [
-                        DataRow(cells: [
-                          DataCell(Text(provider.rekodtempahan)),
-                          DataCell(Text(provider.biltempahan)),
-                          DataCell(Text(provider.bilEjen)),
-                          DataCell(Text(provider.bizappayacc)),
-                          DataCell(Text(provider.jenissyarikatname)),
-                          const DataCell(Text("-")), // bizappshop
-                          const DataCell(Text("-")), // bizappage
-                          const DataCell(Text("-")), // woo-commerce
-                          const DataCell(Text("-")), // wsapme
-                          const DataCell(Text("-")), // shopee
-                          const DataCell(Text("-")), // tiktok
-                        ]),
-                      ],
+    return context.read<StatusController>().call == false
+        ? Consumer<StatusController>(
+            builder: (context, provider, child) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 1.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(
+                              label: Text('No. Records')), // rekod tempahan
+                          DataColumn(label: Text('No. Orders')), // bil tempahan
+                          DataColumn(label: Text('No. Agents')), // bil ejen
+                          DataColumn(label: Text('Bizappay')), // ada bizappay
+                          DataColumn(label: Text('Business')), // jenis syarikat
+                          DataColumn(label: Text('Bizappshop')),
+                          DataColumn(label: Text('Bizappage')),
+                          DataColumn(label: Text('Woo-Commerce')),
+                          DataColumn(label: Text('Wsapme')),
+                          DataColumn(label: Text('Shopee')),
+                          DataColumn(label: Text('Tiktok')),
+                        ],
+                        rows: [
+                          DataRow(cells: [
+                            DataCell(Text(provider.rekodtempahan)),
+                            DataCell(Text(provider.biltempahan)),
+                            DataCell(Text(provider.bilEjen)),
+                            DataCell(Text(provider.bizappayacc)),
+                            DataCell(Text(provider.jenissyarikatname)),
+                            const DataCell(Text("-")), // bizappshop
+                            const DataCell(Text("-")), // bizappage
+                            const DataCell(Text("-")), // woo-commerce
+                            const DataCell(Text("-")), // wsapme
+                            const DataCell(Text("-")), // shopee
+                            const DataCell(Text("-")), // tiktok
+                          ]),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-              ],
-            );
-          },
-        )
-      : SizedBox();
-    }
+                  const SizedBox(height: 20),
+                ],
+              );
+            },
+          )
+        : SizedBox();
+  }
 
   Widget _body4(BuildContext context, BoxConstraints constraints) {
     SupportViewModel viewModel = SupportViewModel();
@@ -303,15 +320,15 @@ class _SupportPageState extends State<SupportPage> {
                 DataRow(cells: [
                   const DataCell(Text(" ")), // date
                   const DataCell(Text(" ")), // key in
-                  DataCell(Text(viewModel.sourceController.text)), // source
+                  DataCell(Text(selectedSource.value)), // source
                   DataCell(Text(" ")), // medium (checkbox)
                   DataCell(Text(" ")), // product (checkbox)
                   DataCell(Text(" ")), // issue (checkbox)
                   DataCell(Text(viewModel.descController.text)), // description
-                  DataCell(Text(viewModel.levelController.text)), // level
-                  DataCell(Text(viewModel.firstResponseController.text)), // first response - initial
-                  DataCell(Text(viewModel.departmentController.text)), // department
-                  DataCell(Text(viewModel.picController.text)), // pic
+                  DataCell(Text(selectedLevel.value)), // level
+                  DataCell(Text(selectedInitial.value)), // first response - initial
+                  DataCell(Text(selectedDepartment.value)), // department
+                  DataCell(Text(selectedPIC.value)), // pic
                   DataCell(Text(" ")), // follow up (checkbox)
                   DataCell(Text(viewModel.noteController.text)), // note
                 ]),
@@ -397,493 +414,290 @@ class _SupportPageState extends State<SupportPage> {
     );
   }
 
-  Widget _buildCheckboxMedium(SupportViewModel viewModel) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Column for the "Select your choices" text
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Medium: ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              //SizedBox(height: 16),
-            ],
-          ),
-          SizedBox(width: 30),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Generate the checkboxes in a 3 by 3 layout
-                for (int i = 0; i < viewModel.mediumCheckbox.length; i += 3)
-                  Row(
-                    children: [
-                      for (int j = i;
-                          j < i + 3 && j < viewModel.mediumCheckbox.length;
-                          j++)
-                        Expanded(
-                          child: CheckboxListTile(
-                            title: Text(viewModel.mediumCheckbox[j].name),
-                            value: viewModel.mediumCheckbox[j].value,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                viewModel.mediumCheckbox[j].value = value!;
-                              });
-                            },
-                          ),
-                        ),
-                    ],
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCheckboxProduct(SupportViewModel viewModel) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Column for the "Select your choices" text
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Product: ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          SizedBox(width: 32),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Generate the checkboxes in a 3 by 3 layout
-                for (int i = 0; i < viewModel.productCheckbox.length; i += 3)
-                  Row(
-                    children: [
-                      for (int j = i;
-                          j < i + 3 && j < viewModel.productCheckbox.length;
-                          j++)
-                        Expanded(
-                          child: CheckboxListTile(
-                            title: Text(viewModel.productCheckbox[j].name),
-                            value: viewModel.productCheckbox[j].value,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                viewModel.productCheckbox[j].value = value!;
-                              });
-                            },
-                          ),
-                        ),
-                    ],
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCheckboxIssue(SupportViewModel viewModel) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Column for the "Select your choices" text
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Issue: ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          SizedBox(width: 51),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Generate the checkboxes in a 3 by 3 layout
-                for (int i = 0; i < viewModel.issueCheckbox.length; i += 3)
-                  Row(
-                    children: [
-                      for (int j = i;
-                          j < i + 3 && j < viewModel.issueCheckbox.length;
-                          j++)
-                        Expanded(
-                          child: CheckboxListTile(
-                            title: Text(viewModel.issueCheckbox[j].name),
-                            value: viewModel.issueCheckbox[j].value,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                viewModel.issueCheckbox[j].value = value!;
-                              });
-                            },
-                          ),
-                        ),
-                    ],
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCheckboxFollowUp(SupportViewModel viewModel) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Column for the "Select your choices" text
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Follow up: ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 16),
-            ],
-          ),
-          SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Generate the checkboxes in a 3 by 3 layout
-                for (int i = 0; i < viewModel.followUpCheckbox.length; i += 3)
-                  Row(
-                    children: [
-                      for (int j = i;
-                          j < i + 3 && j < viewModel.followUpCheckbox.length;
-                          j++)
-                        Expanded(
-                          child: CheckboxListTile(
-                            title: Text(viewModel.followUpCheckbox[j].name),
-                            value: viewModel.followUpCheckbox[j].value,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                viewModel.followUpCheckbox[j].value = value!;
-                              });
-                            },
-                          ),
-                        ),
-                    ],
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDDSource(SupportViewModel viewModel) {
-    if (viewModel.sourceController.text.isEmpty) {
-      viewModel.sourceController.text = viewModel.sourceList.first.value;
-    }
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'Source: ',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(width: 60),
-              DropdownButton<String>(
-                value: viewModel.sourceController.text,
-                items: viewModel.sourceList.map((FormList formList) {
-                  return DropdownMenuItem<String>(
-                    value: formList.value,
-                    child: Text(formList.name),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    viewModel.sourceController.text = newValue!;
-                  });
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDDLevel(SupportViewModel viewModel) {
-    if (viewModel.levelController.text.isEmpty) {
-      viewModel.levelController.text = viewModel.levelList.first.value;
-    }
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'Level: ',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(width: 70),
-              DropdownButton<String>(
-                value: viewModel.levelController.text,
-                items: viewModel.levelList.map((FormList formList) {
-                  return DropdownMenuItem<String>(
-                    value: formList.value,
-                    child: Text(formList.name),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    viewModel.levelController.text = newValue!;
-                  });
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDDFirstResponse(SupportViewModel viewModel) {
-    if (viewModel.firstResponseController.text.isEmpty) {
-      viewModel.firstResponseController.text =
-          viewModel.firstResponseList.first.value;
-    }
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'First Response: ',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(width: 20),
-              DropdownButton<String>(
-                value: viewModel.firstResponseController.text,
-                items: viewModel.firstResponseList.map((FormList formList) {
-                  return DropdownMenuItem<String>(
-                    value: formList.value,
-                    child: Text(formList.name),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    viewModel.firstResponseController.text = newValue!;
-                  });
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDDDepartment(SupportViewModel viewModel) {
-    if (viewModel.departmentController.text.isEmpty) {
-      viewModel.departmentController.text =
-          viewModel.departmentList.first.value;
-    }
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'Department: ',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(width: 20),
-              DropdownButton<String>(
-                value: viewModel.departmentController.text,
-                items: viewModel.departmentList.map((FormList formList) {
-                  return DropdownMenuItem<String>(
-                    value: formList.value,
-                    child: Text(formList.name),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    viewModel.departmentController.text = newValue!;
-                  });
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDDPIC(SupportViewModel viewModel) {
-    if (viewModel.picController.text.isEmpty) {
-      viewModel.picController.text = viewModel.picList.first.value;
-    }
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'PIC: ',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(width: 87),
-              DropdownButton<String>(
-                value: viewModel.picController.text,
-                items: viewModel.picList.map((FormList formList) {
-                  return DropdownMenuItem<String>(
-                    value: formList.value,
-                    child: Text(formList.name),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    viewModel.picController.text = newValue!;
-                  });
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextDesc(SupportViewModel viewModel) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment
-            .start, // Align text and text field vertically at the top
-        children: [
-          Text(
-            'Description: ',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(width: 20),
-          Expanded(
-            child: TextField(
-              controller: viewModel.descController,
-              maxLines: 3, // Set the maximum number of lines
-              keyboardType: TextInputType.multiline, // Enable multiline input
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextNote(SupportViewModel viewModel) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment
-            .start, // Align text and text field vertically at the top
-        children: [
-          Text(
-            'Note: ',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(width: 70),
-          Expanded(
-            child: TextField(
-              controller: viewModel.noteController,
-              maxLines: 3,
-              keyboardType: TextInputType.multiline,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUpdateClearButton() {
+  
+Widget _buildForm(SupportViewModel viewModel) {
   return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Color.fromARGB(255, 125, 212, 98),
-            minimumSize: Size(150, 50), 
+        _buildDropdown(
+          label: 'Source',
+          value: selectedSource,
+          items: viewModel.sourceList,
+          width: 60,
+          onChanged: (FormList? newValue) {
+            setState(() {
+              selectedSource = newValue!; // Update selectedSource
+              viewModel.sourceController.text = newValue.value; // Update the controller
+            });
+          },
+        ),
+        _buildCheckbox(
+          label: 'Medium', 
+          items: viewModel.mediumCheckbox, 
+          width: 30,
+          onChanged: handleMediumCheckboxChanges),
+        _buildCheckbox(
+          label: 'Product', 
+          items: viewModel.productCheckbox, 
+          width: 32,
+          onChanged: handleProductCheckboxChanges),
+        _buildCheckbox(
+          label: 'Issue', 
+          items: viewModel.issueCheckbox, 
+          width: 51,
+          onChanged: handleIssueCheckboxChanges),
+        _buildText(
+          label: 'Description', 
+          controller: viewModel.descController),
+        _buildFilePicker(),
+        _buildDropdown(
+          label: 'Level',
+          value: selectedLevel,
+          items: viewModel.levelList,
+          width: 70,
+          onChanged: (FormList? newValue) {
+            setState(() {
+              selectedLevel = newValue!;
+              viewModel.levelController.text = newValue.value; 
+            });
+          },
+        ),
+        _buildDropdown(
+          label: 'Initial',
+          value: selectedInitial,
+          items: viewModel.firstResponseList,
+          width: 70,
+          onChanged: (FormList? newValue) {
+            setState(() {
+              selectedInitial = newValue!;
+              viewModel.firstResponseController.text = newValue.value;
+            });
+          },
+        ),
+        _buildDropdown(
+          label: 'Department',
+          value: selectedDepartment,
+          items: viewModel.departmentList,
+          width: 20,
+          onChanged: (FormList? newValue) {
+            setState(() {
+              selectedDepartment = newValue!; 
+              viewModel.departmentController.text = newValue.value;
+            });
+          },
+        ),
+        _buildDropdown(
+          label: 'PIC',
+          value: selectedPIC,
+          items: viewModel.picList,
+          width: 87,
+          onChanged: (FormList? newValue) {
+            setState(() {
+              selectedPIC = newValue!; 
+              viewModel.picController.text = newValue.value; 
+            });
+          },
+        ),
+        _buildCheckbox(
+          label: 'Follow Up', 
+          items: viewModel.followUpCheckbox, 
+          width: 16,
+          onChanged: handleFollowUpCheckboxChanges),
+        _buildText(
+          label: 'Note', 
+          controller: viewModel.noteController),
+      ],
+    ),
+  );
+}
+
+// Handle changes for mediumCheckbox
+void handleMediumCheckboxChanges(bool value, int index) {
+  setState(() {
+    viewModel.mediumCheckbox[index].value = value;
+  });
+}
+
+// Handle changes for productCheckbox
+void handleProductCheckboxChanges(bool value, int index) {
+  setState(() {
+    viewModel.productCheckbox[index].value = value;
+  });
+}
+
+// Handle changes for issueCheckbox
+void handleIssueCheckboxChanges(bool value, int index) {
+  setState(() {
+    viewModel.issueCheckbox[index].value = value;
+  });
+}
+
+// Handle changes for followUpCheckbox
+void handleFollowUpCheckboxChanges(bool value, int index) {
+  setState(() {
+    viewModel.followUpCheckbox[index].value = value;
+  });
+}
+
+void updateData() {
+  // Gather values from dropdowns, checkboxes, and text fields
+  String selectedSource = viewModel.sourceController.text;
+  List<String> selectedMediums = [];
+  List<String> selectedProducts = [];
+  List<String> selectedIssues = [];
+  List<String> selectedFollowUps = [];
+  for (CheckboxItem item in viewModel.mediumCheckbox) {
+    if (item.value) {
+      selectedMediums.add(item.name);
+    }
+  }
+  for (CheckboxItem item in viewModel.productCheckbox) {
+    if (item.value) {
+      selectedProducts.add(item.name);
+    }
+  }
+  for (CheckboxItem item in viewModel.issueCheckbox) {
+    if (item.value) {
+      selectedIssues.add(item.name);
+    }
+  }
+  for (CheckboxItem item in viewModel.followUpCheckbox) {
+    if (item.value) {
+      selectedFollowUps.add(item.name);
+    }
+  }
+  String description = viewModel.descController.text;
+}
+
+Widget _buildFilePicker() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text(
+                'Attachment: ',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(width: 16),
+              ElevatedButton.icon(
+          onPressed: _pickFile,
+          icon: Icon(Icons.attach_file, color: Colors.white), // Change icon color here
+          label: Text(
+            'Insert file',
+            style: TextStyle(color: Colors.white), // Change text color here
           ),
-          child: Text(
-            'Update',
-            style: TextStyle(color: Colors.black),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 0, 0, 0), // Change text color when pressed here
+            minimumSize: Size(150, 50), // Minimum button size
           ),
         ),
-        SizedBox(width: 20), 
-        ElevatedButton(
-          onPressed: _clearSelections,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Color.fromARGB(255, 255, 109, 99),
-            minimumSize: Size(150, 50), 
+        if (_fileName != null)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Selected file: $_fileName',
+              style: TextStyle(color: Colors.black), // Change text color here
+            ),
           ),
-          child: Text(
-            'Clear',
-            style: TextStyle(color: Colors.black),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String? _fileName;
+  String? _filePath;
+  double _fileSizeLimit = 10 * 1024 * 1024; // 10 MB
+
+  void _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'mp4'],
+    );
+
+    if (result != null) {
+      PlatformFile file = result.files.first;
+
+      if (file.size <= _fileSizeLimit) {
+        setState(() {
+          _fileName = file.name;
+          _filePath = file.path;
+        });
+        // You can use the file as needed. For example, upload it to a server.
+      } else {
+        // Show a message if the file exceeds the size limit
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('File Size Limit Exceeded'),
+            content: Text('Please select a file smaller than 10 MB.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+  Widget _buildCheckbox({
+  required String label,
+  required List<CheckboxItem> items,
+  required width,
+  required void Function(bool, int) onChanged,
+}) {
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Column for the label text
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$label: ',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+          ],
+        ),
+        SizedBox(width: width),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Generate the checkboxes in a 3 by 3 layout
+              for (int i = 0; i < items.length; i += 3)
+                Row(
+                  children: [
+                    for (int j = i; j < i + 3 && j < items.length; j++)
+                      Expanded(
+                        child: CheckboxListTile(
+                          title: Text(items[j].name),
+                          value: items[j].value,
+                          onChanged: (bool? value) {
+                            if (value != null) {
+                              onChanged(value, j);
+                            }
+                          },
+                        ),
+                      ),
+                  ],
+                ),
+            ],
           ),
         ),
       ],
@@ -891,6 +705,117 @@ class _SupportPageState extends State<SupportPage> {
   );
 }
 
+
+Widget _buildDropdown({
+  required String label,
+  required FormList value,
+  required List<FormList> items,
+  required double width,
+  required void Function(FormList) onChanged,
+}) {
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              '$label: ',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(width: width),
+            DropdownButton<FormList>(
+              value: value,
+              items: items.map((FormList item) {
+                return DropdownMenuItem<FormList>(
+                  value: item,
+                  child: Text(item.name),
+                );
+              }).toList(),
+              onChanged: (FormList? newValue) {
+                if (newValue != null) {
+                  onChanged(newValue);
+                }
+              },
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildText({
+  required String label,
+  required TextEditingController controller,
+  int maxLines = 2,
+  TextInputType keyboardType = TextInputType.text,
+}) {
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$label: ',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(width: 20),
+        Expanded(
+          child: TextField(
+            controller: controller,
+            maxLines: maxLines,
+            keyboardType: keyboardType,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+  Widget _buildUpdateClearButton() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
+            onPressed: updateData,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromARGB(255, 125, 212, 98),
+              minimumSize: Size(150, 50),
+            ),
+            child: Text(
+              'Update',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+          SizedBox(width: 20),
+          ElevatedButton(
+            onPressed: _clearSelections,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromARGB(255, 255, 109, 99),
+              minimumSize: Size(150, 50),
+            ),
+            child: Text(
+              'Clear',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class Header extends StatelessWidget {
