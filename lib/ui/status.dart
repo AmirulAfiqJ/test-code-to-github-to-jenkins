@@ -1,15 +1,13 @@
 import 'package:bizapptrack/ui/button.dart';
-import 'package:bizapptrack/ui/dataUser.dart';
-import 'package:bizapptrack/env.dart';
-import 'package:bizapptrack/ui/home.dart';
+import 'package:bizapptrack/ui/dataUser.dart'; 
 import 'package:bizapptrack/ui/listToExcel.dart';
-import 'package:bizapptrack/ui/loadingWidget.dart';
-import 'package:bizapptrack/ui/login.dart';
+import 'package:bizapptrack/ui/loadingWidget.dart'; 
 import 'package:bizapptrack/ui/sideNav.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'customAppBar.dart'; 
 
 class TestRenew extends StatefulWidget {
   const TestRenew({super.key});
@@ -19,117 +17,77 @@ class TestRenew extends StatefulWidget {
 }
 
 class _TestRenewState extends State<TestRenew> {
-  String _userName = 'John'; // Replace with actual user name
+   // Replace with actual user name
   TextEditingController usernameController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _userName = 'John';
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    key: _scaffoldKey, // Add this line to assign the scaffold key
-    backgroundColor: Color.fromARGB(255, 255, 255, 255),
-    floatingActionButton: BizappButton(
-      color: Colors.black87,
-      title: "Export Excel",
-      tapCallback: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ListToExcel())),
-    ),
-    appBar: AppBar(
-      backgroundColor: Colors.black,
-      leading: IconButton(
-        icon: const Icon(Icons.menu, color: Colors.white),
-        onPressed: () {
-          _scaffoldKey.currentState!.openDrawer();
-        },
+  void _performSearch() async {
+    StatusController model =
+        Provider.of<StatusController>(context, listen: false);
+    setState(() {
+      model.call = true;
+    });
+    try {
+      await model.loginServices(context, userid: usernameController.text);
+      //model.resetListData();
+    } finally {
+      setState(() {
+        model.call = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey, // Assign the scaffold key
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      floatingActionButton: BizappButton(
+        color: Colors.black87,
+        title: "Export Excel",
+        tapCallback: () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const ListToExcel())),
       ),
-      title: Text(
-        'Bizapp Back Office',
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 40.0),
-          child: PopupMenuButton(
-            icon: Icon(Icons.account_circle, color: Color.fromARGB(255, 237, 245, 255)),
-            itemBuilder: (BuildContext context) => [
-              PopupMenuItem(
-                child: Text('Welcome, $_userName'),
-                enabled: false,
-              ),
-              PopupMenuItem(
-                child: ListTile(
-                  leading: Icon(Icons.exit_to_app),
-                  title: Text('Logout'),
-                  onTap: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                      (route) => false,
-                    );
-                  },
+      appBar: CustomAppBar(username: _userName, scaffoldKey: _scaffoldKey), // Use custom app bar
+      body: LayoutBuilder(
+        builder: (context, constraints) => Consumer<StatusController>(
+          builder: (context, model, child) {
+            return SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  children: [
+                    const Header(),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        FormStatus(
+                          constraints: constraints,
+                          controller: usernameController,
+                          onSearch: _performSearch,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.search),
+                          onPressed: _performSearch,
+                        ),
+                        const SizedBox(width: 10),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    _body2(constraints),
+                  ],
                 ),
               ),
-            ],
-          ),
+            );
+          },
         ),
-        // Padding(
-        //   padding: const EdgeInsets.only(right: 20),
-        //   child: Text(Env.versi, style: const TextStyle(color: Colors.black)),
-        // ),
-      ],
-    ),
-    body: LayoutBuilder(
-      builder: (context, constraints) => Consumer<StatusController>(
-        builder: (context, model, child) {
-          return SingleChildScrollView(
-            child: Center(
-              child: Column(
-                children: [
-                  const Header(),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      FormStatus(
-                        constraints: constraints,
-                        controller: usernameController,
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () async {
-                          setState(() {
-                            model.call = true;
-                          });
-                          try {
-                            await model.loginServices(context, userid: usernameController.text);
-                          } finally {
-                            setState(() {
-                              model.call = false;
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  _body2(constraints),
-                ],
-              ),
-            ),
-          );
-        },
       ),
-    ),
-    drawer: SideDrawer(),
-  );
-}
-
+      drawer: SideDrawer(username: '',),
+    );
+  }
 
   Widget _body2(BoxConstraints constraints) {
-
     String formatDate(DateTime date) {
       String year = date.year.toString();
       String month = date.month.toString().padLeft(2, '0');
@@ -155,7 +113,7 @@ Widget build(BuildContext context) {
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.grey[200], // Set the background color of the box // Solid border
+                      color: Colors.grey[200], // Set the background color of the box
                       borderRadius: BorderRadius.circular(10), // Optional: Add rounded corners
                     ),
                     child: Wrap(
@@ -169,12 +127,6 @@ Widget build(BuildContext context) {
                           BizappText(text: "Tarikh naik taraf:  ${provider.tarikhnaiktaraf}"),
                           Text("Tarikh tamat:  ${provider.tarikhtamat}", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red)),
                           Text("Tarikh sekarang: $formattedDate", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green)),
-                          // const Text("Status: Aktif",
-                          //     style: TextStyle(
-                          //         fontSize: 16,
-                          //         fontWeight: FontWeight.bold,
-                          //         color: Colors.green)),
-                          //_tips(),
                           provider.basicplusonly != "-" &&
                                   provider.basicplusonly != ""
                               ? BizappText(
@@ -208,16 +160,17 @@ Widget build(BuildContext context) {
                   ),
                   const SizedBox(height: 10),
                   Container(
-                    constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.4),
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.4),
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.grey[200], 
-                      borderRadius: BorderRadius.circular(10), // Optional: Add rounded corners
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(
+                          10), // Optional: Add rounded corners
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment
-                          .center, // Center align content horizontally
+                      mainAxisAlignment: MainAxisAlignment.center, // Center align content horizontally
                       children: [
                         SizedBox(height: 5), // Add space above the text
                         BizappText(text: 'Senarai rekod 5 terakhir: '),
@@ -267,8 +220,9 @@ class Header extends StatelessWidget {
 class FormStatus extends StatelessWidget {
   final BoxConstraints constraints;
   final TextEditingController controller;
+  final Function() onSearch;
   const FormStatus(
-      {super.key, required this.constraints, required this.controller});
+      {super.key, required this.constraints, required this.controller, required this.onSearch});
 
   @override
   Widget build(BuildContext context) {
@@ -310,6 +264,7 @@ class FormStatus extends StatelessWidget {
                       },
                     ),
                   ),
+                  onEditingComplete: onSearch,
                 ),
               ),
             ],

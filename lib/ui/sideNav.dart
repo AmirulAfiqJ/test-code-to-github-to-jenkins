@@ -1,9 +1,14 @@
+import 'package:bizapptrack/ui/expiring.dart';
 import 'package:bizapptrack/ui/home.dart';
-import 'package:bizapptrack/ui/listToExcel.dart';
-import 'package:bizapptrack/ui/status.dart';
+import 'package:bizapptrack/ui/inactive.dart';
+import 'package:bizapptrack/ui/newRenew.dart';
+import 'package:bizapptrack/ui/others.dart';
+import 'package:bizapptrack/ui/support.dart';
 import 'package:flutter/material.dart';
 
 class SideDrawer extends StatelessWidget {
+  final String username;
+  const SideDrawer({required this.username});
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -30,19 +35,37 @@ class SideDrawer extends StatelessWidget {
           ListTile(
             title: Text('Home'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(username: username)));
             },
           ),
           ListTile(
-            title: Text('Renew Status Bizapp User'),
+            title: Text('New/Renew User'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const TestRenew()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => NewCustomer(username: username)));
             },
           ),
           ListTile(
-            title: Text('Export Excel'),
+            title: Text('Expiring User'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const ListToExcel()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Expiring(username: username)));
+            },
+          ),
+          ListTile(
+            title: Text('Inactive User'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Inactive(username: username)));
+            },
+          ),
+          ListTile(
+            title: Text('Others'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Others(username: username)));
+            },
+          ),
+          ListTile(
+            title: Text('Support'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SupportPage(username: username)));
             },
           ),
         ],
