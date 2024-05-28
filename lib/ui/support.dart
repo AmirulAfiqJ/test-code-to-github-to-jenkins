@@ -20,7 +20,11 @@ class SupportPage extends StatefulWidget {
 
 class _SupportPageState extends State<SupportPage> {
   SupportViewModel viewModel = SupportViewModel();
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final ScrollController _horizontalScrollController = ScrollController();
+  final ScrollController horizontalScrollController = ScrollController();
 
   void dispose() {
     viewModel.sourceController.dispose();
@@ -30,6 +34,8 @@ class _SupportPageState extends State<SupportPage> {
     viewModel.departmentController.dispose();
     viewModel.picController.dispose();
     viewModel.noteController.dispose();
+    _horizontalScrollController.dispose();
+    horizontalScrollController.dispose();
   }
 
   void _performSearch() async {
@@ -69,15 +75,41 @@ class _SupportPageState extends State<SupportPage> {
   late FormList selectedDepartment;
   late FormList selectedPIC;
 
-  
   @override
   void initState() {
     super.initState();
-    selectedSource = viewModel.sourceList.first; 
+    selectedSource = viewModel.sourceList.first;
     selectedLevel = viewModel.levelList.first;
     selectedInitial = viewModel.firstResponseList.first;
     selectedDepartment = viewModel.departmentList.first;
     selectedPIC = viewModel.picList.first;
+  }
+
+  List<String> selectedMediumValues = [];
+  List<String> selectedProductValues = [];
+  List<String> selectedIssueValues = [];
+  List<String> selectedFollowUpValues = [];
+
+  void handleCheckboxChanges(bool value, int index, List<CheckboxItem> items) {
+    setState(() {
+      items[index].value = value;
+    });
+  }
+
+  List<String> getSelectedCheckboxValues(List<CheckboxItem> items) {
+    return items.where((item) => item.value).map((item) => item.name).toList();
+  }
+
+  void _updateSelectedValues() {
+    setState(() {
+      selectedMediumValues =
+          getSelectedCheckboxValues(viewModel.mediumCheckbox);
+      selectedProductValues =
+          getSelectedCheckboxValues(viewModel.productCheckbox);
+      selectedIssueValues = getSelectedCheckboxValues(viewModel.issueCheckbox);
+      selectedFollowUpValues =
+          getSelectedCheckboxValues(viewModel.followUpCheckbox);
+    });
   }
 
   @override
@@ -113,7 +145,7 @@ class _SupportPageState extends State<SupportPage> {
                     const SizedBox(height: 20),
                     model.call
                         ? const SizedBox.shrink()
-                        : _body4(context, constraints),
+                        : _body4(context, constraints, viewModel),
                   ],
                 ),
               ),
@@ -145,43 +177,48 @@ class _SupportPageState extends State<SupportPage> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 1.0),
+                        maxWidth: MediaQuery.of(context).size.width * 0.9),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        columns: const [
-                          DataColumn(label: Text('Bizapp ID')), // username
-                          DataColumn(label: Text('Name')), // nama
-                          DataColumn(label: Text('Email')), // emel
-                          DataColumn(label: Text('No. H/P')), // no hp
-                          DataColumn(label: Text('Package')), // pakej
-                          DataColumn(
-                              label: Text('Date Start')), // tarikh naik taraf
-                          DataColumn(label: Text('Date End')), // tarikh tamat
-                          DataColumn(
-                              label: Text('Last Login')), // tarikh log masuk
-                          DataColumn(
-                              label: Text('Last Order')), // tarikh last order
-                          DataColumn(label: Text('Payment')), // payment
-                        ],
-                        rows: [
-                          DataRow(cells: [
-                            DataCell(Text(provider.username)), // username
-                            DataCell(Text(provider.nama)), // nama
-                            DataCell(Text(provider.emel)), // emel
-                            DataCell(Text(provider.nohp)), // no hp
-                            DataCell(Text(provider.roleid)), // pakej
-                            DataCell(Text(datePart)), // tarikhnaiktaraf
-                            DataCell(Text(datePart2)), // tarikhtamat
-                            const DataCell(Text("-")), // tarikh log masuk
-                            const DataCell(Text("-")), // tarikh last order
-                            const DataCell(Text("-")), // payment
-                          ]),
-                        ],
+                    child: Scrollbar(
+                      controller: _horizontalScrollController,
+                      thumbVisibility: false,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        controller: _horizontalScrollController,
+                        child: DataTable(
+                          columns: const [
+                            DataColumn(label: Text('Bizapp ID')), // username
+                            DataColumn(label: Text('Name')), // nama
+                            DataColumn(label: Text('Email')), // emel
+                            DataColumn(label: Text('No. H/P')), // no hp
+                            DataColumn(label: Text('Package')), // pakej
+                            DataColumn(
+                                label: Text('Date Start')), // tarikh naik taraf
+                            DataColumn(label: Text('Date End')), // tarikh tamat
+                            DataColumn(
+                                label: Text('Last Login')), // tarikh log masuk
+                            DataColumn(
+                                label: Text('Last Order')), // tarikh last order
+                            DataColumn(label: Text('Payment')), // payment
+                          ],
+                          rows: [
+                            DataRow(cells: [
+                              DataCell(Text(provider.username)), // username
+                              DataCell(Text(provider.nama)), // nama
+                              DataCell(Text(provider.emel)), // emel
+                              DataCell(Text(provider.nohp)), // no hp
+                              DataCell(Text(provider.roleid)), // pakej
+                              DataCell(Text(datePart)), // tarikhnaiktaraf
+                              DataCell(Text(datePart2)), // tarikhtamat
+                              const DataCell(Text("-")), // tarikh log masuk
+                              const DataCell(Text("-")), // tarikh last order
+                              const DataCell(Text("-")), // payment
+                            ]),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -236,7 +273,7 @@ class _SupportPageState extends State<SupportPage> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 1.0),
+                        maxWidth: MediaQuery.of(context).size.width * 0.9),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(10),
@@ -284,55 +321,84 @@ class _SupportPageState extends State<SupportPage> {
         : SizedBox();
   }
 
-  Widget _body4(BuildContext context, BoxConstraints constraints) {
-    SupportViewModel viewModel = SupportViewModel();
+  Widget _body4(BuildContext context, BoxConstraints constraints,
+      SupportViewModel viewModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
           padding: const EdgeInsets.all(10),
-          constraints:
-              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 1.0),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.9,
+            minHeight: MediaQuery.of(context).size.height * 0.3,
+          ),
           decoration: BoxDecoration(
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(10),
           ),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              columns: const [
-                DataColumn(label: Text('Date')),
-                DataColumn(label: Text('Key In')),
-                DataColumn(label: Text('Source')),
-                DataColumn(label: Text('Medium')),
-                DataColumn(label: Text('Product')),
-                DataColumn(label: Text('Issue')),
-                DataColumn(label: Text('Description')),
-                DataColumn(label: Text('Level')),
-                DataColumn(label: Text('First Response')),
-                DataColumn(label: Text('Department')),
-                DataColumn(label: Text('PIC')),
-                DataColumn(label: Text('Follow Up')),
-                DataColumn(label: Text('Note')),
-              ],
-              rows: [
-                DataRow(cells: [
-                  const DataCell(Text(" ")), // date
-                  const DataCell(Text(" ")), // key in
-                  DataCell(Text(selectedSource.value)), // source
-                  DataCell(Text(" ")), // medium (checkbox)
-                  DataCell(Text(" ")), // product (checkbox)
-                  DataCell(Text(" ")), // issue (checkbox)
-                  DataCell(Text(viewModel.descController.text)), // description
-                  DataCell(Text(selectedLevel.value)), // level
-                  DataCell(Text(selectedInitial.value)), // first response - initial
-                  DataCell(Text(selectedDepartment.value)), // department
-                  DataCell(Text(selectedPIC.value)), // pic
-                  DataCell(Text(" ")), // follow up (checkbox)
-                  DataCell(Text(viewModel.noteController.text)), // note
-                ]),
-              ],
+          child: Scrollbar(
+            controller: horizontalScrollController,
+            thumbVisibility: false,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              controller: horizontalScrollController,
+              child: DataTable(
+                columns: const [
+                  DataColumn(label: Text('Date')),
+                  DataColumn(label: Text('Key In')),
+                  DataColumn(label: Text('Source')),
+                  DataColumn(label: Text('Medium')),
+                  DataColumn(label: Text('Product')),
+                  DataColumn(label: Text('Issue')),
+                  DataColumn(label: Text('Description')),
+                  DataColumn(label: Text('Level')),
+                  DataColumn(label: Text('First Response')),
+                  DataColumn(label: Text('Department')),
+                  DataColumn(label: Text('PIC')),
+                  DataColumn(label: Text('Follow Up')),
+                  DataColumn(label: Text('Note')),
+                ],
+                rows: [
+                  DataRow(cells: [
+                    const DataCell(Text(" ")), // date
+                    DataCell(Text(widget.username)), // key in
+                    DataCell(Text(selectedSource.value)), // source
+                    DataCell(Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: selectedMediumValues
+                          .map((value) => Text(value))
+                          .toList(),
+                    )), // medium (checkbox)
+                    DataCell(Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: selectedProductValues
+                          .map((value) => Text(value))
+                          .toList(),
+                    )), // product (checkbox)
+                    DataCell(Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: selectedIssueValues
+                          .map((value) => Text(value))
+                          .toList(),
+                    )), // issue (checkbox)
+                    DataCell(
+                        Text(viewModel.descController.text)), // description
+                    DataCell(Text(selectedLevel.value)), // level
+                    DataCell(Text(
+                        selectedInitial.value)), // first response - initial
+                    DataCell(Text(selectedDepartment.value)), // department
+                    DataCell(Text(selectedPIC.value)), // pic
+                    DataCell(Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: selectedFollowUpValues
+                          .map((value) => Text(value))
+                          .toList(),
+                    )), // follow up (checkbox)
+                    DataCell(Text(viewModel.noteController.text)), // note
+                  ]),
+                ],
+              ),
             ),
           ),
         ),
@@ -414,164 +480,111 @@ class _SupportPageState extends State<SupportPage> {
     );
   }
 
-  
-Widget _buildForm(SupportViewModel viewModel) {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        _buildDropdown(
-          label: 'Source',
-          value: selectedSource,
-          items: viewModel.sourceList,
-          width: 60,
-          onChanged: (FormList? newValue) {
-            setState(() {
-              selectedSource = newValue!; // Update selectedSource
-              viewModel.sourceController.text = newValue.value; // Update the controller
-            });
-          },
-        ),
-        _buildCheckbox(
-          label: 'Medium', 
-          items: viewModel.mediumCheckbox, 
-          width: 30,
-          onChanged: handleMediumCheckboxChanges),
-        _buildCheckbox(
-          label: 'Product', 
-          items: viewModel.productCheckbox, 
-          width: 32,
-          onChanged: handleProductCheckboxChanges),
-        _buildCheckbox(
-          label: 'Issue', 
-          items: viewModel.issueCheckbox, 
-          width: 51,
-          onChanged: handleIssueCheckboxChanges),
-        _buildText(
-          label: 'Description', 
-          controller: viewModel.descController),
-        _buildFilePicker(),
-        _buildDropdown(
-          label: 'Level',
-          value: selectedLevel,
-          items: viewModel.levelList,
-          width: 70,
-          onChanged: (FormList? newValue) {
-            setState(() {
-              selectedLevel = newValue!;
-              viewModel.levelController.text = newValue.value; 
-            });
-          },
-        ),
-        _buildDropdown(
-          label: 'Initial',
-          value: selectedInitial,
-          items: viewModel.firstResponseList,
-          width: 70,
-          onChanged: (FormList? newValue) {
-            setState(() {
-              selectedInitial = newValue!;
-              viewModel.firstResponseController.text = newValue.value;
-            });
-          },
-        ),
-        _buildDropdown(
-          label: 'Department',
-          value: selectedDepartment,
-          items: viewModel.departmentList,
-          width: 20,
-          onChanged: (FormList? newValue) {
-            setState(() {
-              selectedDepartment = newValue!; 
-              viewModel.departmentController.text = newValue.value;
-            });
-          },
-        ),
-        _buildDropdown(
-          label: 'PIC',
-          value: selectedPIC,
-          items: viewModel.picList,
-          width: 87,
-          onChanged: (FormList? newValue) {
-            setState(() {
-              selectedPIC = newValue!; 
-              viewModel.picController.text = newValue.value; 
-            });
-          },
-        ),
-        _buildCheckbox(
-          label: 'Follow Up', 
-          items: viewModel.followUpCheckbox, 
-          width: 16,
-          onChanged: handleFollowUpCheckboxChanges),
-        _buildText(
-          label: 'Note', 
-          controller: viewModel.noteController),
-      ],
-    ),
-  );
-}
-
-// Handle changes for mediumCheckbox
-void handleMediumCheckboxChanges(bool value, int index) {
-  setState(() {
-    viewModel.mediumCheckbox[index].value = value;
-  });
-}
-
-// Handle changes for productCheckbox
-void handleProductCheckboxChanges(bool value, int index) {
-  setState(() {
-    viewModel.productCheckbox[index].value = value;
-  });
-}
-
-// Handle changes for issueCheckbox
-void handleIssueCheckboxChanges(bool value, int index) {
-  setState(() {
-    viewModel.issueCheckbox[index].value = value;
-  });
-}
-
-// Handle changes for followUpCheckbox
-void handleFollowUpCheckboxChanges(bool value, int index) {
-  setState(() {
-    viewModel.followUpCheckbox[index].value = value;
-  });
-}
-
-void updateData() {
-  // Gather values from dropdowns, checkboxes, and text fields
-  String selectedSource = viewModel.sourceController.text;
-  List<String> selectedMediums = [];
-  List<String> selectedProducts = [];
-  List<String> selectedIssues = [];
-  List<String> selectedFollowUps = [];
-  for (CheckboxItem item in viewModel.mediumCheckbox) {
-    if (item.value) {
-      selectedMediums.add(item.name);
-    }
+  Widget _buildForm(SupportViewModel viewModel) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          _buildDropdown(
+            label: 'Source',
+            value: selectedSource,
+            items: viewModel.sourceList,
+            width: 60,
+            onChanged: (FormList? newValue) {
+              setState(() {
+                selectedSource = newValue!; // Update selectedSource
+                viewModel.sourceController.text =
+                    newValue.value; // Update the controller
+              });
+            },
+          ),
+          _buildCheckbox(
+              label: 'Medium',
+              items: viewModel.mediumCheckbox,
+              width: 30,
+              onChanged: (value, index) {
+                handleCheckboxChanges(value, index, viewModel.mediumCheckbox);
+              }),
+          _buildCheckbox(
+              label: 'Product',
+              items: viewModel.productCheckbox,
+              width: 32,
+              onChanged: (value, index) {
+                handleCheckboxChanges(value, index, viewModel.productCheckbox);
+              }),
+          _buildCheckbox(
+              label: 'Issue',
+              items: viewModel.issueCheckbox,
+              width: 51,
+              onChanged: (value, index) {
+                handleCheckboxChanges(value, index, viewModel.issueCheckbox);
+              }),
+          _buildText(
+              label: 'Description', controller: viewModel.descController),
+          _buildFilePicker(),
+          _buildDropdown(
+            label: 'Level',
+            value: selectedLevel,
+            items: viewModel.levelList,
+            width: 70,
+            onChanged: (FormList? newValue) {
+              setState(() {
+                selectedLevel = newValue!;
+                viewModel.levelController.text = newValue.value;
+              });
+            },
+          ),
+          _buildDropdown(
+            label: 'Initial',
+            value: selectedInitial,
+            items: viewModel.firstResponseList,
+            width: 70,
+            onChanged: (FormList? newValue) {
+              setState(() {
+                selectedInitial = newValue!;
+                viewModel.firstResponseController.text = newValue.value;
+              });
+            },
+          ),
+          _buildDropdown(
+            label: 'Department',
+            value: selectedDepartment,
+            items: viewModel.departmentList,
+            width: 20,
+            onChanged: (FormList? newValue) {
+              setState(() {
+                selectedDepartment = newValue!;
+                viewModel.departmentController.text = newValue.value;
+              });
+            },
+          ),
+          _buildDropdown(
+            label: 'PIC',
+            value: selectedPIC,
+            items: viewModel.picList,
+            width: 87,
+            onChanged: (FormList? newValue) {
+              setState(() {
+                selectedPIC = newValue!;
+                viewModel.picController.text = newValue.value;
+              });
+            },
+          ),
+          _buildCheckbox(
+              label: 'Follow Up',
+              items: viewModel.followUpCheckbox,
+              width: 16,
+              onChanged: (value, index) {
+                handleCheckboxChanges(value, index, viewModel.followUpCheckbox);
+              }),
+          _buildText(label: 'Note', controller: viewModel.noteController),
+        ],
+      ),
+    );
   }
-  for (CheckboxItem item in viewModel.productCheckbox) {
-    if (item.value) {
-      selectedProducts.add(item.name);
-    }
-  }
-  for (CheckboxItem item in viewModel.issueCheckbox) {
-    if (item.value) {
-      selectedIssues.add(item.name);
-    }
-  }
-  for (CheckboxItem item in viewModel.followUpCheckbox) {
-    if (item.value) {
-      selectedFollowUps.add(item.name);
-    }
-  }
-  String description = viewModel.descController.text;
-}
 
-Widget _buildFilePicker() {
+  Widget _buildFilePicker() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
       child: Column(
@@ -588,25 +601,30 @@ Widget _buildFilePicker() {
               ),
               SizedBox(width: 16),
               ElevatedButton.icon(
-          onPressed: _pickFile,
-          icon: Icon(Icons.attach_file, color: Colors.white), // Change icon color here
-          label: Text(
-            'Insert file',
-            style: TextStyle(color: Colors.white), // Change text color here
-          ),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 0, 0, 0), // Change text color when pressed here
-            minimumSize: Size(150, 50), // Minimum button size
-          ),
-        ),
-        if (_fileName != null)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Selected file: $_fileName',
-              style: TextStyle(color: Colors.black), // Change text color here
-            ),
-          ),
+                onPressed: _pickFile,
+                icon: Icon(Icons.attach_file,
+                    color: Colors.white), // Change icon color here
+                label: Text(
+                  'Insert file',
+                  style:
+                      TextStyle(color: Colors.white), // Change text color here
+                ),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: const Color.fromARGB(
+                      255, 0, 0, 0), // Change text color when pressed here
+                  minimumSize: Size(150, 50), // Minimum button size
+                ),
+              ),
+              if (_fileName != null)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Selected file: $_fileName',
+                    style: TextStyle(
+                        color: Colors.black), // Change text color here
+                  ),
+                ),
             ],
           ),
         ],
@@ -653,135 +671,134 @@ Widget _buildFilePicker() {
   }
 
   Widget _buildCheckbox({
-  required String label,
-  required List<CheckboxItem> items,
-  required width,
-  required void Function(bool, int) onChanged,
-}) {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Column for the label text
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '$label: ',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-          ],
-        ),
-        SizedBox(width: width),
-        Expanded(
-          child: Column(
+    required String label,
+    required List<CheckboxItem> items,
+    required width,
+    required void Function(bool, int) onChanged,
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Column for the label text
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Generate the checkboxes in a 3 by 3 layout
-              for (int i = 0; i < items.length; i += 3)
-                Row(
-                  children: [
-                    for (int j = i; j < i + 3 && j < items.length; j++)
-                      Expanded(
-                        child: CheckboxListTile(
-                          title: Text(items[j].name),
-                          value: items[j].value,
-                          onChanged: (bool? value) {
-                            if (value != null) {
-                              onChanged(value, j);
-                            }
-                          },
-                        ),
-                      ),
-                  ],
-                ),
+              Text(
+                '$label: ',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16),
             ],
           ),
-        ),
-      ],
-    ),
-  );
-}
+          SizedBox(width: width),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Generate the checkboxes in a 3 by 3 layout
+                for (int i = 0; i < items.length; i += 3)
+                  Row(
+                    children: [
+                      for (int j = i; j < i + 3 && j < items.length; j++)
+                        Expanded(
+                          child: CheckboxListTile(
+                            title: Text(items[j].name),
+                            value: items[j].value,
+                            onChanged: (bool? value) {
+                              if (value != null) {
+                                onChanged(value, j);
+                              }
+                            },
+                          ),
+                        ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
+  Widget _buildDropdown({
+    required String label,
+    required FormList value,
+    required List<FormList> items,
+    required double width,
+    required void Function(FormList) onChanged,
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                '$label: ',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(width: width),
+              DropdownButton<FormList>(
+                value: value,
+                items: items.map((FormList item) {
+                  return DropdownMenuItem<FormList>(
+                    value: item,
+                    child: Text(item.name),
+                  );
+                }).toList(),
+                onChanged: (FormList? newValue) {
+                  if (newValue != null) {
+                    onChanged(newValue);
+                  }
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
-Widget _buildDropdown({
-  required String label,
-  required FormList value,
-  required List<FormList> items,
-  required double width,
-  required void Function(FormList) onChanged,
-}) {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              '$label: ',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+  Widget _buildText({
+    required String label,
+    required TextEditingController controller,
+    int maxLines = 2,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$label: ',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(width: 20),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              maxLines: maxLines,
+              keyboardType: keyboardType,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(width: width),
-            DropdownButton<FormList>(
-              value: value,
-              items: items.map((FormList item) {
-                return DropdownMenuItem<FormList>(
-                  value: item,
-                  child: Text(item.name),
-                );
-              }).toList(),
-              onChanged: (FormList? newValue) {
-                if (newValue != null) {
-                  onChanged(newValue);
-                }
-              },
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildText({
-  required String label,
-  required TextEditingController controller,
-  int maxLines = 2,
-  TextInputType keyboardType = TextInputType.text,
-}) {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '$label: ',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
           ),
-        ),
-        SizedBox(width: 20),
-        Expanded(
-          child: TextField(
-            controller: controller,
-            maxLines: maxLines,
-            keyboardType: keyboardType,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
   Widget _buildUpdateClearButton() {
     return Padding(
@@ -790,7 +807,7 @@ Widget _buildText({
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
-            onPressed: updateData,
+            onPressed: _updateSelectedValues,
             style: ElevatedButton.styleFrom(
               backgroundColor: Color.fromARGB(255, 125, 212, 98),
               minimumSize: Size(150, 50),

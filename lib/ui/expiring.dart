@@ -189,7 +189,7 @@ class Expiring extends StatelessWidget {
                 DataRow(cells: [
                   const DataCell(Text(" ")),
                   const DataCell(Text(" ")),
-                  const DataCell(Text(" ")),
+                  DataCell(Text(username)),
                   DataCell(Text(model.selectedNumber)),
                   DataCell(Text(model.selectedCallStatus)),
                   DataCell(Text(model.selectedFeedback)),

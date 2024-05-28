@@ -234,7 +234,7 @@ class _OthersState extends State<Others> {
                 DataRow(cells: [
                   const DataCell(Text(" ")),
                   const DataCell(Text(" ")),
-                  const DataCell(Text(" ")),
+                  DataCell(Text(widget.username)),
                   DataCell(Text(_selectedNumber)),
                   DataCell(Text(_selectedCallStatus)),
                   DataCell(Text(purposeController.text)),
