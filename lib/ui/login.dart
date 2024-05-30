@@ -1,4 +1,5 @@
 import 'package:bizapptrack/ui/home.dart';
+import 'package:bizapptrack/utils/route.dart';
 import 'package:bizapptrack/viewmodel/login_viewmodel.dart';
 import 'package:flutter/material.dart';
 
@@ -33,52 +34,53 @@ class _LoginFormState extends State<LoginForm> {
     String email = viewModel.emailController.text.toLowerCase();
     String password = viewModel.passwordController.text;
 
-    // Check email and password combination
-    for (var user in viewModel.loginList) {
-      if (user.email.toLowerCase() == email) {
-        if (user.password == password) {
-          // Successful login
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(username: user.username),
-            ),
-          );
-          return;
-        } else {
-          // Show error message if email and password do not match
-          showDialog(
+    if(email.isNotEmpty && password.isNotEmpty) {
+      Navigator.pushNamed(context, AppRoutes.login);
+    }else{
+      showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text('Login Failed'),
-              content: Text('Email and password do not match.'),
+              title: const Text('Login Failed'),
+              content: const Text('Email and password do not match.'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text('OK'),
+                  child: const Text('OK'),
                 ),
               ],
             ),
           );
-          return;
-        }
-      }
     }
+    // TODO :: dah fix, later call pass username and password ke API then dapat return untuk check betul or tak
+    // // Check email and password combination
+    // for (var user in viewModel.loginList) {
+    //   if (user.email.toLowerCase() == email) {
+    //     if (user.password == password) {
+    //       // Successful login
+          
+    //       return;
+    //     } else {
+    //       // Show error message if email and password do not match
+          
+    //       return;
+    //     }
+    //   }
+    // }
 
-    // Show error message if email does not exist in the validCredentials map
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Login Failed'),
-        content: Text('You do not have access to this website.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
+    // // Show error message if email does not exist in the validCredentials map
+    // showDialog(
+    //   context: context,
+    //   builder: (context) => AlertDialog(
+    //     title: const Text('Login Failed'),
+    //     content: const Text('You do not have access to this website.'),
+    //     actions: [
+    //       TextButton(
+    //         onPressed: () => Navigator.pop(context),
+    //         child: const Text('OK'),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
   @override
@@ -91,7 +93,7 @@ class _LoginFormState extends State<LoginForm> {
           // Left Container for Login Fields
           Container(
             width: MediaQuery.of(context).size.width * 0.4,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color.fromARGB(255, 198, 197, 197),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20.0),
@@ -104,21 +106,21 @@ class _LoginFormState extends State<LoginForm> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Bizapp Back Office',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 50),
+                    const SizedBox(height: 50),
                     TextField(
                       controller: viewModel.emailController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Email',
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     TextField(
                       controller: viewModel.passwordController,
                       obscureText: !_isPasswordVisible,
@@ -135,7 +137,7 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                       onSubmitted: (_) => _loginPressed(context),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () => _loginPressed(context),
                       style: ElevatedButton.styleFrom(
@@ -144,7 +146,7 @@ class _LoginFormState extends State<LoginForm> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Login',
                         style: TextStyle(
                           color: Colors.black,
@@ -160,7 +162,7 @@ class _LoginFormState extends State<LoginForm> {
           // Right Container for Logo and Text
           Container(
             width: MediaQuery.of(context).size.width * 0.4,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color.fromARGB(255, 50, 49, 49),
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20.0),
@@ -178,8 +180,8 @@ class _LoginFormState extends State<LoginForm> {
                       width: 300,
                       height: 300,
                     ),
-                    SizedBox(height: 60),
-                    Text(
+                    const SizedBox(height: 60),
+                    const Text(
                       'Hello, welcome to Bizapp Back Office!',
                       style: TextStyle(
                         fontSize: 22,

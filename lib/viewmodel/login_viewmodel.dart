@@ -10,11 +10,9 @@ class LoginViewModel extends ChangeNotifier {
 
   List<LoginList> loginList = [
     LoginList(email: "admin", password: "admin", username: "Admin"),
-    LoginList(
-        email: "khai@bizapp.my", password: "khaibiz", username: "Khairina"),
+    LoginList(email: "khai@bizapp.my", password: "khaibiz", username: "Khairina"),
     LoginList(email: "miza@bizapp.my", password: "mizabiz", username: "Miza"),
-    LoginList(
-        email: "zurah@bizapp.my", password: "zurahbiz", username: "Zurah"),
+    LoginList(email: "zurah@bizapp.my", password: "zurahbiz", username: "Zurah"),
   ];
 }
 

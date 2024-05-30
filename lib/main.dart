@@ -41,8 +41,8 @@ class MyApp extends StatelessWidget {
         body: Center(
           child: Container(
             padding: const EdgeInsets.all(20.0),
-            constraints: BoxConstraints(maxHeight: 650, maxWidth: 1400), // Limit width
-            decoration: BoxDecoration(
+            constraints: const BoxConstraints(maxHeight: 650, maxWidth: 1400), // Limit width
+            decoration: const BoxDecoration(
               //color: Color.fromARGB(255, 198, 197, 197), // Change color here
               //borderRadius: BorderRadius.circular(25), // Set border radius
             ),

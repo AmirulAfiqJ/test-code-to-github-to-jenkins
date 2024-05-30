@@ -15,12 +15,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final buttonWidth = 200.0;
-    final buttonHeight = 50.0;
+    const buttonWidth = 200.0;
+    const buttonHeight = 50.0;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Bizapp Back Office',
           style: TextStyle(
             color: Colors.white,
@@ -29,24 +29,24 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
-        leading: Padding(
+        leading: const Padding(
           padding: EdgeInsets.all(8.0),
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 40.0),
+            padding: const EdgeInsets.only(right: 40.0),
             child: PopupMenuButton(
-              icon: Icon(Icons.account_circle,
+              icon: const Icon(Icons.account_circle,
                   color: Color.fromARGB(255, 237, 245, 255)),
               itemBuilder: (BuildContext context) => [
                 PopupMenuItem(
-                  child: Text('Welcome, ${widget.username}!'),
                   enabled: false,
+                  child: Text('Welcome, ${widget.username}!'),
                 ),
                 PopupMenuItem(
                   child: ListTile(
-                    leading: Icon(Icons.exit_to_app),
-                    title: Text('Logout'),
+                    leading: const Icon(Icons.exit_to_app),
+                    title: const Text('Logout'),
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
                         context,
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   width: double.infinity,
                   height: double.infinity,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(
                         'https://static.vecteezy.com/system/resources/previews/025/368/863/original/group-of-people-in-office-discussing-plan-graphic-illustration-ui-illustration-gui-ai-generated-png.png',
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                   right: 50.0,
                   child: Text(
                     'Welcome ${widget.username}!',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Roboto',
                       color: Color.fromARGB(255, 0, 0, 0),
                       fontSize: 24,
@@ -100,24 +100,24 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             child: Container(
-              color: Color.fromARGB(255, 243, 251, 255),
+              color: const Color.fromARGB(255, 243, 251, 255),
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         'Bizapp User Status',
                         style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
+                          color:  Color.fromARGB(255, 0, 0, 0),
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 70.0),
+                      const SizedBox(height: 70.0),
                       SizedBox(
                         width: buttonWidth,
                         height: buttonHeight,
@@ -128,8 +128,8 @@ class _HomePageState extends State<HomePage> {
                               MaterialPageRoute(builder: (context) => NewCustomer(username: widget.username)),
                             );
                           },
-                          icon: Icon(Icons.fiber_new, size: 30.0), // Set icon size
-                          label: Padding(
+                          icon: const Icon(Icons.fiber_new, size: 30.0), // Set icon size
+                          label: const Padding(
                             padding: EdgeInsets.symmetric(vertical: 16.0),
                             child: Text(
                               'New & Renew',
@@ -138,14 +138,14 @@ class _HomePageState extends State<HomePage> {
                           ),
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.black,
-                            backgroundColor: Color.fromARGB(255, 173, 185, 242),
+                            backgroundColor: const Color.fromARGB(255, 173, 185, 242),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ), // Text color
                           ),
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       SizedBox(
                         width: buttonWidth,
                         height: buttonHeight,
@@ -156,8 +156,8 @@ class _HomePageState extends State<HomePage> {
                             MaterialPageRoute(builder: (context) => Inactive(username: widget.username)),
                           );
                         },
-                        icon: Icon(Icons.remove_circle_outline, size: 30.0), // Set icon size
-                        label: Padding(
+                        icon: const Icon(Icons.remove_circle_outline, size: 30.0), // Set icon size
+                        label: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.0),
                           child: Text(
                             'Inactive',
@@ -166,14 +166,14 @@ class _HomePageState extends State<HomePage> {
                         ),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.black,
-                          backgroundColor: Color.fromARGB(255, 255, 228, 138),
+                          backgroundColor: const Color.fromARGB(255, 255, 228, 138),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ), // Text color
                         ),
                       ), 
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       SizedBox(
                         width: buttonWidth,
                         height: buttonHeight,
@@ -184,8 +184,8 @@ class _HomePageState extends State<HomePage> {
                             MaterialPageRoute(builder: (context) => Expiring(username: widget.username)),
                           );
                         },
-                        icon: Icon(Icons.access_time, size: 30.0), // Set icon size
-                        label: Padding(
+                        icon: const Icon(Icons.access_time, size: 30.0), // Set icon size
+                        label: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.0),
                           child: Text(
                             'Expiring',
@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.black,
-                          backgroundColor: Color.fromARGB(255, 255, 172, 172),
+                          backgroundColor: const Color.fromARGB(255, 255, 172, 172),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ), // Text color
@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       ),
 
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       SizedBox(
                         width: buttonWidth,
                         height: buttonHeight,
@@ -213,8 +213,8 @@ class _HomePageState extends State<HomePage> {
                             MaterialPageRoute(builder: (context) => Others(username: widget.username)),
                           );
                         },
-                        icon: Icon(Icons.category, size: 30.0), // Set icon size
-                        label: Padding(
+                        icon: const Icon(Icons.category, size: 30.0), // Set icon size
+                        label: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.0),
                           child: Text(
                             'Others',
@@ -230,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       SizedBox(
                         width: buttonWidth,
                         height: buttonHeight,
@@ -241,8 +241,8 @@ class _HomePageState extends State<HomePage> {
                             MaterialPageRoute(builder: (context) => SupportPage(username: widget.username)),
                           );
                         },
-                        icon: Icon(Icons.category, size: 30.0), // Set icon size
-                        label: Padding(
+                        icon: const Icon(Icons.category, size: 30.0), // Set icon size
+                        label: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.0),
                           child: Text(
                             'Support',
@@ -251,7 +251,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.black,
-                          backgroundColor: Color.fromARGB(255, 112, 211, 101),
+                          backgroundColor: const Color.fromARGB(255, 112, 211, 101),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ), // Text color
