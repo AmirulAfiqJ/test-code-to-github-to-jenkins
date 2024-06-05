@@ -16,7 +16,6 @@ class _ListToExcelState extends State<ListToExcel> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setState(() {
       _list.clear();
@@ -26,7 +25,6 @@ class _ListToExcelState extends State<ListToExcel> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _controller.dispose();
   }

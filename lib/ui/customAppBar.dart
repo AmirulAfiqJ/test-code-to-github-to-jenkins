@@ -1,5 +1,5 @@
+import 'package:bizapptrack/utils/route.dart';
 import 'package:flutter/material.dart';
-import 'package:bizapptrack/ui/login.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String username;
@@ -8,12 +8,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar({required this.username, required this.scaffoldKey});
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(
+      title: const Text(
         'Bizapp Back Office',
         style: TextStyle(
           color: Colors.white,
@@ -30,24 +30,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         Padding(
-          padding: EdgeInsets.only(right: 40.0),
+          padding: const EdgeInsets.only(right: 40.0),
           child: PopupMenuButton(
-            icon: Icon(Icons.account_circle, color: Color.fromARGB(255, 237, 245, 255)),
+            icon: const Icon(Icons.account_circle, color: Color.fromARGB(255, 237, 245, 255)),
             itemBuilder: (BuildContext context) => [
               PopupMenuItem(
-                child: Text('Welcome, $username'),
                 enabled: false,
+                child: Text('Welcome, $username'),
               ),
               PopupMenuItem(
                 child: ListTile(
-                  leading: Icon(Icons.exit_to_app),
-                  title: Text('Logout'),
+                  leading: const Icon(Icons.exit_to_app),
+                  title: const Text('Logout'),
                   onTap: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                      (route) => false,
-                    );
+                    // Navigator.pushAndRemoveUntil(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => LoginPage()),
+                    //   (route) => false,
+                    // );
+                    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (route) => false);
                   },
                 ),
               ),

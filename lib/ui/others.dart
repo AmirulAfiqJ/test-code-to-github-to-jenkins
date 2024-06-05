@@ -78,7 +78,7 @@ class _OthersState extends State<Others> {
                     _buildSearchSection(),
                     const SizedBox(height: 20),
                     model.call
-                        ? CircularProgressIndicator(color: Colors.red)
+                        ? const CircularProgressIndicator(color: Colors.red)
                         : _buildUserDetailsSection(model),
                     const SizedBox(height: 20),
                     _body2(context, constraints),
@@ -261,7 +261,7 @@ class _OthersState extends State<Others> {
           onSearch: _performSearch,
         ),
         IconButton(
-          icon: Icon(Icons.search),
+          icon: const Icon(Icons.search),
           onPressed: _performSearch,
         ),
         const SizedBox(width: 10),
@@ -278,7 +278,7 @@ class _OthersState extends State<Others> {
           Expanded(
             flex: 1,
             child: Container(
-              padding: EdgeInsets.all(70),
+              padding: const EdgeInsets.all(70),
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(10),
@@ -287,34 +287,34 @@ class _OthersState extends State<Others> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Bizapp ID: " + "${model.username}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    "Bizapp ID: " "${model.username}",
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "Package: ${model.roleid}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const  TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Text(
                     "Name: ${model.nama}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "Email: ${model.emel}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "No. H/P: ${model.nohp}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const  TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             ),
           ),
-          SizedBox(width: 70),
+          const SizedBox(width: 70),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,13 +322,13 @@ class _OthersState extends State<Others> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Number: ',
                       style: TextStyle(
                         fontSize: 18,
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     DropdownButton<String>(
                       value: _selectedNumber,
                       items: <String>[
@@ -350,17 +350,17 @@ class _OthersState extends State<Others> {
                     ),
                   ],
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Call status: ',
                       style: TextStyle(
                         fontSize: 18,
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     DropdownButton<String>(
                       value: _selectedCallStatus,
                       items: <String>[
@@ -385,21 +385,21 @@ class _OthersState extends State<Others> {
                     ),
                   ],
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Purpose: ',
                       style: TextStyle(
                         fontSize: 18,
                       ),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Expanded(
                       child: TextFormField(
                         controller: purposeController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Enter purpose',
                         ),
@@ -407,21 +407,21 @@ class _OthersState extends State<Others> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Feedback: ',
                       style: TextStyle(
                         fontSize: 18,
                       ),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Expanded(
                       child: TextFormField(
                         controller: feedbackController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Enter feedback',
                         ),
@@ -429,21 +429,21 @@ class _OthersState extends State<Others> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Reasoning: ',
                       style: TextStyle(
                         fontSize: 18,
                       ),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Expanded(
                       child: TextFormField(
                         controller: reasonController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Enter reason',
                         ),
@@ -451,21 +451,21 @@ class _OthersState extends State<Others> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Note: ',
                       style: TextStyle(
                         fontSize: 18,
                       ),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Expanded(
                       child: TextFormField(
                         controller: noteController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Enter note',
                         ),
@@ -473,17 +473,17 @@ class _OthersState extends State<Others> {
                     ),
                   ],
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Follow up: ',
                       style: TextStyle(
                         fontSize: 18,
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     DropdownButton<String>(
                       value: _selectedFollowUp,
                       items: <String>[
@@ -512,7 +512,7 @@ class _OthersState extends State<Others> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -531,9 +531,9 @@ class _OthersState extends State<Others> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 125, 212, 98),
+                        backgroundColor: const  Color.fromARGB(255, 125, 212, 98),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Update',
                         style: TextStyle(color: Colors.black),
                       ),
@@ -541,9 +541,9 @@ class _OthersState extends State<Others> {
                     ElevatedButton(
                       onPressed: _clearSelections,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 255, 109, 99),
+                        backgroundColor: const Color.fromARGB(255, 255, 109, 99),
                       ),
-                      child: Text(
+                      child: const  Text(
                         'Clear',
                         style: TextStyle(color: Colors.black),
                       ),
@@ -564,7 +564,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return const Padding(
       padding: EdgeInsets.all(20.0),
       child: Text(
         "Others",

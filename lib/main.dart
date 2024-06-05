@@ -1,4 +1,6 @@
+import 'package:bizapptrack/ui/home.dart';
 import 'package:bizapptrack/ui/login.dart';
+import 'package:bizapptrack/utils/route.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -50,6 +52,11 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      debugShowCheckedModeBanner: false,
+      routes: AppRoutes.getRoutes(),
+      onGenerateRoute: (_) {
+        return MaterialPageRoute(builder: (context) => HomePage());
+      },
     );
   }
 }

@@ -35,7 +35,7 @@ class Expiring extends StatelessWidget {
                         _buildSearchSection(model, context),
                         const SizedBox(height: 20),
                         model.isLoading
-                            ? CircularProgressIndicator(color: Colors.red)
+                            ? const CircularProgressIndicator(color: Colors.red)
                             : _buildUserDetailsSection(context, model),
                         if (!model.isLoading)
                           Column(
@@ -215,7 +215,7 @@ class Expiring extends StatelessWidget {
           onSearch: () => model.performSearch(context),
         ),
         IconButton(
-          icon: Icon(Icons.search),
+          icon: const Icon(Icons.search),
           onPressed: () => model.performSearch(context),
         ),
         const SizedBox(width: 10),
@@ -235,7 +235,7 @@ class Expiring extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Container(
-              padding: EdgeInsets.all(50),
+              padding: const EdgeInsets.all(50),
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(10),
@@ -245,33 +245,33 @@ class Expiring extends StatelessWidget {
                 children: [
                   Text(
                     "Bizapp ID: ${statusModel.username}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "Package: ${statusModel.roleid}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Text(
                     "Name: ${statusModel.nama}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "Email: ${statusModel.emel}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "No. H/P: ${statusModel.nohp}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             ),
           ),
-          SizedBox(width: 70),
+          const SizedBox(width: 70),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -309,12 +309,12 @@ class Expiring extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Note: ', style: TextStyle(fontSize: 18)),
-                    SizedBox(width: 15),
+                    const Text('Note: ', style: TextStyle(fontSize: 18)),
+                    const SizedBox(width: 15),
                     Expanded(
                       child: TextFormField(
                         controller: model.noteController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Enter note',
                         ),
@@ -323,7 +323,7 @@ class Expiring extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -332,18 +332,18 @@ class Expiring extends StatelessWidget {
                       model.setNoteText(model.noteController.text);
                     },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 125, 212, 98),
+                        backgroundColor: const Color.fromARGB(255, 125, 212, 98),
                       ),
                       child:
-                          Text('Update', style: TextStyle(color: Colors.black)),
+                          const Text('Update', style: TextStyle(color: Colors.black)),
                     ),
                     ElevatedButton(
                       onPressed: model.clearSelections,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 255, 109, 99),
+                        backgroundColor: const Color.fromARGB(255, 255, 109, 99),
                       ),
                       child:
-                          Text('Clear', style: TextStyle(color: Colors.black)),
+                          const Text('Clear', style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ),
@@ -364,8 +364,8 @@ class Expiring extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text('$label: ', style: TextStyle(fontSize: 18)),
-        SizedBox(width: 10),
+        Text('$label: ', style: const TextStyle(fontSize: 18)),
+        const SizedBox(width: 10),
         DropdownButton<String>(
           value: value,
           items: items.map((String item) {
@@ -388,7 +388,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return const Padding(
       padding: EdgeInsets.all(20.0),
       child: Text(
         "Expiring",

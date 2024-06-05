@@ -10,8 +10,9 @@ import 'package:bizapptrack/viewmodel/support_viewmodel.dart';
 import 'customAppBar.dart';
 
 class SupportPage extends StatefulWidget {
-  final String username;
-  SupportPage({required this.username});
+  // final String username;
+  // SupportPage({required this.username});
+  SupportPage({Key? key});
   //const SupportPage({super.key});
 
   @override
@@ -78,6 +79,8 @@ class _SupportPageState extends State<SupportPage> {
   @override
   void initState() {
     super.initState();
+
+    viewModel.getPref(context);
     selectedSource = viewModel.sourceList.first;
     selectedLevel = viewModel.levelList.first;
     selectedInitial = viewModel.firstResponseList.first;
@@ -118,7 +121,7 @@ class _SupportPageState extends State<SupportPage> {
       key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar:
-          CustomAppBar(username: widget.username, scaffoldKey: _scaffoldKey),
+          CustomAppBar(username: viewModel.username, scaffoldKey: _scaffoldKey),
       body: LayoutBuilder(
         builder: (context, constraints) => Consumer<StatusController>(
           builder: (context, model, child) {
@@ -132,7 +135,7 @@ class _SupportPageState extends State<SupportPage> {
                     _buildSearchSection(),
                     const SizedBox(height: 20),
                     model.call
-                        ? CircularProgressIndicator()
+                        ? const CircularProgressIndicator()
                         : _buildUserDetailsSection(model),
                     _buildForm(viewModel),
                     _buildUpdateClearButton(),
@@ -153,7 +156,7 @@ class _SupportPageState extends State<SupportPage> {
           },
         ),
       ),
-      drawer: SideDrawer(username: widget.username),
+      drawer: SideDrawer(username: viewModel.username),
     );
   }
 
@@ -318,7 +321,7 @@ class _SupportPageState extends State<SupportPage> {
               );
             },
           )
-        : SizedBox();
+        : const SizedBox();
   }
 
   Widget _body4(BuildContext context, BoxConstraints constraints,
@@ -362,7 +365,7 @@ class _SupportPageState extends State<SupportPage> {
                 rows: [
                   DataRow(cells: [
                     const DataCell(Text(" ")), // date
-                    DataCell(Text(widget.username)), // key in
+                    DataCell(Text(viewModel.username)), // key in
                     DataCell(Text(selectedSource.value)), // source
                     DataCell(Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -416,7 +419,7 @@ class _SupportPageState extends State<SupportPage> {
           onSearch: _performSearch,
         ),
         IconButton(
-          icon: Icon(Icons.search),
+          icon: const Icon(Icons.search),
           onPressed: _performSearch,
         ),
         const SizedBox(width: 10),
@@ -426,14 +429,14 @@ class _SupportPageState extends State<SupportPage> {
 
   Widget _buildUserDetailsSection(StatusController model) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             flex: 1,
             child: Container(
-              padding: EdgeInsets.all(50),
+              padding: const EdgeInsets.all(50),
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(10),
@@ -446,25 +449,25 @@ class _SupportPageState extends State<SupportPage> {
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "Package: ${model.roleid}",
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Text(
                     "Name: ${model.nama}",
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "Email: ${model.emel}",
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "No. H/P: ${model.nohp}",
                     style: const TextStyle(
@@ -474,7 +477,7 @@ class _SupportPageState extends State<SupportPage> {
               ),
             ),
           ),
-          SizedBox(width: 70),
+          const SizedBox(width: 70),
         ],
       ),
     );
@@ -482,7 +485,7 @@ class _SupportPageState extends State<SupportPage> {
 
   Widget _buildForm(SupportViewModel viewModel) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -586,7 +589,7 @@ class _SupportPageState extends State<SupportPage> {
 
   Widget _buildFilePicker() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -599,12 +602,12 @@ class _SupportPageState extends State<SupportPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               ElevatedButton.icon(
                 onPressed: _pickFile,
-                icon: Icon(Icons.attach_file,
+                icon: const Icon(Icons.attach_file,
                     color: Colors.white), // Change icon color here
-                label: Text(
+                label: const Text(
                   'Insert file',
                   style:
                       TextStyle(color: Colors.white), // Change text color here
@@ -613,7 +616,7 @@ class _SupportPageState extends State<SupportPage> {
                   foregroundColor: Colors.white,
                   backgroundColor: const Color.fromARGB(
                       255, 0, 0, 0), // Change text color when pressed here
-                  minimumSize: Size(150, 50), // Minimum button size
+                  minimumSize: const Size(150, 50), // Minimum button size
                 ),
               ),
               if (_fileName != null)
@@ -621,7 +624,7 @@ class _SupportPageState extends State<SupportPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Selected file: $_fileName',
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.black), // Change text color here
                   ),
                 ),
@@ -656,12 +659,12 @@ class _SupportPageState extends State<SupportPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('File Size Limit Exceeded'),
-            content: Text('Please select a file smaller than 10 MB.'),
+            title: const Text('File Size Limit Exceeded'),
+            content: const Text('Please select a file smaller than 10 MB.'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           ),
@@ -677,7 +680,7 @@ class _SupportPageState extends State<SupportPage> {
     required void Function(bool, int) onChanged,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -687,9 +690,9 @@ class _SupportPageState extends State<SupportPage> {
             children: [
               Text(
                 '$label: ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
             ],
           ),
           SizedBox(width: width),
@@ -731,7 +734,7 @@ class _SupportPageState extends State<SupportPage> {
     required void Function(FormList) onChanged,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -739,7 +742,7 @@ class _SupportPageState extends State<SupportPage> {
             children: [
               Text(
                 '$label: ',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -773,24 +776,24 @@ class _SupportPageState extends State<SupportPage> {
     TextInputType keyboardType = TextInputType.text,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             '$label: ',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Expanded(
             child: TextField(
               controller: controller,
               maxLines: maxLines,
               keyboardType: keyboardType,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
               ),
             ),
@@ -802,29 +805,29 @@ class _SupportPageState extends State<SupportPage> {
 
   Widget _buildUpdateClearButton() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
             onPressed: _updateSelectedValues,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromARGB(255, 125, 212, 98),
-              minimumSize: Size(150, 50),
+              backgroundColor: const Color.fromARGB(255, 125, 212, 98),
+              minimumSize: const Size(150, 50),
             ),
-            child: Text(
+            child: const Text(
               'Update',
               style: TextStyle(color: Colors.black),
             ),
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           ElevatedButton(
             onPressed: _clearSelections,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromARGB(255, 255, 109, 99),
-              minimumSize: Size(150, 50),
+              backgroundColor: const Color.fromARGB(255, 255, 109, 99),
+              minimumSize: const Size(150, 50),
             ),
-            child: Text(
+            child: const Text(
               'Clear',
               style: TextStyle(color: Colors.black),
             ),

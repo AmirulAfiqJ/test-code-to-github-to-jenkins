@@ -2,17 +2,32 @@ import 'package:bizapptrack/ui/expiring.dart';
 import 'package:bizapptrack/ui/inactive.dart';
 import 'package:bizapptrack/ui/newRenew.dart';
 import 'package:bizapptrack/ui/others.dart';
-import 'package:bizapptrack/ui/support.dart';
+import 'package:bizapptrack/utils/route.dart';
+import 'package:bizapptrack/viewmodel/home_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:bizapptrack/ui/login.dart';
 class HomePage extends StatefulWidget {
-  final String username;
-  HomePage({required this.username});
+
+  // final String username;
+
+  // HomePage({
+  //   required this.username
+  //   });
+
+  HomePage({super.key});
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
+  HomeViewModel viewModel = HomeViewModel();
+  @override
+  void initState() {
+    super.initState();
+    viewModel.getPref(context);
+    print(viewModel.username);
+  }
+
   @override
   Widget build(BuildContext context) {
     const buttonWidth = 200.0;
@@ -41,18 +56,19 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (BuildContext context) => [
                 PopupMenuItem(
                   enabled: false,
-                  child: Text('Welcome, ${widget.username}!'),
+                  child: Text('Welcome, ${viewModel.username}!'),
                 ),
                 PopupMenuItem(
                   child: ListTile(
                     leading: const Icon(Icons.exit_to_app),
                     title: const Text('Logout'),
                     onTap: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                        (route) => false,
-                      );
+                      // Navigator.pushAndRemoveUntil(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => LoginPage()),
+                      //   (route) => false,
+                      // );
+                      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (route) => false);
                     },
                   ),
                 ),
@@ -85,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                   bottom: 45.0,
                   right: 50.0,
                   child: Text(
-                    'Welcome ${widget.username}!',
+                    'Welcome ${viewModel.username}!',
                     style: const TextStyle(
                       fontFamily: 'Roboto',
                       color: Color.fromARGB(255, 0, 0, 0),
@@ -125,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => NewCustomer(username: widget.username)),
+                              MaterialPageRoute(builder: (context) => NewCustomer(username: viewModel.username)),
                             );
                           },
                           icon: const Icon(Icons.fiber_new, size: 30.0), // Set icon size
@@ -153,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Inactive(username: widget.username)),
+                            MaterialPageRoute(builder: (context) => Inactive(username: viewModel.username)),
                           );
                         },
                         icon: const Icon(Icons.remove_circle_outline, size: 30.0), // Set icon size
@@ -181,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Expiring(username: widget.username)),
+                            MaterialPageRoute(builder: (context) => Expiring(username: viewModel.username)),
                           );
                         },
                         icon: const Icon(Icons.access_time, size: 30.0), // Set icon size
@@ -210,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Others(username: widget.username)),
+                            MaterialPageRoute(builder: (context) => Others(username: viewModel.username)),
                           );
                         },
                         icon: const Icon(Icons.category, size: 30.0), // Set icon size
@@ -236,10 +252,13 @@ class _HomePageState extends State<HomePage> {
                         height: buttonHeight,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SupportPage(username: widget.username)),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(builder: (context) => SupportPage(username: viewModel.username)),
+                          // );
+                          Navigator.pushNamed(context, AppRoutes.support, arguments: {
+                            "username": viewModel.username
+                          });
                         },
                         icon: const Icon(Icons.category, size: 30.0), // Set icon size
                         label: const Padding(

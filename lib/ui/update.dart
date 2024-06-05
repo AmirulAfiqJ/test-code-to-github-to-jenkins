@@ -1,4 +1,4 @@
-import 'package:bizapptrack/ui/login.dart';
+import 'package:bizapptrack/utils/route.dart';
 import 'package:flutter/material.dart';
 
 class Update extends StatefulWidget {
@@ -45,12 +45,12 @@ class _UpdateState extends State<Update> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.white),
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () {
           Navigator.pop(context);
         },
         ),
-        title: Text(
+        title: const Text(
           'Bizapp Back Office',
           style: TextStyle(
             color: Colors.white,
@@ -61,24 +61,25 @@ class _UpdateState extends State<Update> {
         automaticallyImplyLeading: false,
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 40.0),
+            padding: const EdgeInsets.only(right: 40.0),
             child: PopupMenuButton(
-              icon: Icon(Icons.account_circle, color: Color.fromARGB(255, 237, 245, 255)),
+              icon: const Icon(Icons.account_circle, color: Color.fromARGB(255, 237, 245, 255)),
               itemBuilder: (BuildContext context) => [
-                PopupMenuItem(
+                const PopupMenuItem(
                   child: Text('Welcome, John'),
                   enabled: false,
                 ),
                       PopupMenuItem(
                         child: ListTile(
-                          leading: Icon(Icons.exit_to_app),
-                          title: Text('Logout'),
+                          leading: const Icon(Icons.exit_to_app),
+                          title: const Text('Logout'),
                           onTap: () {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (context) => LoginPage()),
-                              (route) => false,
-                      );
+                      //       Navigator.pushAndRemoveUntil(
+                      //         context,
+                      //         MaterialPageRoute(builder: (context) => LoginPage()),
+                      //         (route) => false,
+                      // );
+                      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (route) => false);
                     },
                   ),
                 ),
@@ -89,10 +90,10 @@ class _UpdateState extends State<Update> {
       ),
       
       body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(100, 40, 100, 40),
+        padding: const EdgeInsets.fromLTRB(100, 40, 100, 40),
         child: Column(
           children: [
-            Header(), // Calling the Header widget here
+            const Header(), // Calling the Header widget here
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(50.0),
@@ -101,37 +102,37 @@ class _UpdateState extends State<Update> {
                   children: [
                     TextFormField(
                       controller: usernameController,
-                      decoration: InputDecoration(labelText: 'Username'),
+                      decoration: const InputDecoration(labelText: 'Username'),
                       enabled: false,
                     ),
                     TextFormField(
                       controller: namaController,
-                      decoration: InputDecoration(labelText: 'Nama'),
+                      decoration: const InputDecoration(labelText: 'Nama'),
                       enabled: false,
                     ),
                     TextFormField(
                       controller: roleidController,
-                      decoration: InputDecoration(labelText: 'Pakej'),
+                      decoration: const InputDecoration(labelText: 'Pakej'),
                       enabled: false,
                     ),
                     TextFormField(
                       controller: tarikhnaiktarafController,
-                      decoration: InputDecoration(labelText: 'Tarikh naik taraf'),
+                      decoration: const InputDecoration(labelText: 'Tarikh naik taraf'),
                       enabled: false,
                     ),
                     TextFormField(
                       controller: tarikhtamatController,
-                      decoration: InputDecoration(labelText: 'Tarikh tamat'),
+                      decoration: const InputDecoration(labelText: 'Tarikh tamat'),
                       enabled: false,
                     ),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           'Status : ',
                           style: TextStyle(fontSize: 18),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         DropdownButton<String>(
                           value: _selectedStatus,
                           items: <String>['Active', 'Inactive']
@@ -149,14 +150,14 @@ class _UpdateState extends State<Update> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           'Reason for inactivity : ',
                           style: TextStyle(fontSize: 18),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         DropdownButton<String>(
                           value: _selectedReason,
                           items: <String>[
@@ -180,16 +181,16 @@ class _UpdateState extends State<Update> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () {
                         // Add your save logic here
                       },
                       style: ElevatedButton.styleFrom(
-                        minimumSize: Size(20, 40),
+                        minimumSize: const Size(20, 40),
                         backgroundColor: Colors.black,
                       ),
-                      child: Text(
+                      child: const Text(
                         'Save',
                         style: TextStyle(color: Colors.white),
                       ),

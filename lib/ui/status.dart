@@ -42,7 +42,7 @@ class _TestRenewState extends State<TestRenew> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey, // Assign the scaffold key
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       floatingActionButton: BizappButton(
         color: Colors.black87,
         title: "Export Excel",
@@ -68,7 +68,7 @@ class _TestRenewState extends State<TestRenew> {
                           onSearch: _performSearch,
                         ),
                         IconButton(
-                          icon: Icon(Icons.search),
+                          icon: const  Icon(Icons.search),
                           onPressed: _performSearch,
                         ),
                         const SizedBox(width: 10),
@@ -83,7 +83,7 @@ class _TestRenewState extends State<TestRenew> {
           },
         ),
       ),
-      drawer: SideDrawer(username: '',),
+      drawer: const SideDrawer(username: '',),
     );
   }
 
@@ -111,7 +111,7 @@ class _TestRenewState extends State<TestRenew> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: const  EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: Colors.grey[200], // Set the background color of the box
                       borderRadius: BorderRadius.circular(10), // Optional: Add rounded corners
@@ -125,8 +125,8 @@ class _TestRenewState extends State<TestRenew> {
                           BizappText(text: "Nama:  ${provider.nama}"),
                           BizappText(text: "Pakej:  ${provider.roleid}"),
                           BizappText(text: "Tarikh naik taraf:  ${provider.tarikhnaiktaraf}"),
-                          Text("Tarikh tamat:  ${provider.tarikhtamat}", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red)),
-                          Text("Tarikh sekarang: $formattedDate", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green)),
+                          Text("Tarikh tamat:  ${provider.tarikhtamat}", style: const  TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red)),
+                          Text("Tarikh sekarang: $formattedDate", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green)),
                           provider.basicplusonly != "-" &&
                                   provider.basicplusonly != ""
                               ? BizappText(
@@ -162,7 +162,7 @@ class _TestRenewState extends State<TestRenew> {
                   Container(
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.4),
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(
@@ -172,20 +172,20 @@ class _TestRenewState extends State<TestRenew> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center, // Center align content horizontally
                       children: [
-                        SizedBox(height: 5), // Add space above the text
-                        BizappText(text: 'Senarai rekod 5 terakhir: '),
-                        SizedBox(height: 5), // Add space below the text
+                        const SizedBox(height: 5), // Add space above the text
+                        const BizappText(text: 'Senarai rekod 5 terakhir: '),
+                        const SizedBox(height: 5), // Add space below the text
                         /// data list
                         provider.callRekod == false
                             ? provider.listrekod.isEmpty
-                                ? Text('Tiada Rekod',
+                                ? const Text('Tiada Rekod',
                                     style: TextStyle(
                                       fontSize: 16,
                                     ))
                                 : Center(
                                     child:
                                         DataList(listrekod: provider.listrekod))
-                            : GetLoad(text: "Load data record ..."),
+                            : const GetLoad(text: "Load data record ..."),
                       ],
                     ),
                   ),
