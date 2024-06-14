@@ -9,7 +9,7 @@ SnackBar snackBarBizapp(String error) {
     },
     duration: const Duration(seconds: 4),
     behavior: SnackBarBehavior.floating,
-    content: Text("Error. Sila panggil Faiz (sebelum Faiz takde :p ) : $error", style: const TextStyle(
+    content: Text("Error. Username not found. Please try again.", style: const TextStyle(
       fontFamily: 'Poppins',
       fontSize: 18, color: Colors.white,
     )),

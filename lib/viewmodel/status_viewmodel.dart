@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:io';
-
+import 'dart:html';
 import 'package:bizapptrack/model/listrekodmodel.dart';
 import 'package:bizapptrack/utils/constant.dart';
 import 'package:bizapptrack/env.dart';
@@ -17,14 +16,28 @@ class StatusController extends ChangeNotifier {
   String roleid = "";
   String tarikhnaiktaraf = "";
   String tarikhtamat = "";
+  String tarikhlogmasuk = "";
   String basicplusonly = "";
   String pid = "";
 
-  String biltempahan = "-";
-  String rekodtempahan = "-";
-  String bilEjen = "-";
-  String bizappayacc = "-";
-  String jenissyarikatname = "-";
+  String biltempahan = "";
+  String rekodtempahan = "";
+  String bilEjen = "";
+  String bizappayacc = "";
+  String jenissyarikatname = "";
+  String bizappage = "";
+  String statusTiktok = "-";
+  String statusShopee = "-";
+  String woo = "-";
+  String wsapme = "-";
+  String typepayment = "";
+  String transactdate = "";
+
+  String today = "";
+  String ystd = "";
+  String week = "";
+  String month = "";
+  String year = "";
 
   bool call = false;
   bool callDedagang = false;
@@ -57,7 +70,7 @@ class StatusController extends ChangeNotifier {
             .showSnackBar(snackBarBizapp("error dedagang"));
       });
 
-       _getRekod(resJSON[0]['pid']);
+      _getRekod(resJSON[0]['pid']);
 
       var report = resJSON[0]['addon_module_rpt'];
 
@@ -128,6 +141,121 @@ class StatusController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future statushopee(BuildContext context, {required String pid}) async {
+    Map<String, dynamic> body = {
+      "pid": pid,
+      "DOMAIN": "BIZAPP",
+      "TOKEN": " ",
+    };
+
+    await http
+        .post(Uri.parse(Env.statusShopee), body: body)
+        .then((res) async {
+      final resJSON = json.decode(res.body);
+      call = false;
+
+      resJSON[0]['shopee_connection'] == "1"
+          ? statusShopee = "Connected"
+          : statusShopee = "Disconnected";
+      // print(resJSON[0]);
+      notifyListeners();
+
+      return resJSON[0];
+    }).onError((error, stackTrace) {
+      call = false;
+      notifyListeners();
+    });
+    notifyListeners();
+  }
+
+    Future statustiktok(BuildContext context, {required String pid}) async {
+    Map<String, dynamic> body = {
+      "pid": pid,
+      "DOMAIN": "BIZAPP",
+      "TOKEN": " ",
+    };
+
+    await http.post(Uri.parse(Env.statusTiktok), body: body).then((res) async {
+      final resJSON = json.decode(res.body);
+      call = false;
+
+      resJSON[0]['tiktokshop_connection'] == "1"
+          ? statusTiktok = "Connected"
+          : statusTiktok = "Disconnected";
+      // print(resJSON[0]);
+      notifyListeners();
+
+      return resJSON[0];
+    }).onError((error, stackTrace) {
+      call = false;
+      notifyListeners();
+    });
+    notifyListeners();
+  }
+
+  Future statusWsapme(BuildContext context, {required String pid}) async {
+    Map<String, dynamic> body = {
+      "pid": pid,
+      "DOMAIN": "BIZAPP",
+    };
+
+    await http.post(Uri.parse(Env.Wsapme), body: body).then((res) async {
+      final resJSON = json.decode(res.body);
+      call = false;
+
+      resJSON[0]['STATUS'] == "1" ? wsapme = "Connected" : wsapme = "Disconnected";
+      // print(resJSON[0]);
+      notifyListeners();
+
+      return resJSON[0];
+    }).onError((error, stackTrace) {
+      call = false;
+      notifyListeners();
+    });
+    notifyListeners();
+  }
+
+  Future bizappPage(BuildContext context,
+      {required String pid, required String hqpid}) async {
+    Map<String, dynamic> body = {
+      "pid": pid,
+      "hqpid": hqpid,
+      "DOMAIN": "BIZAPP",
+      "TOKEN": " ",
+    };
+
+    await http.post(Uri.parse(Env.bizappage), body: body).then((res) async {
+      final resJSON = json.decode(res.body);
+      call = false;
+
+      bizappage = resJSON[0]['url'];
+      notifyListeners();
+
+      return resJSON[0];
+    }).onError((error, stackTrace) {
+      call = false;
+      notifyListeners();
+    });
+    notifyListeners();
+  }
+
+  Future wooCom(String pid) async {
+    Map<String, dynamic> body = {
+      "pid": pid,
+      "DOMAIN": "BIZAPP",
+      "TOKEN": "aa",
+    };
+
+    await http.post(Uri.parse(Env.woocommerce), body: body).then((res) {
+      final resJSON = json.decode(res.body);
+
+      woo = [resJSON][0]['woowebhook'] == null ? "Tiada" : "";
+      resJSON[0]['woowebhook'] != "" ? woo = "Tiada" : woo = "";
+
+      notifyListeners();
+    });
+  }
+
   void resetData() {
     username = "";
     sk = "";
@@ -137,12 +265,26 @@ class StatusController extends ChangeNotifier {
     roleid = "";
     tarikhnaiktaraf = "";
     tarikhtamat = "";
+    tarikhlogmasuk = "";
     basicplusonly = "";
     biltempahan = "-";
     rekodtempahan = "-";
     bilEjen = "-";
     bizappayacc = "-";
     jenissyarikatname = "-";
+    statusTiktok = "-";
+    statusShopee = "-";
+    wsapme = "-";
+    woo = "-";
+    typepayment = "";
+    transactdate = "";
+
+    today = "";
+    ystd = "";
+    week = "";
+    month = "";
+    year = "";
+
     call = false;
     callDedagang = false;
     callRekod = false;
@@ -173,8 +315,10 @@ class StatusController extends ChangeNotifier {
 
   listRekodModel? listrekodmodel;
 
-  final List<listRekodModel> listrekod = [];
-  Future<listRekodModel?> _getRekod(String pid) async {
+  // final List<listRekodModel> listrekod = [];
+  // Future<listRekodModel?> _getRekod(String pid) async {
+  final List listrekod = [];
+  Future _getRekod(String pid) async {
     Map<String, dynamic> body = {
       "pid": pid,
       "DOMAIN": "BIZAPP",
@@ -194,13 +338,57 @@ class StatusController extends ChangeNotifier {
     final res =
         await http.post(Uri.parse(Env.rekodurl), body: body).then((res) {
       final resJSON = json.decode(res.body);
-      listrekod.add(listRekodModel.fromJson(resJSON));
+      // listrekod.add(listRekodModel.fromJson(resJSON));
       // listrekodmodel = listRekodModel.fromJson(jsonDecode(res.body));
       callRekod = false;
-      print("test: ${listrekod}");
+      typepayment = resJSON[0]['camefrom'] ?? "null";
+      // print("test: ${listrekod}");
+      if (resJSON[0]["camefrom"] == "WOO") {
+        typepayment = "WooCommerce";
+      } else if (resJSON[0]["camefrom"] == "EMALL") {
+        typepayment = "Bizappshop (Minishop)";
+      } else if (resJSON[0]["fpxkey"] == "DONE") {
+        typepayment = "Bizappay";
+      } else {
+        typepayment = "Manual";
+      }
+
+      transactdate = resJSON[0]['transactiondate'];
       // listrekod.addAll(res.listmodel);
+      listrekod.addAll(resJSON);
+      // print(resJSON[0]);
       notifyListeners();
     });
+  }
+
+  Future<void> ordertotal(BuildContext context) async {
+    Map<String, dynamic> body = {
+      "domain": "BIZAPP",
+      "summary": "total-orders",
+    };
+
+    try {
+      final res = await http.post(
+        Uri.parse(Env.totalorders),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(body),
+      );
+
+      if (res.statusCode == 200) {
+        final resJSON = json.decode(res.body);
+        today = resJSON[0]['today'];
+        ystd = resJSON[0]['yesterday'];
+        week = resJSON[0]['this_week'];
+        month = resJSON[0]['this_month'];
+        year = resJSON[0]['this_year'];
+      } else {
+        print('Error: ${res.statusCode}, Response: ${res.body}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+
+    notifyListeners();
   }
 
   void resetListData() {

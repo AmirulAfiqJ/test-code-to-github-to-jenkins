@@ -25,6 +25,9 @@ class _SupportPageState extends State<SupportPage> {
 
   final ScrollController _horizontalScrollController = ScrollController();
   final ScrollController horizontalScrollController = ScrollController();
+  final ScrollController _verticalScrollController = ScrollController();
+
+  bool _showScrollToTopButton = false;
 
   void dispose() {
     viewModel.sourceController.dispose();
@@ -36,6 +39,8 @@ class _SupportPageState extends State<SupportPage> {
     viewModel.noteController.dispose();
     _horizontalScrollController.dispose();
     horizontalScrollController.dispose();
+    _verticalScrollController.dispose();
+    super.dispose();
   }
 
   void _performSearch() async {
@@ -48,6 +53,10 @@ class _SupportPageState extends State<SupportPage> {
       await model.loginServices(context,
           userid: viewModel.usernameController.text);
       await model.profile(context, pid: model.pid);
+      await model.statushopee(context, pid: model.pid);
+      await model.statustiktok(context, pid: model.pid);
+      await model.statusWsapme(context, pid: model.pid);
+      await model.bizappPage(context, pid: model.pid, hqpid: '');
     } finally {
       setState(() {
         model.call = false;
@@ -69,6 +78,20 @@ class _SupportPageState extends State<SupportPage> {
     });
   }
 
+  void _scrollListener() {
+    setState(() {
+      _showScrollToTopButton = _verticalScrollController.offset >= 200;
+    });
+  }
+
+  void _scrollToTop() {
+    _verticalScrollController.animateTo(
+      0,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
   late FormList selectedSource;
   late FormList selectedLevel;
   late FormList selectedInitial;
@@ -83,6 +106,7 @@ class _SupportPageState extends State<SupportPage> {
     selectedInitial = viewModel.firstResponseList.first;
     selectedDepartment = viewModel.departmentList.first;
     selectedPIC = viewModel.picList.first;
+    _verticalScrollController.addListener(_scrollListener);
   }
 
   List<String> selectedMediumValues = [];
@@ -123,6 +147,7 @@ class _SupportPageState extends State<SupportPage> {
         builder: (context, constraints) => Consumer<StatusController>(
           builder: (context, model, child) {
             return SingleChildScrollView(
+              controller: _verticalScrollController,
               child: Center(
                 child: Column(
                   children: [
@@ -154,6 +179,13 @@ class _SupportPageState extends State<SupportPage> {
         ),
       ),
       drawer: SideDrawer(username: widget.username),
+      floatingActionButton: Visibility(
+        visible: _showScrollToTopButton,
+        child: FloatingActionButton(
+          onPressed: _scrollToTop,
+          child: Icon(Icons.arrow_upward),
+        ),
+      ),
     );
   }
 
@@ -163,17 +195,28 @@ class _SupportPageState extends State<SupportPage> {
             builder: (context, provider, child) {
               String upgradeDate = provider.tarikhnaiktaraf;
               String endDate = provider.tarikhtamat;
+              String logDate = provider.transactdate;
 
               List<String> parts = upgradeDate.split(' ');
               List<String> parts2 = endDate.split(' ');
+              List<String> parts3 = logDate.split(' ');
 
               String datePart = parts[0];
               String datePart2 = parts2[0];
+              String datePart3 = parts3[0];
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Text(
+                    'Customer Details',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.all(10),
                     constraints: BoxConstraints(
@@ -195,13 +238,10 @@ class _SupportPageState extends State<SupportPage> {
                             DataColumn(label: Text('Email')), // emel
                             DataColumn(label: Text('No. H/P')), // no hp
                             DataColumn(label: Text('Package')), // pakej
-                            DataColumn(
-                                label: Text('Date Start')), // tarikh naik taraf
+                            DataColumn(label: Text('Date Start')), // tarikh naik taraf
                             DataColumn(label: Text('Date End')), // tarikh tamat
-                            DataColumn(
-                                label: Text('Last Login')), // tarikh log masuk
-                            DataColumn(
-                                label: Text('Last Order')), // tarikh last order
+                            DataColumn(label: Text('Last Login')), // tarikh log masuk
+                            DataColumn(label: Text('Last Order')), // tarikh last order
                             DataColumn(label: Text('Payment')), // payment
                           ],
                           rows: [
@@ -213,9 +253,9 @@ class _SupportPageState extends State<SupportPage> {
                               DataCell(Text(provider.roleid)), // pakej
                               DataCell(Text(datePart)), // tarikhnaiktaraf
                               DataCell(Text(datePart2)), // tarikhtamat
-                              const DataCell(Text("-")), // tarikh log masuk
-                              const DataCell(Text("-")), // tarikh last order
-                              const DataCell(Text("-")), // payment
+                              DataCell(Text(provider.tarikhlogmasuk)), // tarikh log masuk
+                              DataCell(Text(datePart3)), // tarikh last order
+                              DataCell(Text(provider.typepayment)), // payment
                             ]),
                           ],
                         ),
@@ -223,38 +263,6 @@ class _SupportPageState extends State<SupportPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Container(
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.4,
-                    ),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 5),
-                        const Text('Senarai rekod 5 terakhir: '),
-                        const SizedBox(height: 5),
-                        provider.callRekod == false
-                            ? provider.listrekod.isEmpty
-                                ? const Text(
-                                    'Tiada Rekod',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  )
-                                : Center(
-                                    child:
-                                        DataList(listrekod: provider.listrekod),
-                                  )
-                            : const GetLoad(text: "Load data record ..."),
-                      ],
-                    ),
-                  ),
                 ],
               );
             },
@@ -303,11 +311,11 @@ class _SupportPageState extends State<SupportPage> {
                             DataCell(Text(provider.bizappayacc)),
                             DataCell(Text(provider.jenissyarikatname)),
                             const DataCell(Text("-")), // bizappshop
-                            const DataCell(Text("-")), // bizappage
-                            const DataCell(Text("-")), // woo-commerce
-                            const DataCell(Text("-")), // wsapme
-                            const DataCell(Text("-")), // shopee
-                            const DataCell(Text("-")), // tiktok
+                            DataCell(Text(provider.bizappage)), // bizappage
+                            DataCell(Text(provider.woo)), // woo-commerce
+                            DataCell(Text(provider.wsapme)), // wsapme
+                            DataCell(Text(provider.statusShopee)), // shopee
+                            DataCell(Text(provider.statusTiktok)), // tiktok
                           ]),
                         ],
                       ),
@@ -323,15 +331,42 @@ class _SupportPageState extends State<SupportPage> {
 
   Widget _body4(BuildContext context, BoxConstraints constraints,
       SupportViewModel viewModel) {
+    String formatDate(DateTime date) {
+      String year = date.year.toString();
+      String month = date.month.toString().padLeft(2, '0');
+      String day = date.day.toString().padLeft(2, '0');
+      String hour =
+          (date.hour > 12) ? (date.hour - 12).toString() : date.hour.toString();
+      if (hour == '0') hour = '12'; // Adjust 0 to 12 for midnight
+      String minute = date.minute.toString().padLeft(2, '0');
+      String period = (date.hour >= 12) ? 'PM' : 'AM';
+      return '$day/$month/$year $hour:$minute $period';
+    }
+
+    DateTime now = DateTime.now();
+    String formattedDate = formatDate(now);
+
+    List<String> parts = formattedDate.split(' ');
+
+    String date = parts[0];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        const Text(
+          'Follow Up',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
         Container(
           padding: const EdgeInsets.all(10),
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.9,
-            minHeight: MediaQuery.of(context).size.height * 0.3,
+            // minHeight: MediaQuery.of(context).size.height * 0.3,
           ),
           decoration: BoxDecoration(
             color: Colors.grey[200],
@@ -361,7 +396,7 @@ class _SupportPageState extends State<SupportPage> {
                 ],
                 rows: [
                   DataRow(cells: [
-                    const DataCell(Text(" ")), // date
+                    DataCell(Text(date)), // date today
                     DataCell(Text(widget.username)), // key in
                     DataCell(Text(selectedSource.value)), // source
                     DataCell(Column(
@@ -385,8 +420,7 @@ class _SupportPageState extends State<SupportPage> {
                     DataCell(
                         Text(viewModel.descController.text)), // description
                     DataCell(Text(selectedLevel.value)), // level
-                    DataCell(Text(
-                        selectedInitial.value)), // first response - initial
+                    DataCell(Text(selectedInitial.value)), // first response
                     DataCell(Text(selectedDepartment.value)), // department
                     DataCell(Text(selectedPIC.value)), // pic
                     DataCell(Column(
@@ -802,7 +836,7 @@ class _SupportPageState extends State<SupportPage> {
 
   Widget _buildUpdateClearButton() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
+      padding: EdgeInsets.symmetric(horizontal: 500.0, vertical: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -883,6 +917,7 @@ class FormStatus extends StatelessWidget {
             icon: const Icon(Icons.clear, color: Colors.red),
             onPressed: () {
               controller.clear();
+              Provider.of<StatusController>(context, listen: false).resetData();
             },
           ),
         ),

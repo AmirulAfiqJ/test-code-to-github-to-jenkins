@@ -83,17 +83,28 @@ class Inactive extends StatelessWidget {
             builder: (context, provider, child) {
               String upgradeDate = provider.tarikhnaiktaraf;
               String endDate = provider.tarikhtamat;
+              String logDate = provider.transactdate;
 
               List<String> parts = upgradeDate.split(' ');
               List<String> parts2 = endDate.split(' ');
+              List<String> parts3 = logDate.split(' ');
 
               String datePart = parts[0];
               String datePart2 = parts2[0];
+              String datePart3 = parts3[0];
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Text(
+                    'Customer Details',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.all(10),
                     constraints: BoxConstraints(
@@ -106,12 +117,16 @@ class Inactive extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: DataTable(
                         columns: const [
-                          DataColumn(label: Text('Date Start')), // tarikh naik taraf
+                          DataColumn(
+                              label: Text('Date Start')), // tarikh naik taraf
                           DataColumn(label: Text('Date End')), // tarikh tamat
-                          DataColumn(label: Text('Last Login')), // tarikh log masuk
-                          DataColumn(label: Text('Last Order')), // tarikh last order
+                          DataColumn(
+                              label: Text('Last Login')), // tarikh log masuk
+                          DataColumn(
+                              label: Text('Last Order')), // tarikh last order
                           DataColumn(label: Text('Payment')), // payment
-                          DataColumn(label: Text('No. Records')), // rekod tempahan
+                          DataColumn(
+                              label: Text('No. Records')), // rekod tempahan
                           DataColumn(label: Text('No. Orders')), // bil tempahan
                           DataColumn(label: Text('No. Agents')), // bil ejen
                           DataColumn(label: Text('Bizappay')), // ada bizappay
@@ -121,9 +136,9 @@ class Inactive extends StatelessWidget {
                           DataRow(cells: [
                             DataCell(Text(datePart)), // tarikhnaiktaraf
                             DataCell(Text(datePart2)), // tarikhtamat
-                            const DataCell(Text("-")),
-                            const DataCell(Text("-")),
-                            const DataCell(Text("-")),
+                            DataCell(Text(provider.tarikhlogmasuk)), // tarikh log masuk
+                            DataCell(Text(datePart3)), // tarikh last order
+                            DataCell(Text(provider.typepayment)), // payment
                             DataCell(Text(provider.rekodtempahan)),
                             DataCell(Text(provider.biltempahan)),
                             DataCell(Text(provider.bilEjen)),
@@ -135,38 +150,6 @@ class Inactive extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Container(
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.4,
-                    ),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 5),
-                        const Text('Senarai rekod 5 terakhir: '),
-                        const SizedBox(height: 5),
-                        provider.callRekod == false
-                            ? provider.listrekod.isEmpty
-                                ? const Text(
-                                    'Tiada Rekod',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  )
-                                : Center(
-                                    child:
-                                        DataList(listrekod: provider.listrekod),
-                                  )
-                            : const GetLoad(text: "Load data record ..."),
-                      ],
-                    ),
-                  ),
                 ],
               );
             },
@@ -175,12 +158,19 @@ class Inactive extends StatelessWidget {
   }
 
   Widget _body3(BuildContext context, BoxConstraints constraints) {
-    final InactiveViewmodel model =
-        Provider.of<InactiveViewmodel>(context);
+    final InactiveViewmodel model = Provider.of<InactiveViewmodel>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        const Text(
+          'Follow Up',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
         Container(
           padding: const EdgeInsets.all(10),
           constraints:
@@ -199,9 +189,9 @@ class Inactive extends StatelessWidget {
                 DataColumn(label: Text('Number')),
                 DataColumn(label: Text('Call Status')),
                 DataColumn(label: Text('Feedback')),
-                DataColumn(label: Text('Note')),
                 DataColumn(label: Text('Action')),
                 DataColumn(label: Text('Follow Up')),
+                DataColumn(label: Text('Note')),
               ],
               rows: [
                 DataRow(cells: [
@@ -211,9 +201,9 @@ class Inactive extends StatelessWidget {
                   DataCell(Text(model.selectedNumber)),
                   DataCell(Text(model.selectedCallStatus)),
                   DataCell(Text(model.selectedFeedback)),
-                  DataCell(Text(model.noteController.text)),
                   DataCell(Text(model.selectedAction)),
                   DataCell(Text(model.selectedFollowUp)),
+                  DataCell(Text(model.noteController.text)),
                 ]),
               ],
             ),
@@ -428,6 +418,7 @@ class FormStatus extends StatelessWidget {
             icon: const Icon(Icons.clear, color: Colors.red),
             onPressed: () {
               controller.clear();
+              Provider.of<StatusController>(context, listen: false).resetData();
             },
           ),
         ),
