@@ -125,8 +125,14 @@ class _TestRenewState extends State<TestRenew> {
                           BizappText(text: "Nama:  ${provider.nama}"),
                           BizappText(text: "Pakej:  ${provider.roleid}"),
                           BizappText(text: "Tarikh naik taraf:  ${provider.tarikhnaiktaraf}"),
-                          Text("Tarikh tamat:  ${provider.tarikhtamat}", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red)),
-                          Text("Tarikh sekarang: $formattedDate", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green)),
+                          Text("Tarikh tamat:  ${provider.tarikhtamat}",
+                          style: TextStyle(fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red)),
+                          Text("Tarikh sekarang: $formattedDate",
+                          style: TextStyle(fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green)),
                           provider.basicplusonly != "-" &&
                                   provider.basicplusonly != ""
                               ? BizappText(
@@ -166,16 +172,16 @@ class _TestRenewState extends State<TestRenew> {
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(
-                          10), // Optional: Add rounded corners
+                          10),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center, // Center align content horizontally
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(height: 5), // Add space above the text
+                        SizedBox(height: 5),
                         BizappText(text: 'Senarai rekod 5 terakhir: '),
-                        SizedBox(height: 5), // Add space below the text
-                        /// data list
+                        SizedBox(height: 5),
+                        // data list
                         provider.callRekod == false
                             ? provider.listrekod.isEmpty
                                 ? Text('Tiada Rekod',

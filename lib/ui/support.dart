@@ -238,10 +238,13 @@ class _SupportPageState extends State<SupportPage> {
                             DataColumn(label: Text('Email')), // emel
                             DataColumn(label: Text('No. H/P')), // no hp
                             DataColumn(label: Text('Package')), // pakej
-                            DataColumn(label: Text('Date Start')), // tarikh naik taraf
+                            DataColumn(
+                                label: Text('Date Start')), // tarikh naik taraf
                             DataColumn(label: Text('Date End')), // tarikh tamat
-                            DataColumn(label: Text('Last Login')), // tarikh log masuk
-                            DataColumn(label: Text('Last Order')), // tarikh last order
+                            DataColumn(
+                                label: Text('Last Login')), // tarikh log masuk
+                            DataColumn(
+                                label: Text('Last Order')), // tarikh last order
                             DataColumn(label: Text('Payment')), // payment
                           ],
                           rows: [
@@ -253,7 +256,8 @@ class _SupportPageState extends State<SupportPage> {
                               DataCell(Text(provider.roleid)), // pakej
                               DataCell(Text(datePart)), // tarikhnaiktaraf
                               DataCell(Text(datePart2)), // tarikhtamat
-                              DataCell(Text(provider.tarikhlogmasuk)), // tarikh log masuk
+                              DataCell(Text(
+                                  provider.tarikhlogmasuk)), // tarikh log masuk
                               DataCell(Text(datePart3)), // tarikh last order
                               DataCell(Text(provider.typepayment)), // payment
                             ]),

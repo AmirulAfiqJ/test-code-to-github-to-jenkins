@@ -31,6 +31,7 @@ class NewCustomerViewModel extends ChangeNotifier {
   String _selectedAction = 'Select Action';
   String _selectedFollowUp = 'Select Follow Up';
   String _noteText = '';
+  bool _isUpdated = false;
   bool isLoading = false;
 
   String get selectedNumber => _selectedNumber;
@@ -39,6 +40,7 @@ class NewCustomerViewModel extends ChangeNotifier {
   String get selectedAction => _selectedAction;
   String get selectedFollowUp => _selectedFollowUp;
   String get noteText => _noteText;
+  bool get isUpdated => _isUpdated;
 
   void setSelectedNumber(String value) {
     _selectedNumber = value;
@@ -70,6 +72,11 @@ class NewCustomerViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setIsUpdated(bool value) {
+    _isUpdated = value;
+    notifyListeners();
+  }
+
   void performSearch(BuildContext context) async {
     final model = Provider.of<StatusController>(context, listen: false);
     isLoading = true;
@@ -90,6 +97,7 @@ class NewCustomerViewModel extends ChangeNotifier {
     _selectedFollowUp = 'Select Follow Up';
     noteController.clear();
     _noteText = '';
+    _isUpdated = false;
     notifyListeners();
   }
 }

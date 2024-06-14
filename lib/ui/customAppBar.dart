@@ -1,3 +1,4 @@
+import 'package:bizapptrack/main.dart';
 import 'package:flutter/material.dart';
 import 'package:bizapptrack/ui/login.dart';
 
@@ -12,23 +13,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return AppBar(
       title: Text(
         'Bizapp Back Office',
         style: TextStyle(
-          color: Colors.white,
+          color: Color.fromARGB(255, 243, 241, 241),
           fontWeight: FontWeight.bold,
         ),
       ),
       backgroundColor: Colors.black,
       automaticallyImplyLeading: false,
-      leading: IconButton(
-        icon: const Icon(Icons.menu, color: Colors.white),
-        onPressed: () {
-          scaffoldKey.currentState!.openDrawer();
-        },
-      ),
+      // leading: IconButton(
+      //   icon: const Icon(Icons.menu, color: Color.fromARGB(255, 223, 221, 221)),
+      //   onPressed: () {
+      //     scaffoldKey.currentState!.openDrawer();
+      //   },
+      // ),
       actions: [
+        ThemeSwitcher(),
         Padding(
           padding: EdgeInsets.only(right: 40.0),
           child: PopupMenuButton(
