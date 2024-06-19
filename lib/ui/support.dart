@@ -1,5 +1,6 @@
 import 'package:bizapptrack/ui/dataUser.dart';
 import 'package:bizapptrack/ui/loadingWidget.dart';
+import 'package:bizapptrack/utils/constant_widgets.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +13,6 @@ import 'customAppBar.dart';
 class SupportPage extends StatefulWidget {
   final String username;
   SupportPage({required this.username});
-  //const SupportPage({super.key});
 
   @override
   State<SupportPage> createState() => _SupportPageState();
@@ -23,11 +23,9 @@ class _SupportPageState extends State<SupportPage> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final ScrollController _horizontalScrollController = ScrollController();
-  final ScrollController horizontalScrollController = ScrollController();
-  final ScrollController _verticalScrollController = ScrollController();
-
-  bool _showScrollToTopButton = false;
+  final ScrollController body2ScrollController = ScrollController();
+  final ScrollController body4ScrollController = ScrollController();
+  final ScrollController body3ScrollbarController = ScrollController();
 
   void dispose() {
     viewModel.sourceController.dispose();
@@ -37,10 +35,9 @@ class _SupportPageState extends State<SupportPage> {
     viewModel.departmentController.dispose();
     viewModel.picController.dispose();
     viewModel.noteController.dispose();
-    _horizontalScrollController.dispose();
-    horizontalScrollController.dispose();
-    _verticalScrollController.dispose();
-    super.dispose();
+    body2ScrollController.dispose();
+    body4ScrollController.dispose();
+    body3ScrollbarController.dispose();
   }
 
   void _performSearch() async {
@@ -66,30 +63,9 @@ class _SupportPageState extends State<SupportPage> {
 
   void _clearSelections() {
     setState(() {
-      // do to every field
       viewModel.clearAllCheckboxes();
-      viewModel.sourceController.clear();
-      viewModel.descController.clear();
-      viewModel.levelController.clear();
-      viewModel.firstResponseController.clear();
-      viewModel.departmentController.clear();
-      viewModel.picController.clear();
-      viewModel.noteController.clear();
+      clearSelections();
     });
-  }
-
-  void _scrollListener() {
-    setState(() {
-      _showScrollToTopButton = _verticalScrollController.offset >= 200;
-    });
-  }
-
-  void _scrollToTop() {
-    _verticalScrollController.animateTo(
-      0,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
   }
 
   late FormList selectedSource;
@@ -97,6 +73,7 @@ class _SupportPageState extends State<SupportPage> {
   late FormList selectedInitial;
   late FormList selectedDepartment;
   late FormList selectedPIC;
+  final ConstantWidgets constantWidgets = ConstantWidgets();
 
   @override
   void initState() {
@@ -106,7 +83,14 @@ class _SupportPageState extends State<SupportPage> {
     selectedInitial = viewModel.firstResponseList.first;
     selectedDepartment = viewModel.departmentList.first;
     selectedPIC = viewModel.picList.first;
-    _verticalScrollController.addListener(_scrollListener);
+  }
+
+  void clearSelections() {
+    selectedSource = viewModel.sourceList.first;
+    selectedLevel = viewModel.levelList.first;
+    selectedInitial = viewModel.firstResponseList.first;
+    selectedDepartment = viewModel.departmentList.first;
+    selectedPIC = viewModel.picList.first;
   }
 
   List<String> selectedMediumValues = [];
@@ -133,6 +117,18 @@ class _SupportPageState extends State<SupportPage> {
       selectedIssueValues = getSelectedCheckboxValues(viewModel.issueCheckbox);
       selectedFollowUpValues =
           getSelectedCheckboxValues(viewModel.followUpCheckbox);
+      constantWidgets.showCustomDialog(
+        context,
+        title: "Success!",
+        content: "Form is saved successfully.",
+        iconData: Icons.done,
+        iconColor: Colors.green,
+        button1Text: "OK",
+        onButton1Pressed: _clearSelections,
+        onButton2Pressed: () {},
+        button1Color: Colors.green,
+        button1TextColor: Colors.white,
+      );
     });
   }
 
@@ -140,52 +136,47 @@ class _SupportPageState extends State<SupportPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.white,
+      //backgroundColor: Colors.white,
       appBar:
           CustomAppBar(username: widget.username, scaffoldKey: _scaffoldKey),
-      body: LayoutBuilder(
-        builder: (context, constraints) => Consumer<StatusController>(
-          builder: (context, model, child) {
-            return SingleChildScrollView(
-              controller: _verticalScrollController,
-              child: Center(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    const Header(),
-                    const SizedBox(height: 20),
-                    _buildSearchSection(),
-                    const SizedBox(height: 20),
-                    model.call
-                        ? CircularProgressIndicator()
-                        : _buildUserDetailsSection(model),
-                    _buildForm(viewModel),
-                    _buildUpdateClearButton(),
-                    const SizedBox(height: 20),
-                    _body2(context, constraints),
-                    const SizedBox(height: 20),
-                    model.call
-                        ? const SizedBox.shrink()
-                        : _body3(context, constraints),
-                    const SizedBox(height: 20),
-                    model.call
-                        ? const SizedBox.shrink()
-                        : _body4(context, constraints, viewModel),
-                  ],
-                ),
-              ),
-            );
-          },
+      body: Row(children: [
+        SideDrawer(username: widget.username), // Add the side navigation here
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, constraints) => Consumer<StatusController>(
+              builder: (context, model, child) {
+                return SingleChildScrollView(
+                  child: Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        const Header(),
+                        const SizedBox(height: 20),
+                        _buildSearchSection(),
+                        const SizedBox(height: 20),
+                        model.call
+                            ? CircularProgressIndicator()
+                            : _buildUserDetailsSection(model),
+                        buildCard(context),
+                        const SizedBox(height: 20),
+                        _body2(context, constraints),
+                        const SizedBox(height: 20),
+                        model.call
+                            ? const SizedBox.shrink()
+                            : _body3(context, constraints),
+                        const SizedBox(height: 20),
+                        model.call
+                            ? const SizedBox.shrink()
+                            : _body4(context, constraints, viewModel),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
-      ),
-      drawer: SideDrawer(username: widget.username),
-      floatingActionButton: Visibility(
-        visible: _showScrollToTopButton,
-        child: FloatingActionButton(
-          onPressed: _scrollToTop,
-          child: Icon(Icons.arrow_upward),
-        ),
-      ),
+      ]),
     );
   }
 
@@ -222,51 +213,86 @@ class _SupportPageState extends State<SupportPage> {
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.9),
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: Color.fromARGB(255, 220, 246, 227),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Scrollbar(
-                      controller: _horizontalScrollController,
+                      controller: body2ScrollController,
                       thumbVisibility: false,
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        controller: _horizontalScrollController,
+                        controller: body2ScrollController,
                         child: DataTable(
                           columns: const [
-                            DataColumn(label: Text('Bizapp ID')), // username
-                            DataColumn(label: Text('Name')), // nama
-                            DataColumn(label: Text('Email')), // emel
-                            DataColumn(label: Text('No. H/P')), // no hp
-                            DataColumn(label: Text('Package')), // pakej
                             DataColumn(
-                                label: Text('Date Start')), // tarikh naik taraf
-                            DataColumn(label: Text('Date End')), // tarikh tamat
+                                label: Text('Bizapp ID',
+                                    style:
+                                        AppStyles.fixedTextStyle)), // username
                             DataColumn(
-                                label: Text('Last Login')), // tarikh log masuk
+                                label: Text('Name',
+                                    style: AppStyles.fixedTextStyle)), // nama
                             DataColumn(
-                                label: Text('Last Order')), // tarikh last order
-                            DataColumn(label: Text('Payment')), // payment
+                                label: Text('Email',
+                                    style: AppStyles.fixedTextStyle)), // emel
+                            DataColumn(
+                                label: Text('No. H/P',
+                                    style: AppStyles.fixedTextStyle)), // no hp
+                            DataColumn(
+                                label: Text('Package',
+                                    style: AppStyles.fixedTextStyle)), // pakej
+                            DataColumn(
+                                label: Text('Date Start',
+                                    style: AppStyles
+                                        .fixedTextStyle)), // tarikh naik taraf
+                            DataColumn(
+                                label: Text('Date End',
+                                    style: AppStyles
+                                        .fixedTextStyle)), // tarikh tamat
+                            DataColumn(
+                                label: Text('Last Login',
+                                    style: AppStyles
+                                        .fixedTextStyle)), // tarikh log masuk
+                            DataColumn(
+                                label: Text('Last Order',
+                                    style: AppStyles
+                                        .fixedTextStyle)), // tarikh last order
+                            DataColumn(
+                                label: Text('Payment',
+                                    style:
+                                        AppStyles.fixedTextStyle)), // payment
                           ],
                           rows: [
                             DataRow(cells: [
-                              DataCell(Text(provider.username)), // username
-                              DataCell(Text(provider.nama)), // nama
-                              DataCell(Text(provider.emel)), // emel
-                              DataCell(Text(provider.nohp)), // no hp
-                              DataCell(Text(provider.roleid)), // pakej
-                              DataCell(Text(datePart)), // tarikhnaiktaraf
-                              DataCell(Text(datePart2)), // tarikhtamat
-                              DataCell(Text(
-                                  provider.tarikhlogmasuk)), // tarikh log masuk
-                              DataCell(Text(datePart3)), // tarikh last order
-                              DataCell(Text(provider.typepayment)), // payment
+                              DataCell(Text(provider.username,
+                                  style: AppStyles.fixedTextStyle)), // username
+                              DataCell(Text(provider.nama,
+                                  style: AppStyles.fixedTextStyle)), // nama
+                              DataCell(Text(provider.emel,
+                                  style: AppStyles.fixedTextStyle)), // emel
+                              DataCell(Text(provider.nohp,
+                                  style: AppStyles.fixedTextStyle)), // no hp
+                              DataCell(Text(provider.roleid,
+                                  style: AppStyles.fixedTextStyle)), // pakej
+                              DataCell(Text(datePart,
+                                  style: AppStyles
+                                      .fixedTextStyle)), // tarikhnaiktaraf
+                              DataCell(Text(datePart2,
+                                  style:
+                                      AppStyles.fixedTextStyle)), // tarikhtamat
+                              DataCell(Text(provider.tarikhlogmasuk,
+                                  style: AppStyles
+                                      .fixedTextStyle)), // tarikh log masuk
+                              DataCell(Text(datePart3,
+                                  style: AppStyles
+                                      .fixedTextStyle)), // tarikh last order
+                              DataCell(Text(provider.typepayment,
+                                  style: AppStyles.fixedTextStyle)), // payment
                             ]),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
                 ],
               );
             },
@@ -287,41 +313,86 @@ class _SupportPageState extends State<SupportPage> {
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.9),
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: Color.fromARGB(255, 220, 246, 227),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        columns: const [
-                          DataColumn(
-                              label: Text('No. Records')), // rekod tempahan
-                          DataColumn(label: Text('No. Orders')), // bil tempahan
-                          DataColumn(label: Text('No. Agents')), // bil ejen
-                          DataColumn(label: Text('Bizappay')), // ada bizappay
-                          DataColumn(label: Text('Business')), // jenis syarikat
-                          DataColumn(label: Text('Bizappshop')),
-                          DataColumn(label: Text('Bizappage')),
-                          DataColumn(label: Text('Woo-Commerce')),
-                          DataColumn(label: Text('Wsapme')),
-                          DataColumn(label: Text('Shopee')),
-                          DataColumn(label: Text('Tiktok')),
-                        ],
-                        rows: [
-                          DataRow(cells: [
-                            DataCell(Text(provider.rekodtempahan)),
-                            DataCell(Text(provider.biltempahan)),
-                            DataCell(Text(provider.bilEjen)),
-                            DataCell(Text(provider.bizappayacc)),
-                            DataCell(Text(provider.jenissyarikatname)),
-                            const DataCell(Text("-")), // bizappshop
-                            DataCell(Text(provider.bizappage)), // bizappage
-                            DataCell(Text(provider.woo)), // woo-commerce
-                            DataCell(Text(provider.wsapme)), // wsapme
-                            DataCell(Text(provider.statusShopee)), // shopee
-                            DataCell(Text(provider.statusTiktok)), // tiktok
-                          ]),
-                        ],
+                    child: Scrollbar(
+                      controller: body3ScrollbarController,
+                      thumbVisibility: false,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        controller: body3ScrollbarController,
+                        child: DataTable(
+                          columns: const [
+                            DataColumn(
+                                label: Text('No. Records',
+                                    style: AppStyles
+                                        .fixedTextStyle)), // rekod tempahan
+                            DataColumn(
+                                label: Text('No. Orders',
+                                    style: AppStyles
+                                        .fixedTextStyle)), // bil tempahan
+                            DataColumn(
+                                label: Text('No. Agents',
+                                    style:
+                                        AppStyles.fixedTextStyle)), // bil ejen
+                            DataColumn(
+                                label: Text('Bizappay',
+                                    style: AppStyles
+                                        .fixedTextStyle)), // ada bizappay
+                            DataColumn(
+                                label: Text('Business',
+                                    style: AppStyles
+                                        .fixedTextStyle)), // jenis syarikat
+                            DataColumn(
+                                label: Text('Bizappshop',
+                                    style: AppStyles.fixedTextStyle)),
+                            DataColumn(
+                                label: Text('Bizappage',
+                                    style: AppStyles.fixedTextStyle)),
+                            DataColumn(
+                                label: Text('Woo-Commerce',
+                                    style: AppStyles.fixedTextStyle)),
+                            DataColumn(
+                                label: Text('Wsapme',
+                                    style: AppStyles.fixedTextStyle)),
+                            DataColumn(
+                                label: Text('Shopee',
+                                    style: AppStyles.fixedTextStyle)),
+                            DataColumn(
+                                label: Text('Tiktok',
+                                    style: AppStyles.fixedTextStyle)),
+                          ],
+                          rows: [
+                            DataRow(cells: [
+                              DataCell(Text(provider.rekodtempahan,
+                                  style: AppStyles.fixedTextStyle)),
+                              DataCell(Text(provider.biltempahan,
+                                  style: AppStyles.fixedTextStyle)),
+                              DataCell(Text(provider.bilEjen,
+                                  style: AppStyles.fixedTextStyle)),
+                              DataCell(Text(provider.bizappayacc,
+                                  style: AppStyles.fixedTextStyle)),
+                              DataCell(Text(provider.jenissyarikatname,
+                                  style: AppStyles.fixedTextStyle)),
+                              const DataCell(Text("-",
+                                  style:
+                                      AppStyles.fixedTextStyle)), // bizappshop
+                              DataCell(Text(provider.bizappage,
+                                  style:
+                                      AppStyles.fixedTextStyle)), // bizappage
+                              DataCell(Text(provider.woo,
+                                  style: AppStyles
+                                      .fixedTextStyle)), // woo-commerce
+                              DataCell(Text(provider.wsapme,
+                                  style: AppStyles.fixedTextStyle)), // wsapme
+                              DataCell(Text(provider.statusShopee,
+                                  style: AppStyles.fixedTextStyle)), // shopee
+                              DataCell(Text(provider.statusTiktok,
+                                  style: AppStyles.fixedTextStyle)), // tiktok
+                            ]),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -335,25 +406,6 @@ class _SupportPageState extends State<SupportPage> {
 
   Widget _body4(BuildContext context, BoxConstraints constraints,
       SupportViewModel viewModel) {
-    String formatDate(DateTime date) {
-      String year = date.year.toString();
-      String month = date.month.toString().padLeft(2, '0');
-      String day = date.day.toString().padLeft(2, '0');
-      String hour =
-          (date.hour > 12) ? (date.hour - 12).toString() : date.hour.toString();
-      if (hour == '0') hour = '12'; // Adjust 0 to 12 for midnight
-      String minute = date.minute.toString().padLeft(2, '0');
-      String period = (date.hour >= 12) ? 'PM' : 'AM';
-      return '$day/$month/$year $hour:$minute $period';
-    }
-
-    DateTime now = DateTime.now();
-    String formattedDate = formatDate(now);
-
-    List<String> parts = formattedDate.split(' ');
-
-    String date = parts[0];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -365,75 +417,108 @@ class _SupportPageState extends State<SupportPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 10),
         Container(
           padding: const EdgeInsets.all(10),
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.9,
-            // minHeight: MediaQuery.of(context).size.height * 0.3,
+            minHeight: MediaQuery.of(context).size.height * 0.3,
           ),
           decoration: BoxDecoration(
-            color: Colors.grey[200],
+            color: Color.fromARGB(255, 220, 246, 227),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Scrollbar(
-            controller: horizontalScrollController,
+            controller: body4ScrollController,
             thumbVisibility: false,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              controller: horizontalScrollController,
+              controller: body4ScrollController,
               child: DataTable(
                 columns: const [
-                  DataColumn(label: Text('Date')),
-                  DataColumn(label: Text('Key In')),
-                  DataColumn(label: Text('Source')),
-                  DataColumn(label: Text('Medium')),
-                  DataColumn(label: Text('Product')),
-                  DataColumn(label: Text('Issue')),
-                  DataColumn(label: Text('Description')),
-                  DataColumn(label: Text('Level')),
-                  DataColumn(label: Text('First Response')),
-                  DataColumn(label: Text('Department')),
-                  DataColumn(label: Text('PIC')),
-                  DataColumn(label: Text('Follow Up')),
-                  DataColumn(label: Text('Note')),
+                  DataColumn(
+                      label: Text('Date', style: AppStyles.fixedTextStyle)),
+                  DataColumn(
+                      label: Text('Key In', style: AppStyles.fixedTextStyle)),
+                  DataColumn(
+                      label: Text('Source', style: AppStyles.fixedTextStyle)),
+                  DataColumn(
+                      label: Text('Medium', style: AppStyles.fixedTextStyle)),
+                  DataColumn(
+                      label: Text('Product', style: AppStyles.fixedTextStyle)),
+                  DataColumn(
+                      label: Text('Issue', style: AppStyles.fixedTextStyle)),
+                  DataColumn(
+                      label:
+                          Text('Description', style: AppStyles.fixedTextStyle)),
+                  DataColumn(
+                      label: Text('Level', style: AppStyles.fixedTextStyle)),
+                  DataColumn(
+                      label: Text('First Response',
+                          style: AppStyles.fixedTextStyle)),
+                  DataColumn(
+                      label:
+                          Text('Department', style: AppStyles.fixedTextStyle)),
+                  DataColumn(
+                      label: Text('PIC', style: AppStyles.fixedTextStyle)),
+                  DataColumn(
+                      label:
+                          Text('Follow Up', style: AppStyles.fixedTextStyle)),
+                  DataColumn(
+                      label: Text('Note', style: AppStyles.fixedTextStyle)),
                 ],
                 rows: [
                   DataRow(cells: [
-                    DataCell(Text(date)), // date today
-                    DataCell(Text(widget.username)), // key in
-                    DataCell(Text(selectedSource.value)), // source
-                    DataCell(Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: selectedMediumValues
-                          .map((value) => Text(value))
-                          .toList(),
-                    )), // medium (checkbox)
+                    DataCell(Text(constantWidgets.date(),
+                        style: AppStyles.fixedTextStyle)), // date
+                    DataCell(Text(widget.username,
+                        style: AppStyles.fixedTextStyle)), // key in
+                    DataCell(Text(selectedSource.value,
+                        style: AppStyles.fixedTextStyle)), // source
+                    DataCell(
+                      IntrinsicHeight(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: selectedMediumValues
+                              .map((value) =>
+                                  Text(value, style: AppStyles.fixedTextStyle))
+                              .toList(),
+                        ),
+                      ),
+                    ), // medium (checkbox)
                     DataCell(Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: selectedProductValues
-                          .map((value) => Text(value))
+                          .map((value) =>
+                              Text(value, style: AppStyles.fixedTextStyle))
                           .toList(),
                     )), // product (checkbox)
                     DataCell(Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: selectedIssueValues
-                          .map((value) => Text(value))
+                          .map((value) =>
+                              Text(value, style: AppStyles.fixedTextStyle))
                           .toList(),
                     )), // issue (checkbox)
-                    DataCell(
-                        Text(viewModel.descController.text)), // description
-                    DataCell(Text(selectedLevel.value)), // level
-                    DataCell(Text(selectedInitial.value)), // first response
-                    DataCell(Text(selectedDepartment.value)), // department
-                    DataCell(Text(selectedPIC.value)), // pic
+                    DataCell(Text(viewModel.descController.text,
+                        style: AppStyles.fixedTextStyle)), // description
+                    DataCell(Text(selectedLevel.value,
+                        style: AppStyles.fixedTextStyle)), // level
+                    DataCell(Text(selectedInitial.value,
+                        style: AppStyles
+                            .fixedTextStyle)), // first response - initial
+                    DataCell(Text(selectedDepartment.value,
+                        style: AppStyles.fixedTextStyle)), // department
+                    DataCell(Text(selectedPIC.value,
+                        style: AppStyles.fixedTextStyle)), // pic
                     DataCell(Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: selectedFollowUpValues
-                          .map((value) => Text(value))
+                          .map((value) =>
+                              Text(value, style: AppStyles.fixedTextStyle))
                           .toList(),
                     )), // follow up (checkbox)
-                    DataCell(Text(viewModel.noteController.text)), // note
+                    DataCell(Text(viewModel.noteController.text,
+                        style: AppStyles.fixedTextStyle)), // note
                   ]),
                 ],
               ),
@@ -463,180 +548,55 @@ class _SupportPageState extends State<SupportPage> {
   }
 
   Widget _buildUserDetailsSection(StatusController model) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              padding: EdgeInsets.all(50),
+    double screenWidth = MediaQuery.of(context).size.width;
+    double containerWidth = screenWidth * 0.7; // 70% of screen width
+
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: containerWidth,
+              padding: EdgeInsets.symmetric(horizontal: 70, vertical: 50),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Color.fromARGB(255, 220, 246, 227),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Bizapp ID: ${model.username}",
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  Text("Bizapp ID: ${model.username}",
+                      style: AppStyles.fixedBoldStyle),
                   SizedBox(height: 15),
-                  Text(
-                    "Package: ${model.roleid}",
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 50),
-                  Text(
-                    "Name: ${model.nama}",
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  Text("Package: ${model.roleid}",
+                      style: AppStyles.fixedBoldStyle),
+                  SizedBox(height: 30),
+                  Text("Name: ${model.nama}", style: AppStyles.fixedBoldStyle),
                   SizedBox(height: 15),
-                  Text(
-                    "Email: ${model.emel}",
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  Text("Email: ${model.emel}", style: AppStyles.fixedBoldStyle),
                   SizedBox(height: 15),
-                  Text(
-                    "No. H/P: ${model.nohp}",
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  Text("No. H/P: ${model.nohp}",
+                      style: AppStyles.fixedBoldStyle),
                 ],
               ),
             ),
-          ),
-          SizedBox(width: 70),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildForm(SupportViewModel viewModel) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          _buildDropdown(
-            label: 'Source',
-            value: selectedSource,
-            items: viewModel.sourceList,
-            width: 60,
-            onChanged: (FormList? newValue) {
-              setState(() {
-                selectedSource = newValue!; // Update selectedSource
-                viewModel.sourceController.text =
-                    newValue.value; // Update the controller
-              });
-            },
-          ),
-          _buildCheckbox(
-              label: 'Medium',
-              items: viewModel.mediumCheckbox,
-              width: 30,
-              onChanged: (value, index) {
-                handleCheckboxChanges(value, index, viewModel.mediumCheckbox);
-              }),
-          _buildCheckbox(
-              label: 'Product',
-              items: viewModel.productCheckbox,
-              width: 32,
-              onChanged: (value, index) {
-                handleCheckboxChanges(value, index, viewModel.productCheckbox);
-              }),
-          _buildCheckbox(
-              label: 'Issue',
-              items: viewModel.issueCheckbox,
-              width: 51,
-              onChanged: (value, index) {
-                handleCheckboxChanges(value, index, viewModel.issueCheckbox);
-              }),
-          _buildText(
-              label: 'Description', controller: viewModel.descController),
-          _buildFilePicker(),
-          _buildDropdown(
-            label: 'Level',
-            value: selectedLevel,
-            items: viewModel.levelList,
-            width: 70,
-            onChanged: (FormList? newValue) {
-              setState(() {
-                selectedLevel = newValue!;
-                viewModel.levelController.text = newValue.value;
-              });
-            },
-          ),
-          _buildDropdown(
-            label: 'Initial',
-            value: selectedInitial,
-            items: viewModel.firstResponseList,
-            width: 70,
-            onChanged: (FormList? newValue) {
-              setState(() {
-                selectedInitial = newValue!;
-                viewModel.firstResponseController.text = newValue.value;
-              });
-            },
-          ),
-          _buildDropdown(
-            label: 'Department',
-            value: selectedDepartment,
-            items: viewModel.departmentList,
-            width: 20,
-            onChanged: (FormList? newValue) {
-              setState(() {
-                selectedDepartment = newValue!;
-                viewModel.departmentController.text = newValue.value;
-              });
-            },
-          ),
-          _buildDropdown(
-            label: 'PIC',
-            value: selectedPIC,
-            items: viewModel.picList,
-            width: 87,
-            onChanged: (FormList? newValue) {
-              setState(() {
-                selectedPIC = newValue!;
-                viewModel.picController.text = newValue.value;
-              });
-            },
-          ),
-          _buildCheckbox(
-              label: 'Follow Up',
-              items: viewModel.followUpCheckbox,
-              width: 16,
-              onChanged: (value, index) {
-                handleCheckboxChanges(value, index, viewModel.followUpCheckbox);
-              }),
-          _buildText(label: 'Note', controller: viewModel.noteController),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildFilePicker() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Text(
-                'Attachment: ',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              const Text('Attachment: ', style: AppStyles.fixedBoldStyle),
               SizedBox(width: 16),
               ElevatedButton.icon(
                 onPressed: _pickFile,
@@ -708,95 +668,226 @@ class _SupportPageState extends State<SupportPage> {
     }
   }
 
-  Widget _buildCheckbox({
-    required String label,
-    required List<CheckboxItem> items,
-    required width,
-    required void Function(bool, int) onChanged,
-  }) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Column for the label text
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '$label: ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 16),
-            ],
-          ),
-          SizedBox(width: width),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Generate the checkboxes in a 3 by 3 layout
-                for (int i = 0; i < items.length; i += 3)
-                  Row(
-                    children: [
-                      for (int j = i; j < i + 3 && j < items.length; j++)
-                        Expanded(
-                          child: CheckboxListTile(
-                            title: Text(items[j].name),
-                            value: items[j].value,
-                            onChanged: (bool? value) {
-                              if (value != null) {
-                                onChanged(value, j);
-                              }
-                            },
-                          ),
-                        ),
-                    ],
+  PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  Widget buildCard(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    double cardWidth = screenWidth * 0.7; // 70% of screen width
+    double cardHeight = screenHeight * 0.75; // 75% of screen height
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Container(
+          width: cardWidth,
+          height: cardHeight,
+          child: Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0), // Rounded corners
+            ),
+            color: Color.fromARGB(255, 220, 246,
+                227), // Set the background color of the Card to pure white
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildStepIndicators(),
+                  SizedBox(height: 20),
+                  Expanded(
+                    child: PageView(
+                      controller: _pageController,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        buildStep1(),
+                        buildStep2(),
+                        buildStep3(),
+                      ],
+                    ),
                   ),
-              ],
+                ],
+              ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildDropdown({
-    required String label,
-    required FormList value,
-    required List<FormList> items,
-    required double width,
-    required void Function(FormList) onChanged,
-  }) {
+  Widget buildStepIndicators() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        buildStepIndicator(0, '1'),
+        buildStepIndicator(1, '2'),
+        buildStepIndicator(2, '3'),
+      ],
+    );
+  }
+
+  Widget buildStepIndicator(int step, String number) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _currentPage = step;
+        });
+        _pageController.animateToPage(
+          step,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.ease,
+        );
+      },
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      child: Container(
+        width: 40,
+        height: 40,
+        alignment: Alignment.center,
+        margin: const EdgeInsets.only(right: 8.0),
+        decoration: BoxDecoration(
+          color: _currentPage == step ? Colors.green : Colors.grey,
+          shape: BoxShape.circle,
+        ),
+        child: Text(
+          number,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildStep1() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+      padding: const EdgeInsets.all(16.0),
+      child: Stack(
         children: [
-          Row(
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                '$label: ',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(width: width),
-              DropdownButton<FormList>(
-                value: value,
-                items: items.map((FormList item) {
-                  return DropdownMenuItem<FormList>(
-                    value: item,
-                    child: Text(item.name),
-                  );
-                }).toList(),
+              constantWidgets.buildDropdown(
+                label: 'Source',
+                value: selectedSource,
+                items: viewModel.sourceList,
+                width: 60,
                 onChanged: (FormList? newValue) {
-                  if (newValue != null) {
-                    onChanged(newValue);
-                  }
+                  setState(() {
+                    selectedSource = newValue!; // Update selectedSource
+                    viewModel.sourceController.text =
+                        newValue.value; // Update the controller
+                  });
                 },
               ),
+              constantWidgets.buildCheckbox(
+                  label: 'Medium',
+                  items: viewModel.mediumCheckbox,
+                  width: 30,
+                  onChanged: (value, index) {
+                    handleCheckboxChanges(
+                        value, index, viewModel.mediumCheckbox);
+                  }),
+              constantWidgets.buildCheckbox(
+                  label: 'Product',
+                  items: viewModel.productCheckbox,
+                  width: 32,
+                  onChanged: (value, index) {
+                    handleCheckboxChanges(
+                        value, index, viewModel.productCheckbox);
+                  }),
+              SizedBox(height: 20),
+            ],
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: constantWidgets.buildButton(
+              label: 'Next',
+              onPressed: () {
+                setState(() {
+                  _currentPage = 1;
+                });
+                _pageController.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.ease,
+                );
+              },
+              buttonColor: Colors.blue, // Customize button color
+              textColor: Colors.white, // Customize text color
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildStep2() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          constantWidgets.buildCheckbox(
+              label: 'Issue',
+              items: viewModel.issueCheckbox,
+              width: 51,
+              onChanged: (value, index) {
+                handleCheckboxChanges(value, index, viewModel.issueCheckbox);
+              }),
+          constantWidgets.buildText(
+              label: 'Description', controller: viewModel.descController),
+          _buildFilePicker(),
+          constantWidgets.buildDropdown(
+            label: 'Level',
+            value: selectedLevel,
+            items: viewModel.levelList,
+            width: 70,
+            onChanged: (FormList? newValue) {
+              setState(() {
+                selectedLevel = newValue!;
+                viewModel.levelController.text = newValue.value;
+              });
+            },
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              constantWidgets.buildButton(
+                label: 'Back',
+                onPressed: () {
+                  setState(() {
+                    _currentPage = 0;
+                  });
+                  _pageController.previousPage(
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.ease,
+                  );
+                },
+                buttonColor: Colors.white,
+                textColor: Colors.black,
+              ),
+              constantWidgets.buildButton(
+                label: 'Next',
+                onPressed: () {
+                  setState(() {
+                    _currentPage = 2;
+                  });
+                  _pageController.nextPage(
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.ease,
+                  );
+                },
+                buttonColor: Colors.blue,
+                textColor: Colors.white,
+              ),
             ],
           ),
         ],
@@ -804,68 +895,110 @@ class _SupportPageState extends State<SupportPage> {
     );
   }
 
-  Widget _buildText({
-    required String label,
-    required TextEditingController controller,
-    int maxLines = 2,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
+  Widget buildStep3() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200.0, vertical: 10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            '$label: ',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          constantWidgets.buildDropdown(
+            label: 'Initial',
+            value: selectedInitial,
+            items: viewModel.firstResponseList,
+            width: 70,
+            onChanged: (FormList? newValue) {
+              setState(() {
+                selectedInitial = newValue!;
+                viewModel.firstResponseController.text = newValue.value;
+              });
+            },
           ),
-          SizedBox(width: 20),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              maxLines: maxLines,
-              keyboardType: keyboardType,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
+          constantWidgets.buildDropdown(
+            label: 'Department',
+            value: selectedDepartment,
+            items: viewModel.departmentList,
+            width: 20,
+            onChanged: (FormList? newValue) {
+              setState(() {
+                selectedDepartment = newValue!;
+                viewModel.departmentController.text = newValue.value;
+              });
+            },
+          ),
+          constantWidgets.buildDropdown(
+            label: 'PIC',
+            value: selectedPIC,
+            items: viewModel.picList,
+            width: 87,
+            onChanged: (FormList? newValue) {
+              setState(() {
+                selectedPIC = newValue!;
+                viewModel.picController.text = newValue.value;
+              });
+            },
+          ),
+          constantWidgets.buildCheckbox(
+            label: 'Follow Up',
+            items: viewModel.followUpCheckbox,
+            width: 16,
+            onChanged: (value, index) {
+              handleCheckboxChanges(value, index, viewModel.followUpCheckbox);
+            },
+          ),
+          constantWidgets.buildText(
+              label: 'Note', controller: viewModel.noteController),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              constantWidgets.buildButton(
+                  label: "Back",
+                  onPressed: () {
+                    setState(() {
+                      _currentPage = 1;
+                    });
+                    _pageController.previousPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.ease,
+                    );
+                  },
+                  buttonColor: Color.fromARGB(255, 255, 255, 255),
+                  textColor: Color.fromARGB(255, 0, 0, 0)),
+              Row(
+                children: [
+                  constantWidgets.buildButton(
+                      label: "Clear",
+                      onPressed: () {
+                        constantWidgets.showCustomDialog(
+                          context,
+                          title: "Are you sure?",
+                          content: "This will clear out the entire form.",
+                          iconData: Icons.warning,
+                          iconColor: Colors.red,
+                          button1Text: "Clear form",
+                          button2Text: "Cancel",
+                          onButton1Pressed: _clearSelections,
+                          onButton2Pressed: () {},
+                          button1Color: Colors.red,
+                          button1TextColor: Colors.white,
+                          button2Color: Colors.white,
+                          button2TextColor: Colors.black,
+                        );
+                      },
+                      buttonColor: Colors.red,
+                      textColor: Colors.white),
+                  SizedBox(width: 10),
+                  constantWidgets.buildButton(
+                      label: "Submit",
+                      onPressed: () {
+                        _updateSelectedValues();
+                      },
+                      buttonColor: Colors.green,
+                      textColor: Colors.white),
+                ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUpdateClearButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 500.0, vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ElevatedButton(
-            onPressed: _updateSelectedValues,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromARGB(255, 125, 212, 98),
-              minimumSize: Size(150, 50),
-            ),
-            child: Text(
-              'Update',
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          SizedBox(width: 20),
-          ElevatedButton(
-            onPressed: _clearSelections,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromARGB(255, 255, 109, 99),
-              minimumSize: Size(150, 50),
-            ),
-            child: Text(
-              'Clear',
-              style: TextStyle(color: Colors.black),
-            ),
+            ],
           ),
         ],
       ),
@@ -891,6 +1024,17 @@ class Header extends StatelessWidget {
   }
 }
 
+class AppStyles {
+  static const TextStyle fixedTextStyle = TextStyle(
+    color: Color.fromARGB(255, 27, 27, 27), // or any fixed color you prefer
+    fontSize: 16,
+    fontWeight: FontWeight.normal,
+  );
+
+  static const TextStyle fixedBoldStyle =
+      TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold);
+}
+
 class FormStatus extends StatelessWidget {
   final TextEditingController controller;
   final Function() onSearch;
@@ -914,14 +1058,13 @@ class FormStatus extends StatelessWidget {
             borderRadius: BorderRadius.circular(50),
           ),
           filled: true,
-          labelStyle: const TextStyle(fontSize: 14),
+          labelStyle: AppStyles.fixedTextStyle,
           labelText: 'Username',
           fillColor: Colors.white,
           suffixIcon: IconButton(
             icon: const Icon(Icons.clear, color: Colors.red),
             onPressed: () {
               controller.clear();
-              Provider.of<StatusController>(context, listen: false).resetData();
             },
           ),
         ),
