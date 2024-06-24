@@ -1,22 +1,28 @@
-import 'dart:js';
-
-import 'package:bizapptrack/ui/dataUser.dart';
-import 'package:bizapptrack/ui/loadingWidget.dart';
 import 'package:bizapptrack/viewmodel/inactiveViewmodel.dart';
-import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:bizapptrack/ui/sideNav.dart';
 import 'customAppBar.dart';
-import 'package:bizapptrack/viewmodel/themeViewModel.dart';
 
-class Inactive extends StatelessWidget {
-    final String username;
+class Inactive extends StatefulWidget {
+  Inactive({super.key});
+
+  @override
+  State<Inactive> createState() => _InactiveState();
+}
+
+class _InactiveState extends State<Inactive> {
+
+  InactiveViewmodel viewModel = InactiveViewmodel();
+
+  void initState() {
+    super.initState();
+    viewModel.getPref(context);
+  }
+
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-    Inactive({super.key, required this.username});
     
   @override
   Widget build(BuildContext context) {
@@ -25,10 +31,10 @@ class Inactive extends StatelessWidget {
       child: Scaffold(
         key: _scaffoldKey,
         // backgroundColor: Colors.white,
- appBar: CustomAppBar(username: username, scaffoldKey: _scaffoldKey),
+ appBar: CustomAppBar(username: viewModel.username, scaffoldKey: _scaffoldKey),
          body: Row(
           children: [
-            SideDrawer(username: username), // Add the side navigation here
+            SideDrawer(username: viewModel.username), // Add the side navigation here
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -44,7 +50,7 @@ class Inactive extends StatelessWidget {
                               _buildSearchSection(model, context),
                               const SizedBox(height: 20),
                               model.isLoading
-                                  ? CircularProgressIndicator(color: Colors.red)
+                                  ? const CircularProgressIndicator(color: Colors.red)
                                   : _buildUserDetailsSection(context, model),
                               if (!model.isLoading)
                                 Column(
@@ -79,7 +85,7 @@ class Inactive extends StatelessWidget {
           onSearch: () => model.performSearch(context),
         ),
         IconButton(
-          icon: Icon(Icons.search),
+          icon: const Icon(Icons.search),
           onPressed: () => model.performSearch(context),
         ),
         const SizedBox(width: 10),
@@ -120,7 +126,7 @@ class Inactive extends StatelessWidget {
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.9),
                     decoration: BoxDecoration(
-                      color:  Color.fromARGB(255, 254, 233, 165),
+                      color:  const Color.fromARGB(255, 254, 233, 165),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: SingleChildScrollView(
@@ -182,7 +188,7 @@ class Inactive extends StatelessWidget {
           constraints:
               BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.9),
           decoration: BoxDecoration(
-            color:  Color.fromARGB(255, 254, 233, 165),
+            color:  const Color.fromARGB(255, 254, 233, 165),
             borderRadius: BorderRadius.circular(10),
           ),
           child: SingleChildScrollView(
@@ -203,7 +209,7 @@ class Inactive extends StatelessWidget {
                 DataRow(cells: [
                   const DataCell(Text(" ", style: AppStyles.fixedTextStyle)),
                   const DataCell(Text(" ", style: AppStyles.fixedTextStyle)),
-                  DataCell(Text(username, style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(viewModel.username, style: AppStyles.fixedTextStyle)),
                   DataCell(Text(model.selectedNumber, style: AppStyles.fixedTextStyle)),
                   DataCell(Text(model.selectedCallStatus, style: AppStyles.fixedTextStyle)),
                   DataCell(Text(model.selectedFeedback, style: AppStyles.fixedTextStyle)),
@@ -233,7 +239,7 @@ class Inactive extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 80.0),
               decoration: BoxDecoration(
-               color: Color.fromARGB(255, 254, 233, 165),
+               color: const Color.fromARGB(255, 254, 233, 165),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -241,38 +247,38 @@ class Inactive extends StatelessWidget {
                 children: [
                   Text(
                     "Bizapp ID: ${statusModel.username}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "Package: ${statusModel.roleid}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.black),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.black),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Text(
                     "Name: ${statusModel.nama}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "Email: ${statusModel.emel}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.black),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.black),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "No. H/P: ${statusModel.nohp}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.black),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.black),
                   ),
                 ],
               ),
             ),
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Container(
             width: 600,
           padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
           decoration: BoxDecoration(
-              color:  Color.fromARGB(255, 254, 233, 165),
+              color:  const Color.fromARGB(255, 254, 233, 165),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -317,24 +323,24 @@ class Inactive extends StatelessWidget {
                 Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('Note: ', style: TextStyle(fontSize: 18, color: Colors.black)),
-                  SizedBox(height: 10),
+                  const Text('Note: ', style: TextStyle(fontSize: 18, color: Colors.black)),
+                  const SizedBox(height: 10),
                   Container(
                     width: 400, // Set the desired width here
                     child: TextFormField(
                       controller: model.noteController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Enter note',
                         labelStyle: AppStyles.fixedTextStyle,
                       ),
-                      style: TextStyle(color: const Color.fromARGB(255, 56, 56, 56)),
+                      style: const TextStyle(color: Color.fromARGB(255, 56, 56, 56)),
                       onFieldSubmitted: model.setNoteText,
                     ),
                   ),
                 ],
               ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -343,16 +349,16 @@ class Inactive extends StatelessWidget {
                       model.setNoteText(model.noteController.text);
                     },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 125, 212, 98),
+                        backgroundColor: const Color.fromARGB(255, 125, 212, 98),
                       ),
-                      child: Text('Update', style: TextStyle(color: Colors.black)),
+                      child: const Text('Update', style: TextStyle(color: Colors.black)),
                     ),
                     ElevatedButton(
                       onPressed: model.clearSelections,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 255, 109, 99),
+                        backgroundColor: const Color.fromARGB(255, 255, 109, 99),
                       ),
-                      child: Text('Clear', style: TextStyle(color: Colors.black)),
+                      child: const Text('Clear', style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ),
@@ -378,8 +384,8 @@ class Inactive extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text('$label: ', style: TextStyle(fontSize: 18, color: Colors.black)),
-        SizedBox(width: 10),
+        Text('$label: ', style: const TextStyle(fontSize: 18, color: Colors.black)),
+        const SizedBox(width: 10),
         DropdownButton<String>(
           value: value,
           items: items.map((String item) {
@@ -387,8 +393,8 @@ class Inactive extends StatelessWidget {
               value: item,
               child: Text(item, style: TextStyle(
                 color: Theme.of(context).brightness == Brightness.dark
-                    ? Color.fromARGB(255, 165, 165, 165)
-                    : Color.fromARGB(255, 43, 43, 43),
+                    ? const Color.fromARGB(255, 165, 165, 165)
+                    : const Color.fromARGB(255, 43, 43, 43),
               ),
             ),
           );
@@ -407,7 +413,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return const Padding(
       padding: EdgeInsets.all(20.0),
       child: Text(
         "Inactive",

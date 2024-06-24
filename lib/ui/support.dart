@@ -1,5 +1,3 @@
-import 'package:bizapptrack/ui/dataUser.dart';
-import 'package:bizapptrack/ui/loadingWidget.dart';
 import 'package:bizapptrack/utils/constant_widgets.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +9,7 @@ import 'package:bizapptrack/viewmodel/support_viewmodel.dart';
 import 'customAppBar.dart';
 
 class SupportPage extends StatefulWidget {
-  final String username;
-  SupportPage({required this.username});
+  SupportPage({super.key});
 
   @override
   State<SupportPage> createState() => _SupportPageState();
@@ -54,6 +51,7 @@ class _SupportPageState extends State<SupportPage> {
       await model.statustiktok(context, pid: model.pid);
       await model.statusWsapme(context, pid: model.pid);
       await model.bizappPage(context, pid: model.pid, hqpid: '');
+      await model.wooCom(context, pid: model.pid);
     } finally {
       setState(() {
         model.call = false;
@@ -78,6 +76,7 @@ class _SupportPageState extends State<SupportPage> {
   @override
   void initState() {
     super.initState();
+    viewModel.getPref(context);
     selectedSource = viewModel.sourceList.first;
     selectedLevel = viewModel.levelList.first;
     selectedInitial = viewModel.firstResponseList.first;
@@ -138,9 +137,9 @@ class _SupportPageState extends State<SupportPage> {
       key: _scaffoldKey,
       //backgroundColor: Colors.white,
       appBar:
-          CustomAppBar(username: widget.username, scaffoldKey: _scaffoldKey),
+          CustomAppBar(username: viewModel.username, scaffoldKey: _scaffoldKey),
       body: Row(children: [
-        SideDrawer(username: widget.username), // Add the side navigation here
+        SideDrawer(username: viewModel.username), // Add the side navigation here
         Expanded(
           child: LayoutBuilder(
             builder: (context, constraints) => Consumer<StatusController>(
@@ -155,7 +154,7 @@ class _SupportPageState extends State<SupportPage> {
                         _buildSearchSection(),
                         const SizedBox(height: 20),
                         model.call
-                            ? CircularProgressIndicator()
+                            ? const CircularProgressIndicator()
                             : _buildUserDetailsSection(model),
                         buildCard(context),
                         const SizedBox(height: 20),
@@ -213,7 +212,7 @@ class _SupportPageState extends State<SupportPage> {
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.9),
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 220, 246, 227),
+                      color: const Color.fromARGB(255, 220, 246, 227),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Scrollbar(
@@ -313,7 +312,7 @@ class _SupportPageState extends State<SupportPage> {
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.9),
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 220, 246, 227),
+                      color: const Color.fromARGB(255, 220, 246, 227),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Scrollbar(
@@ -401,7 +400,7 @@ class _SupportPageState extends State<SupportPage> {
               );
             },
           )
-        : SizedBox();
+        : const SizedBox();
   }
 
   Widget _body4(BuildContext context, BoxConstraints constraints,
@@ -424,7 +423,7 @@ class _SupportPageState extends State<SupportPage> {
             minHeight: MediaQuery.of(context).size.height * 0.3,
           ),
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 220, 246, 227),
+            color: const Color.fromARGB(255, 220, 246, 227),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Scrollbar(
@@ -470,7 +469,7 @@ class _SupportPageState extends State<SupportPage> {
                   DataRow(cells: [
                     DataCell(Text(constantWidgets.date(),
                         style: AppStyles.fixedTextStyle)), // date
-                    DataCell(Text(widget.username,
+                    DataCell(Text(viewModel.username,
                         style: AppStyles.fixedTextStyle)), // key in
                     DataCell(Text(selectedSource.value,
                         style: AppStyles.fixedTextStyle)), // source
@@ -539,7 +538,7 @@ class _SupportPageState extends State<SupportPage> {
           onSearch: _performSearch,
         ),
         IconButton(
-          icon: Icon(Icons.search),
+          icon: const Icon(Icons.search),
           onPressed: _performSearch,
         ),
         const SizedBox(width: 10),
@@ -553,15 +552,15 @@ class _SupportPageState extends State<SupportPage> {
 
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10.0),
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               width: containerWidth,
-              padding: EdgeInsets.symmetric(horizontal: 70, vertical: 50),
+              padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 50),
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 220, 246, 227),
+                color: const Color.fromARGB(255, 220, 246, 227),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -569,14 +568,14 @@ class _SupportPageState extends State<SupportPage> {
                 children: [
                   Text("Bizapp ID: ${model.username}",
                       style: AppStyles.fixedBoldStyle),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text("Package: ${model.roleid}",
                       style: AppStyles.fixedBoldStyle),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Text("Name: ${model.nama}", style: AppStyles.fixedBoldStyle),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text("Email: ${model.emel}", style: AppStyles.fixedBoldStyle),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text("No. H/P: ${model.nohp}",
                       style: AppStyles.fixedBoldStyle),
                 ],
@@ -590,19 +589,19 @@ class _SupportPageState extends State<SupportPage> {
 
   Widget _buildFilePicker() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             children: [
               const Text('Attachment: ', style: AppStyles.fixedBoldStyle),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               ElevatedButton.icon(
                 onPressed: _pickFile,
-                icon: Icon(Icons.attach_file,
+                icon: const Icon(Icons.attach_file,
                     color: Colors.white), // Change icon color here
-                label: Text(
+                label: const Text(
                   'Insert file',
                   style:
                       TextStyle(color: Colors.white), // Change text color here
@@ -611,7 +610,7 @@ class _SupportPageState extends State<SupportPage> {
                   foregroundColor: Colors.white,
                   backgroundColor: const Color.fromARGB(
                       255, 0, 0, 0), // Change text color when pressed here
-                  minimumSize: Size(150, 50), // Minimum button size
+                  minimumSize: const Size(150, 50), // Minimum button size
                 ),
               ),
               if (_fileName != null)
@@ -619,7 +618,7 @@ class _SupportPageState extends State<SupportPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Selected file: $_fileName',
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.black), // Change text color here
                   ),
                 ),
@@ -654,12 +653,12 @@ class _SupportPageState extends State<SupportPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('File Size Limit Exceeded'),
-            content: Text('Please select a file smaller than 10 MB.'),
+            title: const Text('File Size Limit Exceeded'),
+            content: const Text('Please select a file smaller than 10 MB.'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           ),
@@ -689,7 +688,7 @@ class _SupportPageState extends State<SupportPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0), // Rounded corners
             ),
-            color: Color.fromARGB(255, 220, 246,
+            color: const Color.fromARGB(255, 220, 246,
                 227), // Set the background color of the Card to pure white
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -697,11 +696,11 @@ class _SupportPageState extends State<SupportPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   buildStepIndicators(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Expanded(
                     child: PageView(
                       controller: _pageController,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       children: [
                         buildStep1(),
                         buildStep2(),
@@ -737,7 +736,7 @@ class _SupportPageState extends State<SupportPage> {
         });
         _pageController.animateToPage(
           step,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.ease,
         );
       },
@@ -755,7 +754,7 @@ class _SupportPageState extends State<SupportPage> {
         ),
         child: Text(
           number,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -802,7 +801,7 @@ class _SupportPageState extends State<SupportPage> {
                     handleCheckboxChanges(
                         value, index, viewModel.productCheckbox);
                   }),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
             ],
           ),
           Positioned(
@@ -815,7 +814,7 @@ class _SupportPageState extends State<SupportPage> {
                   _currentPage = 1;
                 });
                 _pageController.nextPage(
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   curve: Curves.ease,
                 );
               },
@@ -856,7 +855,7 @@ class _SupportPageState extends State<SupportPage> {
               });
             },
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -867,7 +866,7 @@ class _SupportPageState extends State<SupportPage> {
                     _currentPage = 0;
                   });
                   _pageController.previousPage(
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     curve: Curves.ease,
                   );
                 },
@@ -881,7 +880,7 @@ class _SupportPageState extends State<SupportPage> {
                     _currentPage = 2;
                   });
                   _pageController.nextPage(
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     curve: Curves.ease,
                   );
                 },
@@ -948,7 +947,7 @@ class _SupportPageState extends State<SupportPage> {
           ),
           constantWidgets.buildText(
               label: 'Note', controller: viewModel.noteController),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -959,12 +958,12 @@ class _SupportPageState extends State<SupportPage> {
                       _currentPage = 1;
                     });
                     _pageController.previousPage(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       curve: Curves.ease,
                     );
                   },
-                  buttonColor: Color.fromARGB(255, 255, 255, 255),
-                  textColor: Color.fromARGB(255, 0, 0, 0)),
+                  buttonColor: const Color.fromARGB(255, 255, 255, 255),
+                  textColor: const Color.fromARGB(255, 0, 0, 0)),
               Row(
                 children: [
                   constantWidgets.buildButton(
@@ -988,7 +987,7 @@ class _SupportPageState extends State<SupportPage> {
                       },
                       buttonColor: Colors.red,
                       textColor: Colors.white),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   constantWidgets.buildButton(
                       label: "Submit",
                       onPressed: () {
@@ -1046,7 +1045,7 @@ class FormStatus extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.3,
       child: TextFormField(
-        style: const TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 16, color: Colors.black),
         keyboardType: TextInputType.emailAddress,
         controller: controller,
         autovalidateMode: AutovalidateMode.onUserInteraction,

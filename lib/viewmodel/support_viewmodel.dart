@@ -3,6 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class SupportViewModel extends ChangeNotifier {
+
+  String username = "";
+
+  Future getPref(context) async {
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    username = args["username"];
+    notifyListeners();
+  }
   final key = new GlobalKey<FormState>();
 
   TextEditingController usernameController = TextEditingController();

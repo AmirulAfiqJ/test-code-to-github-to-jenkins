@@ -1,9 +1,4 @@
-import 'package:bizapptrack/ui/expiring.dart';
-import 'package:bizapptrack/ui/home.dart';
-import 'package:bizapptrack/ui/inactive.dart';
-import 'package:bizapptrack/ui/newRenew.dart';
-import 'package:bizapptrack/ui/others.dart';
-import 'package:bizapptrack/ui/support.dart';
+import 'package:bizapptrack/utils/route.dart';
 import 'package:flutter/material.dart';
 import 'package:bizapptrack/ui/drawerState.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +19,7 @@ class SideDrawer extends StatelessWidget {
     return Container(
       width: 180, // Set the desired width here
       child: Drawer(
-        backgroundColor: Color.fromARGB(255, 36, 36, 36),
+        backgroundColor: const Color.fromARGB(255, 36, 36, 36),
         child: Column(
           children: <Widget>[
             Container(
@@ -33,7 +28,7 @@ class SideDrawer extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.menu,
                       color: Colors.white,
                     ),
@@ -45,67 +40,85 @@ class SideDrawer extends StatelessWidget {
               ),
             ),
             _buildListTile(Icons.home, 'Dashboard', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(username: username),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => HomePage(username: username),
+              //   ),
+              // );
+              Navigator.pushNamed(context, AppRoutes.home, arguments: {
+                "username": username
+              });
             },
             iconColor: Colors.white,
             textColor: Colors.white,
             ),
             _buildListTile(Icons.fiber_new, 'New/Renew', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewCustomer(username: username),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => NewCustomer(username: username),
+              //   ),
+              // );
+              Navigator.pushNamed(context, AppRoutes.newRenew, arguments: {
+                "usename": username
+              });
             },
             iconColor: Colors.white,
             textColor: Colors.white,
             ),
             _buildListTile(Icons.remove_circle_outline, 'Inactive', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Inactive(username: username),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => Inactive(username: username),
+              //   ),
+              // );
+              Navigator.pushNamed(context, AppRoutes.inactive, arguments: {
+                "username": username
+              });
             },
             iconColor: Colors.white,
             textColor: Colors.white,
             ),
             _buildListTile(Icons.access_time, 'Expiring', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Expiring(username: username),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => Expiring(username: username),
+              //   ),
+              // );
+              Navigator.pushNamed(context, AppRoutes.expiring, arguments: {
+                "username": username
+              });
             },
             iconColor: Colors.white,
             textColor: Colors.white,
             ),
             _buildListTile(Icons.category, 'Others', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Others(username: username),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => Others(username: username),
+              //   ),
+              // );
+              Navigator.pushNamed(context, AppRoutes.others, arguments: {
+                "username": username
+              });
             },
             iconColor: Colors.white,
             textColor: Colors.white,
             ),
             _buildListTile(Icons.support_agent, 'Support', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SupportPage(username: username),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => SupportPage(username: username),
+              //   ),
+              // );
+              Navigator.pushNamed(context, AppRoutes.support, arguments: {
+                "username": username
+              });
             },
             iconColor: Colors.white,
             textColor: Colors.white,),
@@ -119,12 +132,12 @@ class SideDrawer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       alignment: Alignment.topLeft,
-      color: Color.fromARGB(255, 36, 36, 36),
+      color: const Color.fromARGB(255, 36, 36, 36),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.menu,
               color: Colors.white,
             ),
@@ -132,19 +145,20 @@ class SideDrawer extends StatelessWidget {
               context.read<DrawerState>().toggleDrawer();
             },
           ),
-          SizedBox(height: 23), // Add some space between the menu icon and the home icon
+          const SizedBox(height: 23), // Add some space between the menu icon and the home icon
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(username: username),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => HomePage(username: username),
+              //   ),
+              // );
+              
             },
-            child: Row(
+            child: const Row(
               children: <Widget>[
-                Padding(padding: const EdgeInsets.all(3)),
+                Padding(padding: EdgeInsets.all(3)),
                 Icon(
                   Icons.home,
                   color: Colors.white,
@@ -152,19 +166,22 @@ class SideDrawer extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 23), // Add some space between the menu icon and the home icon
+          const SizedBox(height: 23), // Add some space between the menu icon and the home icon
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewCustomer(username: username),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => NewCustomer(username: username),
+              //   ),
+              // );
+              Navigator.pushNamed(context, AppRoutes.newRenew, arguments: {
+                "usename": username
+              });
             },
-            child: Row(
+            child: const Row(
               children: <Widget>[
-                Padding(padding: const EdgeInsets.all(3)),
+                Padding(padding: EdgeInsets.all(3)),
                 Icon(
                   Icons.fiber_new,
                   color: Colors.white,
@@ -172,19 +189,22 @@ class SideDrawer extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 23), // Add some space between the menu icon and the home icon
+          const SizedBox(height: 23), // Add some space between the menu icon and the home icon
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Inactive(username: username),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => Inactive(username: username),
+              //   ),
+              // );
+              Navigator.pushNamed(context, AppRoutes.inactive, arguments: {
+                "username": username
+              });
             },
-            child: Row(
+            child: const Row(
               children: <Widget>[
-                Padding(padding: const EdgeInsets.all(3)),
+                Padding(padding: EdgeInsets.all(3)),
                 Icon(
                   Icons.remove_circle_outline,
                   color: Colors.white,
@@ -192,19 +212,22 @@ class SideDrawer extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 23), // Add some space between the menu icon and the home icon
+          const SizedBox(height: 23), // Add some space between the menu icon and the home icon
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Expiring(username: username),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => Expiring(username: username),
+              //   ),
+              // );
+              Navigator.pushNamed(context, AppRoutes.expiring, arguments: {
+                "username": username
+              });
             },
-            child: Row(
+            child: const Row(
               children: <Widget>[
-                Padding(padding: const EdgeInsets.all(3)),
+                Padding(padding: EdgeInsets.all(3)),
                 Icon(
                   Icons.access_time,
                   color: Colors.white,
@@ -212,19 +235,22 @@ class SideDrawer extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 23), // Add some space between the menu icon and the home icon
+          const SizedBox(height: 23), // Add some space between the menu icon and the home icon
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Others(username: username),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => Others(username: username),
+              //   ),
+              // );
+              Navigator.pushNamed(context, AppRoutes.others, arguments: {
+                "username": username
+              });
             },
-            child: Row(
+            child: const Row(
               children: <Widget>[
-                Padding(padding: const EdgeInsets.all(3)),
+                Padding(padding: EdgeInsets.all(3)),
                 Icon(
                   Icons.category,
                   color: Colors.white,
@@ -232,19 +258,22 @@ class SideDrawer extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 23), // Add some space between the menu icon and the home icon
+          const SizedBox(height: 23), // Add some space between the menu icon and the home icon
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SupportPage(username: username),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => SupportPage(username: username),
+              //   ),
+              // );
+              Navigator.pushNamed(context, AppRoutes.support, arguments: {
+                "username": username
+              });
             },
-            child: Row(
+            child: const Row(
               children: <Widget>[
-                Padding(padding: const EdgeInsets.all(3)),
+                Padding(padding: EdgeInsets.all(3)),
                 Icon(
                   Icons.support_agent,
                   color: Colors.white,

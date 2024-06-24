@@ -1,7 +1,6 @@
-import 'package:bizapptrack/ui/home.dart';
+import 'package:bizapptrack/utils/route.dart';
 import 'package:bizapptrack/viewmodel/login_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:bizapptrack/viewmodel/themeViewModel.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -57,12 +56,12 @@ class _LoginFormState extends State<LoginForm> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Login Failed'),
-          content: Text('Email and password must not be empty.'),
+          title: const Text('Login Failed'),
+          content: const Text('Email and password must not be empty.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         ),
@@ -75,24 +74,27 @@ class _LoginFormState extends State<LoginForm> {
       if (user.email.toLowerCase() == email) {
         if (user.password == password) {
           // Successful login
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(username: user.username),
-            ),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => HomePage(username: user.username),
+          //   ),
+          // );
+          Navigator.pushNamed(context, AppRoutes.home, arguments: {
+            "username": user.username
+          });
           return;
         } else {
           // Show error message if email and password do not match
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text('Login Failed'),
-              content: Text('Email and password do not match.'),
+              title: const Text('Login Failed'),
+              content: const Text('Email and password do not match.'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text('OK'),
+                  child: const Text('OK'),
                 ),
               ],
             ),
@@ -102,20 +104,53 @@ class _LoginFormState extends State<LoginForm> {
       }
     }
 
-    // Show error message if email does not exist in the validCredentials map
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Login Failed'),
-        content: Text('You do not have access to this website.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
+    if(email.isNotEmpty && password.isNotEmpty) {
+      Navigator.pushNamed(context, AppRoutes.home);
+    }else{
+      showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Login Failed'),
+              content: const Text('Email and password do not match.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+    }
+    // TODO :: dah fix, later call pass username and password ke API then dapat return untuk check betul or tak
+    // // Check email and password combination
+    // for (var user in viewModel.loginList) {
+    //   if (user.email.toLowerCase() == email) {
+    //     if (user.password == password) {
+    //       // Successful login
+          
+    //       return;
+    //     } else {
+    //       // Show error message if email and password do not match
+          
+    //       return;
+    //     }
+    //   }
+    // }
+
+    // // Show error message if email does not exist in the validCredentials map
+    // showDialog(
+    //   context: context,
+    //   builder: (context) => AlertDialog(
+    //     title: const Text('Login Failed'),
+    //     content: const Text('You do not have access to this website.'),
+    //     actions: [
+    //       TextButton(
+    //         onPressed: () => Navigator.pop(context),
+    //         child: const Text('OK'),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
   @override
@@ -131,7 +166,7 @@ class _LoginFormState extends State<LoginForm> {
             Expanded(
               flex: 1,
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 198, 197, 197),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10.0),
@@ -144,7 +179,7 @@ class _LoginFormState extends State<LoginForm> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'Bizapp Back Office',
                           style: TextStyle(
                             fontSize: 24,
@@ -152,27 +187,27 @@ class _LoginFormState extends State<LoginForm> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         TextField(
                           controller: viewModel.emailController,
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
+                          style: const TextStyle(color: Colors.black),
+                          decoration: const InputDecoration(
                             labelText: 'Email',
                             labelStyle: TextStyle(
-                              color: const Color.fromARGB(255, 41, 41, 41)
+                              color: Color.fromARGB(255, 41, 41, 41)
                             )
                             
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         TextField(
                           controller: viewModel.passwordController,
-                          style: TextStyle(color: Colors.black),
+                          style: const TextStyle(color: Colors.black),
                           obscureText: !_isPasswordVisible,
                           decoration: InputDecoration(
                             labelText: 'Password',
-                               labelStyle: TextStyle(
-                              color: const Color.fromARGB(255, 41, 41, 41)
+                               labelStyle: const TextStyle(
+                              color: Color.fromARGB(255, 41, 41, 41)
                             ),
                             suffixIcon: GestureDetector(
                               onTap: _togglePasswordVisibility,
@@ -186,7 +221,7 @@ class _LoginFormState extends State<LoginForm> {
                           ),
                           onSubmitted: (_) => _loginPressed(context),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: () => _loginPressed(context),
                           style: ElevatedButton.styleFrom(
@@ -195,7 +230,7 @@ class _LoginFormState extends State<LoginForm> {
                               borderRadius: BorderRadius.circular(20.0),
                             ),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Login',
                             style: TextStyle(
                               color: Colors.black,
@@ -213,7 +248,7 @@ class _LoginFormState extends State<LoginForm> {
             Expanded(
             
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 50, 49, 49),
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(10.0),
@@ -231,8 +266,8 @@ class _LoginFormState extends State<LoginForm> {
                           width: 250,
                           height: 250,
                         ),
-                        SizedBox(height: 20),
-                        Text(
+                        const SizedBox(height: 20),
+                        const Text(
                           'Hello, welcome to Bizapp Back Office!',
                           style: TextStyle(
                             fontSize: 22,
@@ -261,7 +296,7 @@ class _LoginFormState extends State<LoginForm> {
               flex: 1,
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 50, 49, 49),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20.0),
@@ -279,8 +314,8 @@ class _LoginFormState extends State<LoginForm> {
                           width: 180,
                           height: 180,
                         ),
-                        SizedBox(height: 20),
-                        Text(
+                        const SizedBox(height: 20),
+                        const Text(
                           'Bizapp Back Office',
                           style: TextStyle(
                             fontSize: 22,
@@ -301,7 +336,7 @@ class _LoginFormState extends State<LoginForm> {
               flex: 1,
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 198, 197, 197),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20.0),
@@ -321,24 +356,24 @@ class _LoginFormState extends State<LoginForm> {
                         //     fontWeight: FontWeight.bold,
                         //   ),
                         // ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         TextField(
                           controller: viewModel.emailController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Email',
                                labelStyle: TextStyle(
-                              color: const Color.fromARGB(255, 41, 41, 41)
+                              color: Color.fromARGB(255, 41, 41, 41)
                             )
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         TextField(
                           controller: viewModel.passwordController,
                           obscureText: !_isPasswordVisible,
                           decoration: InputDecoration(
                             labelText: 'Password',
-                               labelStyle: TextStyle(
-                              color: const Color.fromARGB(255, 41, 41, 41)
+                               labelStyle: const TextStyle(
+                              color: Color.fromARGB(255, 41, 41, 41)
                             ),
                             suffixIcon: GestureDetector(
                               onTap: _togglePasswordVisibility,
@@ -351,7 +386,7 @@ class _LoginFormState extends State<LoginForm> {
                           ),
                           onSubmitted: (_) => _loginPressed(context),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: () => _loginPressed(context),
                           style: ElevatedButton.styleFrom(
@@ -360,7 +395,7 @@ class _LoginFormState extends State<LoginForm> {
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Login',
                             style: TextStyle(
                               color: Colors.black,

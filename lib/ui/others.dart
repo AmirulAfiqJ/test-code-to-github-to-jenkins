@@ -1,22 +1,20 @@
-import 'package:bizapptrack/ui/dataUser.dart';
-import 'package:bizapptrack/ui/loadingWidget.dart';
 import 'package:bizapptrack/ui/sideNav.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'customAppBar.dart';
 
 class Others extends StatefulWidget {
-  final String username;
-  Others({required this.username});
+  Others({super.key});
 
   @override
   State<Others> createState() => _OthersState();
 }
 
 class _OthersState extends State<Others> {
+  StatusController viewModel = StatusController();
+
   TextEditingController usernameController = TextEditingController();
   TextEditingController purposeController = TextEditingController();
   TextEditingController feedbackController = TextEditingController();
@@ -29,6 +27,12 @@ class _OthersState extends State<Others> {
   String _selectedNumber = 'Select';
   String _selectedCallStatus = 'Select Status';
   String _selectedFollowUp = 'Select Follow Up';
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.getPref(context);
+  }
 
   void _performSearch() async {
     StatusController model =
@@ -65,10 +69,10 @@ class _OthersState extends State<Others> {
       key: _scaffoldKey,
       // backgroundColor: Colors.white,
       appBar:
-          CustomAppBar(username: widget.username, scaffoldKey: _scaffoldKey),
+          CustomAppBar(username: viewModel.username, scaffoldKey: _scaffoldKey),
       body: Row(
         children: [
-          SideDrawer(username: widget.username),
+          SideDrawer(username: viewModel.username),
       Expanded(
       child: LayoutBuilder(
         builder: (context, constraints) => Consumer<StatusController>(
@@ -83,7 +87,7 @@ class _OthersState extends State<Others> {
                     _buildSearchSection(),
                     const SizedBox(height: 20),
                     model.call
-                        ? CircularProgressIndicator(color: Colors.red)
+                        ? const CircularProgressIndicator(color: Colors.red)
                         : _buildUserDetailsSection(model),
                     const SizedBox(height: 20),
                     _body2(context, constraints),
@@ -135,7 +139,7 @@ class _OthersState extends State<Others> {
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 1.0),
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 226, 226, 226),
+                      color: const Color.fromARGB(255, 226, 226, 226),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: SingleChildScrollView(
@@ -206,7 +210,7 @@ class _OthersState extends State<Others> {
           constraints:
               BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 1.0),
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 226, 226, 226),
+            color: const Color.fromARGB(255, 226, 226, 226),
             borderRadius: BorderRadius.circular(10),
           ),
           child: SingleChildScrollView(
@@ -228,7 +232,7 @@ class _OthersState extends State<Others> {
                 DataRow(cells: [
                   const DataCell(Text(" ", style: AppStyles.fixedTextStyle)),
                   const DataCell(Text(" ", style: AppStyles.fixedTextStyle)),
-                  DataCell(Text(widget.username, style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(viewModel.username, style: AppStyles.fixedTextStyle)),
                   DataCell(Text(_selectedNumber, style: AppStyles.fixedTextStyle)),
                   DataCell(Text(_selectedCallStatus, style: AppStyles.fixedTextStyle)),
                   DataCell(Text(purposeController.text, style: AppStyles.fixedTextStyle)),
@@ -255,7 +259,7 @@ class _OthersState extends State<Others> {
           onSearch: _performSearch,
         ),
         IconButton(
-          icon: Icon(Icons.search),
+          icon: const Icon(Icons.search),
           onPressed: _performSearch,
         ),
         const SizedBox(width: 10),
@@ -274,7 +278,7 @@ class _OthersState extends State<Others> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 135.0),
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 226, 226, 226),
+                color: const Color.fromARGB(255, 226, 226, 226),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -282,38 +286,38 @@ class _OthersState extends State<Others> {
                 children: [
                   Text(
                     "Bizapp ID: " + "${model.username}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "Package: ${model.roleid}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Text(
                     "Name: ${model.nama}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "Email: ${model.emel}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "No. H/P: ${model.nohp}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                 ],
               ),
             ),
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Container(
             width: 600,
           padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
           decoration: BoxDecoration(
-              color: Color.fromARGB(255, 226, 226, 226),
+              color: const Color.fromARGB(255, 226, 226, 226),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -322,14 +326,14 @@ class _OthersState extends State<Others> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Number: ',
                       style: TextStyle(
                         fontSize: 18 ,
                         color: Colors.black
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     DropdownButton<String>(
                       value: _selectedNumber,
                       items: <String>[
@@ -357,18 +361,18 @@ class _OthersState extends State<Others> {
                     ),
                   ],
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Call status: ',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     DropdownButton<String>(
                       value: _selectedCallStatus,
                       items: <String>[
@@ -399,118 +403,118 @@ class _OthersState extends State<Others> {
                     ),
                   ],
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Purpose: ',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black
                       ),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Expanded(
                       child: TextFormField(
                         controller: purposeController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Enter purpose',
                           labelStyle: AppStyles.fixedTextStyle,
                         ),
-                        style: TextStyle(color: const Color.fromARGB(255, 77, 77, 77)),
+                        style: const TextStyle(color: Color.fromARGB(255, 77, 77, 77)),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Feedback: ',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Expanded(
                       child: TextFormField(
                         controller: feedbackController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Enter feedback',
                           labelStyle: AppStyles.fixedTextStyle,
                         ),
-                        style: TextStyle(color: const Color.fromARGB(255, 77, 77, 77)),
+                        style: const TextStyle(color: Color.fromARGB(255, 77, 77, 77)),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Reasoning: ',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black
                       ),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Expanded(
                       child: TextFormField(
                         controller: reasonController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Enter reason',
                           labelStyle: AppStyles.fixedTextStyle,
                         ),
-                        style: TextStyle(color: const Color.fromARGB(255, 77, 77, 77)),
+                        style: const TextStyle(color: Color.fromARGB(255, 77, 77, 77)),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Note: ',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black
                       ),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Expanded(
                       child: TextFormField(
                         controller: noteController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Enter note',
                           labelStyle: AppStyles.fixedTextStyle,
                         ),
-                        style: TextStyle(color: const Color.fromARGB(255, 77, 77, 77)),
+                        style: const TextStyle(color: Color.fromARGB(255, 77, 77, 77)),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Follow up: ',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     DropdownButton<String>(
                       value: _selectedFollowUp,
                       items: <String>[
@@ -545,7 +549,7 @@ class _OthersState extends State<Others> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -564,9 +568,9 @@ class _OthersState extends State<Others> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 125, 212, 98),
+                        backgroundColor: const  Color.fromARGB(255, 125, 212, 98),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Update',
                         style: TextStyle(color: Colors.black),
                       ),
@@ -574,9 +578,9 @@ class _OthersState extends State<Others> {
                     ElevatedButton(
                       onPressed: _clearSelections,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 255, 109, 99),
+                        backgroundColor: const Color.fromARGB(255, 255, 109, 99),
                       ),
-                      child: Text(
+                      child: const  Text(
                         'Clear',
                         style: TextStyle(color: Colors.black),
                       ),
@@ -597,7 +601,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return const Padding(
       padding: EdgeInsets.all(20.0),
       child: Text(
         "Others",

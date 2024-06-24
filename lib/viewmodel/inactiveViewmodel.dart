@@ -1,10 +1,18 @@
 // new_customer_viewmodel.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:bizapptrack/ui/sideNav.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 
 class InactiveViewmodel extends ChangeNotifier {
+
+  String username = "";
+
+  Future getPref(context) async {
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    username = args["username"];
+    notifyListeners();
+  }
+  
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
 

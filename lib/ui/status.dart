@@ -42,7 +42,7 @@ class _TestRenewState extends State<TestRenew> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey, // Assign the scaffold key
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       floatingActionButton: BizappButton(
         color: Colors.black87,
         title: "Export Excel",
@@ -68,7 +68,7 @@ class _TestRenewState extends State<TestRenew> {
                           onSearch: _performSearch,
                         ),
                         IconButton(
-                          icon: Icon(Icons.search),
+                          icon: const  Icon(Icons.search),
                           onPressed: _performSearch,
                         ),
                         const SizedBox(width: 10),
@@ -83,7 +83,7 @@ class _TestRenewState extends State<TestRenew> {
           },
         ),
       ),
-      drawer: SideDrawer(username: '',),
+      drawer: const SideDrawer(username: '',),
     );
   }
 
@@ -111,7 +111,7 @@ class _TestRenewState extends State<TestRenew> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: const  EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: Colors.grey[200], // Set the background color of the box
                       borderRadius: BorderRadius.circular(10), // Optional: Add rounded corners
@@ -168,7 +168,7 @@ class _TestRenewState extends State<TestRenew> {
                   Container(
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.4),
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(
@@ -184,14 +184,14 @@ class _TestRenewState extends State<TestRenew> {
                         // data list
                         provider.callRekod == false
                             ? provider.listrekod.isEmpty
-                                ? Text('Tiada Rekod',
+                                ? const Text('Tiada Rekod',
                                     style: TextStyle(
                                       fontSize: 16,
                                     ))
                                 : Center(
                                     child:
                                         DataList(listrekod: provider.listrekod))
-                            : GetLoad(text: "Load data record ..."),
+                            : const GetLoad(text: "Load data record ..."),
                       ],
                     ),
                   ),

@@ -27,7 +27,7 @@ class ConstantWidgets {
           title: Row(
             children: [
               Icon(iconData, color: iconColor),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(title, style: titleTextStyle),
             ],
           ),
@@ -86,7 +86,7 @@ class ConstantWidgets {
     required void Function(bool, int) onChanged,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -95,7 +95,7 @@ class ConstantWidgets {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('$label: ', style: AppStyles.fixedBoldStyle),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
             ],
           ),
           SizedBox(width: width),
@@ -138,7 +138,7 @@ class ConstantWidgets {
     required void Function(FormList) onChanged,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -174,18 +174,18 @@ class ConstantWidgets {
     TextInputType keyboardType = TextInputType.text,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('$label: ', style: AppStyles.fixedBoldStyle),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Expanded(
             child: TextField(
                 controller: controller,
                 maxLines: maxLines,
                 keyboardType: keyboardType,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                 ),
                 style: AppStyles.fixedTextStyle),

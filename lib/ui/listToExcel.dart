@@ -52,9 +52,9 @@ class _ListToExcelState extends State<ListToExcel> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: CustomAppBar(username: _userName, scaffoldKey: _scaffoldKey),
-      drawer: SideDrawer(username: '',),
+      drawer: const SideDrawer(username: '',),
       body: _body(),  
         );
   }
@@ -64,7 +64,7 @@ class _ListToExcelState extends State<ListToExcel> {
       physics: const BouncingScrollPhysics(),
       child: Column(
         children: [
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
           const Header(),
           const SizedBox(height: 20),
           Row(
@@ -189,7 +189,7 @@ class _ListToExcelState extends State<ListToExcel> {
           style: const TextStyle(fontSize: 16),
         ),
         trailing: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.delete,
             color: Colors.red,
           ),
@@ -211,7 +211,7 @@ class _ListToExcelState extends State<ListToExcel> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 320),
       child: BizappButton(
-        color: Color.fromARGB(255, 249, 161, 190),
+        color: const Color.fromARGB(255, 249, 161, 190),
         title: "Enter",
         tapCallback: _checksmartEntryI,
       ),
@@ -374,7 +374,7 @@ class PenggunaModel {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: ListToExcel(),
   ));
 }

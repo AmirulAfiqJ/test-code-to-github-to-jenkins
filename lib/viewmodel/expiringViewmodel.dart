@@ -3,6 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 
 class ExpiringViewmodel extends ChangeNotifier {
+  String username = "";
+
+  Future getPref(context) async {
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    username = args["username"];
+    notifyListeners();
+  }
+
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
 

@@ -1,18 +1,27 @@
-import 'package:bizapptrack/ui/dataUser.dart';
-import 'package:bizapptrack/ui/loadingWidget.dart';
 import 'package:bizapptrack/viewmodel/expiringViewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:bizapptrack/ui/sideNav.dart';
 import 'customAppBar.dart';
 
-class Expiring extends StatelessWidget {
-  final String username;
-  Expiring({super.key, required this.username});
+class Expiring extends StatefulWidget {
+  Expiring({super.key});
+
+  @override
+  State<Expiring> createState() => _ExpiringState();
+}
+
+class _ExpiringState extends State<Expiring> {
+  ExpiringViewmodel viewModel = ExpiringViewmodel();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.getPref(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +30,10 @@ class Expiring extends StatelessWidget {
       child: Scaffold(
         key: _scaffoldKey,
         // backgroundColor: Colors.white,
-        appBar: CustomAppBar(username: username, scaffoldKey: _scaffoldKey),
+        appBar: CustomAppBar(username: viewModel.username, scaffoldKey: _scaffoldKey),
         body: Row(
           children: [
-            SideDrawer(username: username), // Add the side navigation here
+            SideDrawer(username: viewModel.username), // Add the side navigation here
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -40,7 +49,7 @@ class Expiring extends StatelessWidget {
                               _buildSearchSection(model, context),
                               const SizedBox(height: 20),
                               model.isLoading
-                                  ? CircularProgressIndicator(color: Colors.red)
+                                  ? const CircularProgressIndicator(color: Colors.red)
                                   : _buildUserDetailsSection(context, model),
                               if (!model.isLoading)
                                 Column(
@@ -76,7 +85,7 @@ class Expiring extends StatelessWidget {
 
               List<String> parts = upgradeDate.split(' ');
               List<String> parts2 = endDate.split(' ');
-              List<String> parts3 = endDate.split(' ');
+              List<String> parts3 = logDate.split(' ');
 
               String datePart = parts[0];
               String datePart2 = parts2[0];
@@ -92,7 +101,7 @@ class Expiring extends StatelessWidget {
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 1.0),
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 253, 221, 221),
+                      color: const Color.fromARGB(255, 253, 221, 221),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: SingleChildScrollView(
@@ -186,7 +195,7 @@ class Expiring extends StatelessWidget {
           constraints:
               BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 1.0),
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 253, 221, 221),
+            color: const Color.fromARGB(255, 253, 221, 221),
             borderRadius: BorderRadius.circular(10),
           ),
           child: SingleChildScrollView(
@@ -217,7 +226,7 @@ class Expiring extends StatelessWidget {
                 DataRow(cells: [
                   const DataCell(Text(" ", style: AppStyles.fixedTextStyle)),
                   const DataCell(Text(" ", style: AppStyles.fixedTextStyle)),
-                  DataCell(Text(username, style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(viewModel.username, style: AppStyles.fixedTextStyle)),
                   DataCell(Text(model.selectedNumber,
                       style: AppStyles.fixedTextStyle)),
                   DataCell(Text(model.selectedCallStatus,
@@ -249,7 +258,7 @@ class Expiring extends StatelessWidget {
           onSearch: () => model.performSearch(context),
         ),
         IconButton(
-          icon: Icon(Icons.search),
+          icon: const Icon(Icons.search),
           onPressed: () => model.performSearch(context),
         ),
         const SizedBox(width: 10),
@@ -272,7 +281,7 @@ class Expiring extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 50.0, vertical: 80.0),
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 253, 221, 221),
+                color: const Color.fromARGB(255, 253, 221, 221),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -280,39 +289,39 @@ class Expiring extends StatelessWidget {
                 children: [
                   Text(
                     "Bizapp ID: ${statusModel.username}",
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.black),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "Package: ${statusModel.roleid}",
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.black),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Text(
                     "Name: ${statusModel.nama}",
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.black),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "Email: ${statusModel.emel}",
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.black),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     "No. H/P: ${statusModel.nohp}",
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.black),
@@ -321,13 +330,13 @@ class Expiring extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Container(
             width: 600,
             padding:
                 const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 253, 221, 221),
+              color: const Color.fromARGB(255, 253, 221, 221),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -371,26 +380,26 @@ class Expiring extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('Note: ',
+                    const Text('Note: ',
                         style: TextStyle(fontSize: 18, color: Colors.black)),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Container(
                       width: 400, // Set the desired width here
                       child: TextFormField(
                         controller: model.noteController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Enter note',
                           labelStyle: AppStyles.fixedTextStyle,
                         ),
-                        style: TextStyle(
-                            color: const Color.fromARGB(255, 77, 77, 77)),
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 77, 77, 77)),
                         onFieldSubmitted: model.setNoteText,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -399,18 +408,18 @@ class Expiring extends StatelessWidget {
                         model.setNoteText(model.noteController.text);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 125, 212, 98),
+                        backgroundColor: const Color.fromARGB(255, 125, 212, 98),
                       ),
                       child:
-                          Text('Update', style: TextStyle(color: Colors.black)),
+                          const Text('Update', style: TextStyle(color: Colors.black)),
                     ),
                     ElevatedButton(
                       onPressed: model.clearSelections,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 255, 109, 99),
+                        backgroundColor: const Color.fromARGB(255, 255, 109, 99),
                       ),
                       child:
-                          Text('Clear', style: TextStyle(color: Colors.black)),
+                          const Text('Clear', style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ),
@@ -436,8 +445,8 @@ class Expiring extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text('$label: ', style: TextStyle(fontSize: 18, color: Colors.black)),
-        SizedBox(width: 10),
+        Text('$label: ', style: const TextStyle(fontSize: 18, color: Colors.black)),
+        const SizedBox(width: 10),
         DropdownButton<String>(
           value: value,
           items: items.map((String item) {
@@ -447,8 +456,8 @@ class Expiring extends StatelessWidget {
                 item,
                 style: TextStyle(
                   color: Theme.of(context).brightness == Brightness.dark
-                      ? Color.fromARGB(255, 165, 165, 165)
-                      : Color.fromARGB(255, 43, 43, 43),
+                      ? const Color.fromARGB(255, 165, 165, 165)
+                      : const Color.fromARGB(255, 43, 43, 43),
                 ),
               ),
             );
@@ -467,7 +476,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return const Padding(
       padding: EdgeInsets.all(20.0),
       child: Text(
         "Expiring",

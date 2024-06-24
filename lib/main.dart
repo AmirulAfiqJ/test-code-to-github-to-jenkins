@@ -1,4 +1,6 @@
+import 'package:bizapptrack/ui/home.dart';
 import 'package:bizapptrack/ui/login.dart';
+import 'package:bizapptrack/utils/route.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -38,6 +40,32 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
+    // return MaterialApp(
+    //   title: 'Bizapp Back Office',
+    //   theme: ThemeData(
+    //     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    //     useMaterial3: true,
+    //   ),
+    //   home: Scaffold(
+    //     body: Center(
+    //       child: Container(
+    //         padding: const EdgeInsets.all(20.0),
+    //         constraints: const BoxConstraints(maxHeight: 650, maxWidth: 1400), // Limit width
+    //         decoration: const BoxDecoration(
+    //           //color: Color.fromARGB(255, 198, 197, 197), // Change color here
+    //           //borderRadius: BorderRadius.circular(25), // Set border radius
+    //         ),
+    //         /// TODO:
+    //         child: LoginForm(isWeb: true),
+    //       ),
+    //     ),
+    //   ),
+    //   debugShowCheckedModeBanner: false,
+    //   routes: AppRoutes.getRoutes(),
+    //   onGenerateRoute: (_) {
+    //     return MaterialPageRoute(builder: (context) => HomePage());
+    //   },
+    // );
     return MaterialApp(
       title: 'Bizapp Back Office',
       theme: ThemeData(
@@ -47,6 +75,11 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData.dark(),
       themeMode: themeProvider.themeMode,
       home: const MyHomePage(),
+      debugShowCheckedModeBanner: false,
+      routes: AppRoutes.getRoutes(),
+      onGenerateRoute: (_) {
+        return MaterialPageRoute(builder: (context) => HomePage());
+      },
     );
   }
 }

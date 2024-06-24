@@ -3,9 +3,16 @@ import 'package:provider/provider.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 
 class NewCustomerViewModel extends ChangeNotifier {
+  String username = "";
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future getRoute(context) async {
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    username = args["username"];
+    notifyListeners();
+  }
   
   // Dropdown items
   final List<String> numberItems = ['Select', 'BualAsia', 'Office HP', 'Personal HP'];
@@ -91,7 +98,9 @@ class NewCustomerViewModel extends ChangeNotifier {
 
   void clearSelections() {
     _selectedNumber = 'Select';
-    _selectedCallStatus = 'Select Status';
+   
+
+  void getPref(BuildContext context) {} _selectedCallStatus = 'Select Status';
     _selectedFeedback = 'Select Feedback';
     _selectedAction = 'Select Action';
     _selectedFollowUp = 'Select Follow Up';
