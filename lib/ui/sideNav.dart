@@ -43,25 +43,37 @@ class SideDrawer extends StatelessWidget {
           ListTile(
             title: const Text('New/Renew User'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => NewCustomer(username: username)));
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => NewCustomer(username: username)));
+              Navigator.pushNamed(context, AppRoutes.newRenew, arguments: {
+                "username": username
+                });
             },
           ),
           ListTile(
             title: const Text('Expiring User'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Expiring(username: username)));
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => Expiring(username: username)));
+              Navigator.pushNamed(context, AppRoutes.expiring, arguments: {
+                "username": username
+                });
             },
           ),
           ListTile(
             title: const Text('Inactive User'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Inactive(username: username)));
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => Inactive(username: username)));
+              Navigator.pushNamed(context, AppRoutes.inactive, arguments: {
+                "username": username
+              });
             },
           ),
           ListTile(
             title: const Text('Others'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Others(username: username)));
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => Others(username: username)));
+              Navigator.pushNamed(context, AppRoutes.others, arguments: {
+                "username": username
+              });
             },
           ),
           ListTile(

@@ -8,14 +8,15 @@ import 'package:provider/provider.dart';
 import 'customAppBar.dart';
 
 class Others extends StatefulWidget {
-  final String username;
-  Others({required this.username});
+  Others({super.key});
 
   @override
   State<Others> createState() => _OthersState();
 }
 
 class _OthersState extends State<Others> {
+  StatusController viewModel = StatusController();
+
   TextEditingController usernameController = TextEditingController();
   TextEditingController purposeController = TextEditingController();
   TextEditingController feedbackController = TextEditingController();
@@ -28,6 +29,12 @@ class _OthersState extends State<Others> {
   String _selectedNumber = 'Select';
   String _selectedCallStatus = 'Select Status';
   String _selectedFollowUp = 'Select Follow Up';
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.getPref(context);
+  }
 
   void _performSearch() async {
     StatusController model =
@@ -64,7 +71,7 @@ class _OthersState extends State<Others> {
       key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar:
-          CustomAppBar(username: widget.username, scaffoldKey: _scaffoldKey),
+          CustomAppBar(username: viewModel.username, scaffoldKey: _scaffoldKey),
       body: LayoutBuilder(
         builder: (context, constraints) => Consumer<StatusController>(
           builder: (context, model, child) {
@@ -91,7 +98,7 @@ class _OthersState extends State<Others> {
           },
         ),
       ),
-      drawer: SideDrawer(username: widget.username),
+      drawer: SideDrawer(username: viewModel.username),
     );
   }
 
@@ -234,7 +241,7 @@ class _OthersState extends State<Others> {
                 DataRow(cells: [
                   const DataCell(Text(" ")),
                   const DataCell(Text(" ")),
-                  DataCell(Text(widget.username)),
+                  DataCell(Text(viewModel.username)),
                   DataCell(Text(_selectedNumber)),
                   DataCell(Text(_selectedCallStatus)),
                   DataCell(Text(purposeController.text)),

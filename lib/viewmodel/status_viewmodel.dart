@@ -8,7 +8,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class StatusController extends ChangeNotifier {
-  String username = "";
+  String usernameUser = "";
+  String username = ""; // for searching
   String sk = "";
   String nama = "";
   String emel = "";
@@ -28,6 +29,12 @@ class StatusController extends ChangeNotifier {
   bool call = false;
   bool callDedagang = false;
   bool callRekod = false;
+  
+  Future getPref(context) async {
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    usernameUser = args["username"];
+    notifyListeners();
+  }
 
   Future loginServices(BuildContext context, {required String userid}) async {
     Map<String, dynamic> body = {

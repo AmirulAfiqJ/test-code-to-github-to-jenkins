@@ -8,10 +8,22 @@ import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:bizapptrack/ui/sideNav.dart';
 import 'customAppBar.dart';
 
-class Inactive extends StatelessWidget {
-    final String username;
+class Inactive extends StatefulWidget {
+  Inactive({super.key});
 
-  Inactive({super.key, required this.username});
+  @override
+  State<Inactive> createState() => _InactiveState();
+}
+
+class _InactiveState extends State<Inactive> {
+
+  InactiveViewmodel viewModel = InactiveViewmodel();
+
+  void initState() {
+    super.initState();
+    viewModel.getPref(context);
+  }
+
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -21,7 +33,7 @@ class Inactive extends StatelessWidget {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        appBar: CustomAppBar(username: username, scaffoldKey: _scaffoldKey),
+        appBar: CustomAppBar(username: viewModel.username, scaffoldKey: _scaffoldKey),
         body: LayoutBuilder(
           builder: (context, constraints) {
             return Consumer<InactiveViewmodel>(
@@ -55,7 +67,7 @@ class Inactive extends StatelessWidget {
             );
           },
         ),
-        drawer: SideDrawer(username: username),
+        drawer: SideDrawer(username: viewModel.username),
       ),
     );
   }
@@ -207,7 +219,7 @@ class Inactive extends StatelessWidget {
                 DataRow(cells: [
                   const DataCell(Text(" ")),
                   const DataCell(Text(" ")),
-                  DataCell(Text(username)),
+                  DataCell(Text(viewModel.username)),
                   DataCell(Text(model.selectedNumber)),
                   DataCell(Text(model.selectedCallStatus)),
                   DataCell(Text(model.selectedFeedback)),

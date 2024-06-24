@@ -139,10 +139,13 @@ class _HomePageState extends State<HomePage> {
                         height: buttonHeight,
                         child: ElevatedButton.icon(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => NewCustomer(username: viewModel.username)),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(builder: (context) => NewCustomer(username: viewModel.username)),
+                            // );
+                            Navigator.pushNamed(context, AppRoutes.newRenew, arguments: {
+                              "username": viewModel.username
+                            });
                           },
                           icon: const Icon(Icons.fiber_new, size: 30.0), // Set icon size
                           label: const Padding(
@@ -167,10 +170,13 @@ class _HomePageState extends State<HomePage> {
                         height: buttonHeight,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Inactive(username: viewModel.username)),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(builder: (context) => Inactive(username: viewModel.username)),
+                          // );
+                          Navigator.pushNamed(context, AppRoutes.inactive, arguments: {
+                            "username": viewModel.username
+                          });
                         },
                         icon: const Icon(Icons.remove_circle_outline, size: 30.0), // Set icon size
                         label: const Padding(
@@ -195,10 +201,13 @@ class _HomePageState extends State<HomePage> {
                         height: buttonHeight,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Expiring(username: viewModel.username)),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(builder: (context) => Expiring(username: viewModel.username)),
+                          // );
+                          Navigator.pushNamed(context, AppRoutes.expiring, arguments: {
+                              "username": viewModel.username
+                            });
                         },
                         icon: const Icon(Icons.access_time, size: 30.0), // Set icon size
                         label: const Padding(
@@ -224,10 +233,13 @@ class _HomePageState extends State<HomePage> {
                         height: buttonHeight,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Others(username: viewModel.username)),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(builder: (context) => Others(username: viewModel.username)),
+                          // );
+                          Navigator.pushNamed(context, AppRoutes.others, arguments: {
+                            "username": viewModel.username
+                            });
                         },
                         icon: const Icon(Icons.category, size: 30.0), // Set icon size
                         label: const Padding(

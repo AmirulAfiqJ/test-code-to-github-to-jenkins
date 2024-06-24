@@ -8,10 +8,22 @@ import 'package:bizapptrack/ui/sideNav.dart';
 import 'package:bizapptrack/viewmodel/newCustomerViewModel.dart';
 import 'customAppBar.dart';
 
-class NewCustomer extends StatelessWidget {
+class NewCustomer extends StatefulWidget {
+  NewCustomer({super.key});
+
+  @override
+  State<NewCustomer> createState() => _NewCustomerState();
+}
+
+class _NewCustomerState extends State<NewCustomer> {
+  NewCustomerViewModel viewModel = NewCustomerViewModel();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final String username;
-  NewCustomer({super.key, required this.username});
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.getRoute(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +32,7 @@ class NewCustomer extends StatelessWidget {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        appBar: CustomAppBar(username: username, scaffoldKey: _scaffoldKey),
+        appBar: CustomAppBar(username: viewModel.username, scaffoldKey: _scaffoldKey),
         body: LayoutBuilder(
           builder: (context, constraints) {
             return Consumer<NewCustomerViewModel>(
@@ -54,7 +66,7 @@ class NewCustomer extends StatelessWidget {
             );
           },
         ),
-        drawer: SideDrawer(username: username),
+        drawer: SideDrawer(username: viewModel.username),
       ),
     );
   }
@@ -189,7 +201,7 @@ class NewCustomer extends StatelessWidget {
                 DataRow(cells: [
                   const DataCell(Text(" ")),
                   const DataCell(Text(" ")),
-                  DataCell(Text(username)),
+                  DataCell(Text(viewModel.username)),
                   DataCell(Text(model.selectedNumber)),
                   DataCell(Text(model.selectedCallStatus)),
                   DataCell(Text(model.selectedFeedback)),

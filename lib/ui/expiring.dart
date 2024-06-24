@@ -8,10 +8,22 @@ import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
 import 'package:bizapptrack/ui/sideNav.dart'; 
 import 'customAppBar.dart';
 
-class Expiring extends StatelessWidget {
-  final String username;
-  Expiring({super.key, required this.username});
+class Expiring extends StatefulWidget {
+  Expiring({super.key});
+
+  @override
+  State<Expiring> createState() => _ExpiringState();
+}
+
+class _ExpiringState extends State<Expiring> {
+  ExpiringViewmodel viewModel = ExpiringViewmodel();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.getPref(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +32,7 @@ class Expiring extends StatelessWidget {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        appBar: CustomAppBar(username: username, scaffoldKey: _scaffoldKey),
+        appBar: CustomAppBar(username: viewModel.username, scaffoldKey: _scaffoldKey),
         body: LayoutBuilder(
           builder: (context, constraints) {
             return Consumer<ExpiringViewmodel>(
@@ -54,7 +66,7 @@ class Expiring extends StatelessWidget {
             );
           },
         ),
-        drawer: SideDrawer(username: username),
+        drawer: SideDrawer(username: viewModel.username),
       ),
     );
   }
@@ -189,7 +201,7 @@ class Expiring extends StatelessWidget {
                 DataRow(cells: [
                   const DataCell(Text(" ")),
                   const DataCell(Text(" ")),
-                  DataCell(Text(username)),
+                  DataCell(Text(viewModel.username)),
                   DataCell(Text(model.selectedNumber)),
                   DataCell(Text(model.selectedCallStatus)),
                   DataCell(Text(model.selectedFeedback)),

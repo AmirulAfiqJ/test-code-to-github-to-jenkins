@@ -1,4 +1,3 @@
-import 'package:bizapptrack/ui/home.dart';
 import 'package:bizapptrack/utils/route.dart';
 import 'package:bizapptrack/viewmodel/login_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +34,7 @@ class _LoginFormState extends State<LoginForm> {
     String password = viewModel.passwordController.text;
 
     if(email.isNotEmpty && password.isNotEmpty) {
-      Navigator.pushNamed(context, AppRoutes.login);
+      Navigator.pushNamed(context, AppRoutes.home);
     }else{
       showDialog(
             context: context,
