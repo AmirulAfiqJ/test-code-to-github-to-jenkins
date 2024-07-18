@@ -26,7 +26,7 @@ class Env {
 
   static String get statusTiktok =>
       "https://corrad.visionice.net/bizapp/apigenerator_tiktokshop.php?api_name=TRACK_GET_TIKTOKSHOP_SETTING&TX=";
-      
+
   static String get Wsapme =>
       "https://corrad.visionice.net/bizapp/apigenerator_wsapme.php?api_name=TRACK_GET_WSAPME_ACCOUNT&TX=";
 
@@ -38,4 +38,13 @@ class Env {
 
   static String get totalorders =>
       "$baseBackOfficeUrl?domain=bizapp&summary=total-orders";
+
+  static String get useractive =>
+      "$baseBackOfficeUrl?domain=bizapp&summary=total-active-user";
+
+  static String get subscribers =>
+      "$baseBackOfficeUrl?domain=bizapp&summary=total-subscribers";
+
+  static String get totalSubs =>
+      "$baseBackOfficeUrl?domain=bizapp&stat=specific-total-subscribers&date=";
 }

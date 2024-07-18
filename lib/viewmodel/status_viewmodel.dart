@@ -1,15 +1,17 @@
 import 'dart:async';
 import 'dart:html';
 import 'package:bizapptrack/model/listrekodmodel.dart';
+import 'package:bizapptrack/ui/home.dart';
 import 'package:bizapptrack/utils/constant.dart';
 import 'package:bizapptrack/env.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:bizapptrack/model/SpecificTotalSubs.dart';
 
 class StatusController extends ChangeNotifier {
+  String username = "";
   String usernameUser = "";
-  String username = ""; // for searching
   String sk = "";
   String nama = "";
   String emel = "";
@@ -34,20 +36,32 @@ class StatusController extends ChangeNotifier {
   String typepayment = "";
   String transactdate = "";
 
-  String today = "";
-  String ystd = "";
-  String week = "";
-  String month = "";
-  String year = "";
+  int today = 0;
+  int ystd = 0;
+  int week = 0;
+  int month = 0;
+  int year = 0;
+
+  int todayult1 = 0;
+  int ystdult1 = 0;
+  int weekult1 = 0;
+  int monthult1 = 0;
+  int yearult1 = 0;
+
+  int todayult12 = 0;
+  int ystdult12 = 0;
+  int weekult12 = 0;
+  int monthult12 = 0;
+  int yearult12 = 0;
 
   bool call = false;
   bool callDedagang = false;
   bool callRekod = false;
-  
+
   Future getPref(context) async {
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
-    usernameUser = args["username"];
-    notifyListeners();
+  final args = ModalRoute.of(context)!.settings.arguments as Map;
+  usernameUser = args["username"];
+  notifyListeners();
   }
 
   Future loginServices(BuildContext context, {required String userid}) async {
@@ -155,9 +169,7 @@ class StatusController extends ChangeNotifier {
       "TOKEN": " ",
     };
 
-    await http
-        .post(Uri.parse(Env.statusShopee), body: body)
-        .then((res) async {
+    await http.post(Uri.parse(Env.statusShopee), body: body).then((res) async {
       final resJSON = json.decode(res.body);
       call = false;
 
@@ -175,7 +187,7 @@ class StatusController extends ChangeNotifier {
     notifyListeners();
   }
 
-    Future statustiktok(BuildContext context, {required String pid}) async {
+  Future statustiktok(BuildContext context, {required String pid}) async {
     Map<String, dynamic> body = {
       "pid": pid,
       "DOMAIN": "BIZAPP",
@@ -210,7 +222,9 @@ class StatusController extends ChangeNotifier {
       final resJSON = json.decode(res.body);
       call = false;
 
-      resJSON[0]['STATUS'] == "1" ? wsapme = "Connected" : wsapme = "Disconnected";
+      resJSON[0]['STATUS'] == "1"
+          ? wsapme = "Connected"
+          : wsapme = "Disconnected";
       // print(resJSON[0]);
       notifyListeners();
 
@@ -256,8 +270,7 @@ class StatusController extends ChangeNotifier {
     await http.post(Uri.parse(Env.woocommerce), body: body).then((res) {
       final resJSON = json.decode(res.body);
 
-      woo = [resJSON][0]['woowebhook'] == null ? "Tiada" : "";
-      resJSON[0]['woowebhook'] != "" ? woo = "Tiada" : woo = "";
+      resJSON[0]['STATUS'] == "1" ? woo = "Active" : woo = "Inactive";
 
       notifyListeners();
     });
@@ -286,11 +299,23 @@ class StatusController extends ChangeNotifier {
     typepayment = "";
     transactdate = "";
 
-    today = "";
-    ystd = "";
-    week = "";
-    month = "";
-    year = "";
+    today = 0;
+    ystd = 0;
+    week = 0;
+    month = 0;
+    year = 0;
+
+    todayult1 = 0;
+    ystdult1 = 0;
+    weekult1 = 0;
+    monthult1 = 0;
+    yearult1 = 0;
+
+    todayult12 = 0;
+    ystdult12 = 0;
+    weekult12 = 0;
+    monthult12 = 0;
+    yearult12 = 0;
 
     call = false;
     callDedagang = false;
@@ -368,26 +393,25 @@ class StatusController extends ChangeNotifier {
     });
   }
 
-  Future<void> ordertotal(BuildContext context) async {
+  // method for Total Active User
+  Future<void> totalactiveuser(BuildContext context) async {
     Map<String, dynamic> body = {
       "domain": "BIZAPP",
-      "summary": "total-orders",
+      "summary": "total-active-user",
     };
 
     try {
-      final res = await http.post(
-        Uri.parse(Env.totalorders),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(body),
+      final res = await http.get(
+        Uri.parse(Env.useractive),
       );
 
       if (res.statusCode == 200) {
         final resJSON = json.decode(res.body);
-        today = resJSON[0]['today'];
-        ystd = resJSON[0]['yesterday'];
-        week = resJSON[0]['this_week'];
-        month = resJSON[0]['this_month'];
-        year = resJSON[0]['this_year'];
+        today = resJSON['resultData']['total-active-user']['today'] ?? 0;
+        ystd = resJSON['resultData']['total-active-user']['yesterday'] ?? 0;
+        week = resJSON['resultData']['total-active-user']['this_week'] ?? 0;
+        month = resJSON['resultData']['total-active-user']['this_month'] ?? 0;
+        year = resJSON['resultData']['total-active-user']['this_year'] ?? 0;
       } else {
         print('Error: ${res.statusCode}, Response: ${res.body}');
       }
@@ -397,6 +421,151 @@ class StatusController extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Map<String, List<dynamic>> getDataAU() {
+    return {
+      'Total Active User': [today, ystd, week, month],
+    };
+  }
+
+  Map<String, List<dynamic>> getDataYearAU() {
+    return {
+      'Total Active User': [year],
+    };
+  }
+
+  // method for Total Orders
+  Future<void> ordertotal(BuildContext context) async {
+    Map<String, dynamic> body = {
+      "domain": "BIZAPP",
+      "summary": "total-orders",
+    };
+
+    try {
+      final res = await http.get(
+        Uri.parse(Env.totalorders),
+      );
+
+      if (res.statusCode == 200) {
+        final resJSON = json.decode(res.body);
+        today = resJSON['resultData']['total-orders']['today'] ?? 0;
+        ystd = resJSON['resultData']['total-orders']['yesterday'] ?? 0;
+        week = resJSON['resultData']['total-orders']['this_week'] ?? 0;
+        month = resJSON['resultData']['total-orders']['this_month'] ?? 0;
+        year = resJSON['resultData']['total-orders']['this_year'] ?? 0;
+      } else {
+        print('Error: ${res.statusCode}, Response: ${res.body}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+
+    notifyListeners();
+  }
+
+  Map<String, List<dynamic>> getDataOR() {
+    return {
+      'Total Orders': [today, ystd, week, month],
+    };
+  }
+
+  Map<String, List<dynamic>> getDataYearOR() {
+    return {
+      'Total Orders': [year],
+    };
+  }
+
+  // method for Total Subscribers
+  Future<void> totalsubscriber(BuildContext context) async {
+    Map<String, dynamic> body = {
+      "domain": "BIZAPP",
+      "summary": "total-subscribers",
+    };
+
+    try {
+      final res = await http.get(
+        Uri.parse(Env.subscribers),
+      );
+
+      if (res.statusCode == 200) {
+        final resJSON = json.decode(res.body);
+        today = resJSON['resultData']['total-subscribers']['BASIC+|today'] ?? 0;
+        ystd = resJSON['resultData']['total-subscribers']['BASIC+|yesterday'] ?? 0;
+        week = resJSON['resultData']['total-subscribers']['BASIC+|this_week'] ?? 0;
+        month = resJSON['resultData']['total-subscribers']['BASIC+|this_month'] ?? 0;
+        year = resJSON['resultData']['total-subscribers']['BASIC+|this_year'] ?? 0;
+
+        todayult1 = resJSON['resultData']['total-subscribers']['ULTIMATE1|today'] ?? 0;
+        ystdult1 = resJSON['resultData']['total-subscribers']['ULTIMATE1|yesterday'] ?? 0;
+        weekult1 = resJSON['resultData']['total-subscribers']['ULTIMATE1|this_week'] ?? 0;
+        monthult1 = resJSON['resultData']['total-subscribers']['ULTIMATE1|this_month'] ?? 0;
+        yearult1 = resJSON['resultData']['total-subscribers']['ULTIMATE1|this_year'] ?? 0;
+
+        todayult12 = resJSON['resultData']['total-subscribers']['ULTIMATE12|today'] ?? 0;
+        ystdult12 = resJSON['resultData']['total-subscribers']['ULTIMATE12|yesterday'] ?? 0;
+        weekult12 = resJSON['resultData']['total-subscribers']['ULTIMATE12|this_week'] ?? 0;
+        monthult12 = resJSON['resultData']['total-subscribers']['ULTIMATE12|this_month'] ?? 0;
+        yearult12 = resJSON['resultData']['total-subscribers']['ULTIMATE12|this_year'] ?? 0;
+
+      } else {
+        print('Error: ${res.statusCode}, Response: ${res.body}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+
+    notifyListeners();
+  }
+
+  Map<String, List<dynamic>> getDataB() {
+    return {
+      'Total Subscriber BASIC+': [today, ystd, week, month],
+    };
+  }
+
+  Map<String, List<dynamic>> getDataYearB() {
+    return {
+      'Total Subscriber BASIC+': [year],
+    };
+  }
+
+  Map<String, List<dynamic>> getDataULT1() {
+    return {
+      'Total Subscriber ULTIMATE 1': [todayult1, ystdult1, weekult1, monthult1],
+    };
+  }
+
+  Map<String, List<dynamic>> getDataYearULT1() {
+    return {
+      'Total Subscriber ULTIMATE 1': [yearult1],
+    };
+  }
+
+    Map<String, List<dynamic>> getDataULT12() {
+    return {
+      'Total Subscriber ULTIMATE 12': [todayult12, ystdult12, weekult12, monthult12],
+    };
+  }
+
+  Map<String, List<dynamic>> getDataYearULT12() {
+    return {
+      'Total Subscriber ULTIMATE 12': [yearult12],
+    };
+  }
+
+  // // method for Total Subscribers
+  // Future<void> subSpec(BuildContext context) async {
+  //   Map<String, dynamic> body = {
+  //     "domain": "BIZAPP",
+  //     "summary": "specific-total-subscribers",
+  //   };
+
+  //   try {
+  //     final res = await http.get(
+  //       Uri.parse(Env.totalSubs),
+  //     );
+  //   }
+  // }
 
   void resetListData() {
     listrekod.clear();

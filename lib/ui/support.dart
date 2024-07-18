@@ -248,10 +248,6 @@ class _SupportPageState extends State<SupportPage> {
                                     style: AppStyles
                                         .fixedTextStyle)), // tarikh tamat
                             DataColumn(
-                                label: Text('Last Login',
-                                    style: AppStyles
-                                        .fixedTextStyle)), // tarikh log masuk
-                            DataColumn(
                                 label: Text('Last Order',
                                     style: AppStyles
                                         .fixedTextStyle)), // tarikh last order
@@ -278,9 +274,6 @@ class _SupportPageState extends State<SupportPage> {
                               DataCell(Text(datePart2,
                                   style:
                                       AppStyles.fixedTextStyle)), // tarikhtamat
-                              DataCell(Text(provider.tarikhlogmasuk,
-                                  style: AppStyles
-                                      .fixedTextStyle)), // tarikh log masuk
                               DataCell(Text(datePart3,
                                   style: AppStyles
                                       .fixedTextStyle)), // tarikh last order
@@ -574,9 +567,9 @@ class _SupportPageState extends State<SupportPage> {
                   const SizedBox(height: 30),
                   Text("Name: ${model.nama}", style: AppStyles.fixedBoldStyle),
                   const SizedBox(height: 15),
-                  Text("Email: ${model.emel}", style: AppStyles.fixedBoldStyle),
+                  SelectableText("Email: ${model.emel}", style: AppStyles.fixedBoldStyle),
                   const SizedBox(height: 15),
-                  Text("No. H/P: ${model.nohp}",
+                  SelectableText("No. H/P: ${model.nohp}",
                       style: AppStyles.fixedBoldStyle),
                 ],
               ),

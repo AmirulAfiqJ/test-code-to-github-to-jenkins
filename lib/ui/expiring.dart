@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
+import 'package:bizapptrack/utils/constant_widgets.dart';
 import 'package:bizapptrack/ui/sideNav.dart';
 import 'customAppBar.dart';
 
@@ -16,6 +17,7 @@ class Expiring extends StatefulWidget {
 class _ExpiringState extends State<Expiring> {
   ExpiringViewmodel viewModel = ExpiringViewmodel();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ConstantWidgets constantWidgets = ConstantWidgets();
 
   @override
   void initState() {
@@ -117,10 +119,6 @@ class _ExpiringState extends State<Expiring> {
                                   style: AppStyles
                                       .fixedTextStyle)), // tarikh tamat
                           DataColumn(
-                              label: Text('Last Login',
-                                  style: AppStyles
-                                      .fixedTextStyle)), // tarikh log masuk
-                          DataColumn(
                               label: Text('Last Order',
                                   style: AppStyles
                                       .fixedTextStyle)), // tarikh last order
@@ -155,8 +153,6 @@ class _ExpiringState extends State<Expiring> {
                             DataCell(Text(datePart2,
                                 style:
                                     AppStyles.fixedTextStyle)), // tarikhtamat
-                            const DataCell(
-                                Text("-", style: AppStyles.fixedTextStyle)),
                             DataCell(Text(datePart3,
                                 style: AppStyles.fixedTextStyle)),
                             DataCell(Text(provider.typepayment,
@@ -224,8 +220,8 @@ class _ExpiringState extends State<Expiring> {
               ],
               rows: [
                 DataRow(cells: [
-                  const DataCell(Text(" ", style: AppStyles.fixedTextStyle)),
-                  const DataCell(Text(" ", style: AppStyles.fixedTextStyle)),
+                  const DataCell(Text('Expiring', style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(constantWidgets.date(), style: AppStyles.fixedTextStyle)),
                   DataCell(Text(viewModel.username, style: AppStyles.fixedTextStyle)),
                   DataCell(Text(model.selectedNumber,
                       style: AppStyles.fixedTextStyle)),
@@ -311,7 +307,7 @@ class _ExpiringState extends State<Expiring> {
                         color: Colors.black),
                   ),
                   const SizedBox(height: 15),
-                  Text(
+                  SelectableText(
                     "Email: ${statusModel.emel}",
                     style: const TextStyle(
                         fontSize: 18,
@@ -319,7 +315,7 @@ class _ExpiringState extends State<Expiring> {
                         color: Colors.black),
                   ),
                   const SizedBox(height: 15),
-                  Text(
+                  SelectableText(
                     "No. H/P: ${statusModel.nohp}",
                     style: const TextStyle(
                         fontSize: 18,

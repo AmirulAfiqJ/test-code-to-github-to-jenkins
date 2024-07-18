@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
+import 'package:bizapptrack/utils/constant_widgets.dart';
 import 'package:bizapptrack/ui/sideNav.dart';
 import 'customAppBar.dart';
 
@@ -22,7 +23,8 @@ class _InactiveState extends State<Inactive> {
     viewModel.getPref(context);
   }
 
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ConstantWidgets constantWidgets = ConstantWidgets();
     
   @override
   Widget build(BuildContext context) {
@@ -135,7 +137,6 @@ class _InactiveState extends State<Inactive> {
                         columns: const [
                           DataColumn(label: Text('Date Start', style: AppStyles.fixedTextStyle)), // tarikh naik taraf
                           DataColumn(label: Text('Date End', style: AppStyles.fixedTextStyle)), // tarikh tamat
-                          DataColumn(label: Text('Last Login', style: AppStyles.fixedTextStyle)), // tarikh log masuk
                           DataColumn(label: Text('Last Order', style: AppStyles.fixedTextStyle)), // tarikh last order
                           DataColumn(label: Text('Payment', style: AppStyles.fixedTextStyle)), // payment
                           DataColumn(label: Text('No. Records', style: AppStyles.fixedTextStyle)), // rekod tempahan
@@ -148,7 +149,6 @@ class _InactiveState extends State<Inactive> {
                           DataRow(cells: [
                             DataCell(Text(datePart, style: AppStyles.fixedTextStyle)), // tarikhnaiktaraf
                             DataCell(Text(datePart2, style: AppStyles.fixedTextStyle)), // tarikhtamat
-                            DataCell(Text(provider.tarikhlogmasuk, style: AppStyles.fixedTextStyle)), // tarikh log masuk
                             DataCell(Text(datePart3, style: AppStyles.fixedTextStyle)), // tarikh last order
                             DataCell(Text(provider.typepayment, style: AppStyles.fixedTextStyle)), // payment
                             DataCell(Text(provider.rekodtempahan, style: AppStyles.fixedTextStyle)),
@@ -207,8 +207,8 @@ class _InactiveState extends State<Inactive> {
               ],
               rows: [
                 DataRow(cells: [
-                  const DataCell(Text(" ", style: AppStyles.fixedTextStyle)),
-                  const DataCell(Text(" ", style: AppStyles.fixedTextStyle)),
+                  const DataCell(Text('Inactive', style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(constantWidgets.date(), style: AppStyles.fixedTextStyle)),
                   DataCell(Text(viewModel.username, style: AppStyles.fixedTextStyle)),
                   DataCell(Text(model.selectedNumber, style: AppStyles.fixedTextStyle)),
                   DataCell(Text(model.selectedCallStatus, style: AppStyles.fixedTextStyle)),
@@ -260,12 +260,12 @@ class _InactiveState extends State<Inactive> {
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                   const SizedBox(height: 15),
-                  Text(
+                  SelectableText(
                     "Email: ${statusModel.emel}",
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.black),
                   ),
                   const SizedBox(height: 15),
-                  Text(
+                  SelectableText(
                     "No. H/P: ${statusModel.nohp}",
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.black),
                   ),

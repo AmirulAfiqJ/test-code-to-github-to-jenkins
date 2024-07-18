@@ -1,6 +1,7 @@
 import 'package:bizapptrack/ui/dataUser.dart';
 import 'package:bizapptrack/ui/drawerState.dart';
 import 'package:bizapptrack/ui/loadingWidget.dart';
+import 'package:bizapptrack/utils/constant_widgets.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +22,7 @@ class NewCustomer extends StatefulWidget {
 class _NewCustomerState extends State<NewCustomer> {
   NewCustomerViewModel viewModel = NewCustomerViewModel();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ConstantWidgets constantWidgets = ConstantWidgets();
 
   @override
   void initState() {
@@ -35,10 +37,12 @@ class _NewCustomerState extends State<NewCustomer> {
       child: Scaffold(
         key: _scaffoldKey,
         // backgroundColor: Colors.white,
-        appBar: CustomAppBar(username: viewModel.username, scaffoldKey: _scaffoldKey),
-         body: Row(
+        appBar: CustomAppBar(
+            username: viewModel.username, scaffoldKey: _scaffoldKey),
+        body: Row(
           children: [
-            SideDrawer(username: viewModel.username), // Add the side navigation here
+            SideDrawer(
+                username: viewModel.username), // Add the side navigation here
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -54,7 +58,8 @@ class _NewCustomerState extends State<NewCustomer> {
                               _buildSearchSection(model, context),
                               const SizedBox(height: 20),
                               model.isLoading
-                                  ? const CircularProgressIndicator(color: Colors.red)
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.red)
                                   : _buildUserDetailsSection(context, model),
                               if (!model.isLoading)
                                 Column(
@@ -87,7 +92,7 @@ class _NewCustomerState extends State<NewCustomer> {
               String upgradeDate = provider.tarikhnaiktaraf;
               String endDate = provider.tarikhtamat;
               String logDate = provider.transactdate;
-              
+
               List<String> parts = upgradeDate.split(' ');
               List<String> parts2 = endDate.split(' ');
               List<String> parts3 = logDate.split(' ');
@@ -109,7 +114,8 @@ class _NewCustomerState extends State<NewCustomer> {
                   ),
                   const SizedBox(height: 10),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10 ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.9),
                     decoration: BoxDecoration(
@@ -120,29 +126,64 @@ class _NewCustomerState extends State<NewCustomer> {
                       scrollDirection: Axis.horizontal,
                       child: DataTable(
                         columns: const [
-                          DataColumn(label: Text('Date Start', style: AppStyles.fixedTextStyle)), // tarikh naik taraf
-                          DataColumn(label: Text('Date End', style: AppStyles.fixedTextStyle)), // tarikh tamat
-                          DataColumn(label: Text('Last Login', style: AppStyles.fixedTextStyle)), // tarikh log masuk
-                          DataColumn(label: Text('Last Order', style: AppStyles.fixedTextStyle)), // tarikh last order
-                          DataColumn(label: Text('Payment', style: AppStyles.fixedTextStyle)), // payment
-                          DataColumn(label: Text('No. Records', style: AppStyles.fixedTextStyle)), // rekod tempahan
-                          DataColumn(label: Text('No. Orders', style: AppStyles.fixedTextStyle)), // bil tempahan
-                          DataColumn(label: Text('No. Agents', style: AppStyles.fixedTextStyle)), // bil ejen
-                          DataColumn(label: Text('Bizappay', style: AppStyles.fixedTextStyle)), // ada bizappay
-                          DataColumn(label: Text('Business', style: AppStyles.fixedTextStyle)), // jenis syarikat
+                          DataColumn(
+                              label: Text('Date Start',
+                                  style: AppStyles
+                                      .fixedTextStyle)), // tarikh naik taraf
+                          DataColumn(
+                              label: Text('Date End',
+                                  style: AppStyles
+                                      .fixedTextStyle)), // tarikh tamat
+                          DataColumn(
+                              label: Text('Last Order',
+                                  style: AppStyles
+                                      .fixedTextStyle)), // tarikh last order
+                          DataColumn(
+                              label: Text('Payment',
+                                  style: AppStyles.fixedTextStyle)), // payment
+                          DataColumn(
+                              label: Text('No. Records',
+                                  style: AppStyles
+                                      .fixedTextStyle)), // rekod tempahan
+                          DataColumn(
+                              label: Text('No. Orders',
+                                  style: AppStyles
+                                      .fixedTextStyle)), // bil tempahan
+                          DataColumn(
+                              label: Text('No. Agents',
+                                  style: AppStyles.fixedTextStyle)), // bil ejen
+                          DataColumn(
+                              label: Text('Bizappay',
+                                  style: AppStyles
+                                      .fixedTextStyle)), // ada bizappay
+                          DataColumn(
+                              label: Text('Business',
+                                  style: AppStyles
+                                      .fixedTextStyle)), // jenis syarikat
                         ],
                         rows: [
                           DataRow(cells: [
-                            DataCell(Text(datePart, style: AppStyles.fixedTextStyle)), // tarikhnaiktaraf
-                            DataCell(Text(datePart2, style: AppStyles.fixedTextStyle)), // tarikhtamat
-                            DataCell(Text(provider.tarikhlogmasuk, style: AppStyles.fixedTextStyle)), // tarikh log masuk
-                            DataCell(Text(datePart3, style: AppStyles.fixedTextStyle)), // tarikh last order
-                            DataCell(Text(provider.typepayment, style: AppStyles.fixedTextStyle)), // payment
-                            DataCell(Text(provider.rekodtempahan, style: AppStyles.fixedTextStyle)),
-                            DataCell(Text(provider.biltempahan, style: AppStyles.fixedTextStyle)),
-                            DataCell(Text(provider.bilEjen, style: AppStyles.fixedTextStyle)),
-                            DataCell(Text(provider.bizappayacc, style: AppStyles.fixedTextStyle)),
-                            DataCell(Text(provider.jenissyarikatname, style: AppStyles.fixedTextStyle)),
+                            DataCell(Text(datePart,
+                                style: AppStyles
+                                    .fixedTextStyle)), // tarikhnaiktaraf
+                            DataCell(Text(datePart2,
+                                style:
+                                    AppStyles.fixedTextStyle)), // tarikhtamat
+                            DataCell(Text(datePart3,
+                                style: AppStyles
+                                    .fixedTextStyle)), // tarikh last order
+                            DataCell(Text(provider.typepayment,
+                                style: AppStyles.fixedTextStyle)), // payment
+                            DataCell(Text(provider.rekodtempahan,
+                                style: AppStyles.fixedTextStyle)),
+                            DataCell(Text(provider.biltempahan,
+                                style: AppStyles.fixedTextStyle)),
+                            DataCell(Text(provider.bilEjen,
+                                style: AppStyles.fixedTextStyle)),
+                            DataCell(Text(provider.bizappayacc,
+                                style: AppStyles.fixedTextStyle)),
+                            DataCell(Text(provider.jenissyarikatname,
+                                style: AppStyles.fixedTextStyle)),
                           ]),
                         ],
                       ),
@@ -183,27 +224,47 @@ class _NewCustomerState extends State<NewCustomer> {
             scrollDirection: Axis.horizontal,
             child: DataTable(
               columns: const [
-                DataColumn(label: Text('Category', style: AppStyles.fixedTextStyle)),
-                DataColumn(label: Text('Date Called', style: AppStyles.fixedTextStyle)),
+                DataColumn(
+                    label: Text('Category', style: AppStyles.fixedTextStyle)),
+                DataColumn(
+                    label:
+                        Text('Date Called', style: AppStyles.fixedTextStyle)),
                 DataColumn(label: Text('PIC', style: AppStyles.fixedTextStyle)),
-                DataColumn(label: Text('Number', style: AppStyles.fixedTextStyle)),
-                DataColumn(label: Text('Call Status', style: AppStyles.fixedTextStyle)),
-                DataColumn(label: Text('Feedback', style: AppStyles.fixedTextStyle)),
-                DataColumn(label: Text('Note', style: AppStyles.fixedTextStyle)),
-                DataColumn(label: Text('Action', style: AppStyles.fixedTextStyle)),
-                DataColumn(label: Text('Follow Up', style: AppStyles.fixedTextStyle)),
+                DataColumn(
+                    label: Text('Number', style: AppStyles.fixedTextStyle)),
+                DataColumn(
+                    label:
+                        Text('Call Status', style: AppStyles.fixedTextStyle)),
+                DataColumn(
+                    label: Text('Feedback', style: AppStyles.fixedTextStyle)),
+                DataColumn(
+                    label: Text('Note', style: AppStyles.fixedTextStyle)),
+                DataColumn(
+                    label: Text('Action', style: AppStyles.fixedTextStyle)),
+                DataColumn(
+                    label: Text('Follow Up', style: AppStyles.fixedTextStyle)),
               ],
               rows: [
                 DataRow(cells: [
-                  const DataCell(Text(" ")),
-                  const DataCell(Text(" ")),
-                  DataCell(Text(viewModel.username,style: AppStyles.fixedTextStyle)),
-                  DataCell(Text(model.selectedNumber,style: AppStyles.fixedTextStyle)),
-                  DataCell(Text(model.selectedCallStatus,style: AppStyles.fixedTextStyle)),
-                  DataCell(Text(model.selectedFeedback,style: AppStyles.fixedTextStyle)),
-                  DataCell(Text(model.noteController.text,style: AppStyles.fixedTextStyle)),
-                  DataCell(Text(model.selectedAction,style: AppStyles.fixedTextStyle)),
-                  DataCell(Text(model.selectedFollowUp,style: AppStyles.fixedTextStyle)),
+                  const DataCell(
+                      Text('New & Renew',
+                      style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(constantWidgets.date(),
+                      style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(viewModel.username,
+                      style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(model.selectedNumber,
+                      style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(model.selectedCallStatus,
+                      style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(model.selectedFeedback,
+                      style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(model.noteController.text,
+                      style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(model.selectedAction,
+                      style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(model.selectedFollowUp,
+                      style: AppStyles.fixedTextStyle)),
                 ]),
               ],
             ),
@@ -241,10 +302,11 @@ class _NewCustomerState extends State<NewCustomer> {
       padding: const EdgeInsets.symmetric(horizontal: 130.0, vertical: 10.0),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Flexible(
-          flex: isDrawerOpen ? 2: 1,
+          flex: isDrawerOpen ? 2 : 1,
           child: Container(
             width: 600,
-            padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 80.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 60.0, vertical: 80.0),
             decoration: BoxDecoration(
               color: const Color.fromARGB(255, 220, 230, 255),
               borderRadius: BorderRadius.circular(10),
@@ -254,27 +316,44 @@ class _NewCustomerState extends State<NewCustomer> {
               children: [
                 Text(
                   "Bizapp ID: ${statusModel.username}",
-                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
                 const SizedBox(height: 15),
                 Text(
                   "Package: ${statusModel.roleid}",
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
                 const SizedBox(height: 50),
                 Text(
                   "Name: ${statusModel.nama}",
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
                 const SizedBox(height: 15),
-                Text(
+                SelectableText(
                   "Email: ${statusModel.emel}",
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 15),
-                Text(
+                SelectableText(
                   "No. H/P: ${statusModel.nohp}",
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ],
             ),
@@ -285,9 +364,9 @@ class _NewCustomerState extends State<NewCustomer> {
           width: 600,
           padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 20.0),
           decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 220, 230, 255),
-              borderRadius: BorderRadius.circular(10),
-            ),
+            color: const Color.fromARGB(255, 220, 230, 255),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -329,7 +408,8 @@ class _NewCustomerState extends State<NewCustomer> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Text('Note: ', style: TextStyle(fontSize: 18, color: Colors.black)),
+                  const Text('Note: ',
+                      style: TextStyle(fontSize: 18, color: Colors.black)),
                   const SizedBox(height: 10),
                   Container(
                     width: 400, // Set the desired width here
@@ -340,15 +420,16 @@ class _NewCustomerState extends State<NewCustomer> {
                         labelText: 'Enter note',
                         labelStyle: AppStyles.fixedTextStyle,
                       ),
-                      style: const TextStyle(color: Color.fromARGB(255, 77, 77, 77)),
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 77, 77, 77)),
                       onFieldSubmitted: model.setNoteText,
                     ),
                   ),
                 ],
               ),
-
               const SizedBox(height: 20),
-              Center( // Wrap the Row with Center widget
+              Center(
+                // Wrap the Row with Center widget
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -358,17 +439,21 @@ class _NewCustomerState extends State<NewCustomer> {
                         model.setNoteText(model.noteController.text);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 125, 212, 98),
+                        backgroundColor:
+                            const Color.fromARGB(255, 125, 212, 98),
                       ),
-                      child: const Text('Update', style: TextStyle(color: Colors.black)),
+                      child: const Text('Update',
+                          style: TextStyle(color: Colors.black)),
                     ),
                     // SizedBox(width: 200), // Add a SizedBox to create a gap
                     ElevatedButton(
                       onPressed: model.clearSelections,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 255, 109, 99),
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 109, 99),
                       ),
-                      child: const Text('Clear', style: TextStyle(color: Colors.black)),
+                      child: const Text('Clear',
+                          style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ),
@@ -387,28 +472,30 @@ class _NewCustomerState extends State<NewCustomer> {
     required void Function(String) onChanged,
     required BuildContext context,
   }) {
-     Color textColor = Theme.of(context).brightness == Brightness.dark
-      ? Colors.white
-      : Colors.black;
+    Color textColor = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : Colors.black;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text('$label: ', style: const TextStyle(fontSize: 18, color: Colors.black)),
+        Text('$label: ',
+            style: const TextStyle(fontSize: 18, color: Colors.black)),
         const SizedBox(width: 10),
-        
         DropdownButton<String>(
           value: value,
           items: items.map((String item) {
             return DropdownMenuItem<String>(
               value: item,
-              child: Text(item, style: TextStyle(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? const Color.fromARGB(255, 165, 165, 165)
-                    : const Color.fromARGB(255, 43, 43, 43),
+              child: Text(
+                item,
+                style: TextStyle(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? const Color.fromARGB(255, 165, 165, 165)
+                      : const Color.fromARGB(255, 43, 43, 43),
+                ),
               ),
-            ),
-          );
+            );
           }).toList(),
           onChanged: (String? newValue) {
             onChanged(newValue!);
@@ -424,7 +511,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const  Padding(
+    return const Padding(
       padding: EdgeInsets.all(20.0),
       child: Text(
         "New & Renew",

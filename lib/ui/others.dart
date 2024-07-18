@@ -1,5 +1,6 @@
 import 'package:bizapptrack/ui/sideNav.dart';
 import 'package:bizapptrack/viewmodel/status_viewmodel.dart';
+import 'package:bizapptrack/utils/constant_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class _OthersState extends State<Others> {
   TextEditingController noteController =
       TextEditingController(); // Controller for the note text field
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ConstantWidgets constantWidgets = ConstantWidgets();
 
   // Add state variables for dropdowns
   String _selectedNumber = 'Select';
@@ -151,8 +153,6 @@ class _OthersState extends State<Others> {
                           DataColumn(
                             label:Text('Date End', style: AppStyles.fixedTextStyle)), // tarikh tamat
                           DataColumn(
-                              label: Text('Last Login', style: AppStyles.fixedTextStyle)), // tarikh log masuk
-                          DataColumn(
                               label: Text('Last Order', style: AppStyles.fixedTextStyle)), // tarikh last order
                           DataColumn(
                             label: Text('Payment', style: AppStyles.fixedTextStyle)), // payment
@@ -171,7 +171,6 @@ class _OthersState extends State<Others> {
                           DataRow(cells: [
                             DataCell(Text(datePart, style: AppStyles.fixedTextStyle)), // tarikhnaiktaraf
                             DataCell(Text(datePart2, style: AppStyles.fixedTextStyle)), // tarikhtamat
-                            DataCell(Text(provider.tarikhlogmasuk, style: AppStyles.fixedTextStyle)), // tarikh log masuk
                             DataCell(Text(datePart3, style: AppStyles.fixedTextStyle)), // tarikh last order
                             DataCell(Text(provider.typepayment, style: AppStyles.fixedTextStyle)), // payment
                             DataCell(Text(provider.rekodtempahan, style: AppStyles.fixedTextStyle)),
@@ -230,8 +229,8 @@ class _OthersState extends State<Others> {
               ],
               rows: [
                 DataRow(cells: [
-                  const DataCell(Text(" ", style: AppStyles.fixedTextStyle)),
-                  const DataCell(Text(" ", style: AppStyles.fixedTextStyle)),
+                  const DataCell(Text('Others', style: AppStyles.fixedTextStyle)),
+                  DataCell(Text(constantWidgets.date(), style: AppStyles.fixedTextStyle)),
                   DataCell(Text(viewModel.username, style: AppStyles.fixedTextStyle)),
                   DataCell(Text(_selectedNumber, style: AppStyles.fixedTextStyle)),
                   DataCell(Text(_selectedCallStatus, style: AppStyles.fixedTextStyle)),
@@ -299,12 +298,12 @@ class _OthersState extends State<Others> {
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                   const SizedBox(height: 15),
-                  Text(
+                  SelectableText(
                     "Email: ${model.emel}",
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                   const SizedBox(height: 15),
-                  Text(
+                  SelectableText(
                     "No. H/P: ${model.nohp}",
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
