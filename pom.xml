@@ -13,9 +13,7 @@
 
     <build>
         <plugins>
-                  <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>25.1.0.102122</version>          <!-- Add your build plugins here -->
+                 <!-- Add your build plugins here -->
         </plugins>
     </build>
 </project>
